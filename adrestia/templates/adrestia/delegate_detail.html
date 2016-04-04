@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block content %}
+{{ delegate.legislator.senate_class }}
+      <script type='text/javascript'
+          src='http://www.opensecrets.org/widgets/races_widget.php?id={{delegate.legislator.state}}{{delegate.legislator.district}}'></script>
+
+        <h2>
+            {% if delegate.url %}
+                <a href="{{ delegate.url }}">{{ delegate.name }}</a>
+            {% else %}
+                {{ delegate.name }}
+            {% endif %}
+            ({{ delegate.state }} {% if delegate.legislator.district %} {{ delegate.legislator.district }} {% endif %})
+        </h2>
+        <h3>{% ifnotequal delegate.presidential_candidate.name 'Uncommitted' %}Pledged to{% endifnotequal %}
+            {% if delegate.presidential_candidate.name == "Sanders" %}
+                <span class="btn btn-success">
+                {{ delegate.presidential_candidate }}
+                </span>
+            {% elif delegate.presidential_candidate.name == "Clinton" %}
+                <span class="btn btn-danger">
+                {{ delegate.presidential_candidate }}
+                </span>
+            {% elif delegate.presidential_candidate.name == "Uncommitted" %}
+                {{ delegate.presidential_candidate }}
+            {% endif %}
+        </h3>
+
+        {% if member_profile %}
+        <p>Estimated Net Worth: ${{member_profile.net_low|intcomma}}&ndash;${{member_profile.net_high|intcomma}}</p>
+        {% endif %}
+
+
+        {% if contributors %}
+        <h4>Top Contributors in {{ meta_contributors.cycle }}</h4>
+        <ul class="list-unstyled">
+        {% for c in contributors %}
+        <li>{{c.attributes.org_name}} ${{c.attributes.total|intcomma}}</li>
+        {% endfor %}
+        </ul>
+        <p class="small"><a href="{{meta_contributors.source}}">{{meta_contributors.origin}}</a></p>
+        <p class="small">{{meta_contributors.notice}}</p>
+        {% endif %}
+
+        <h4>
+            <address>
+                {{ delegate.legislator }}</br>
+                {{ delegate.legislator.congress_office }}
+            </address>
+        </h4>
+        <h4><i class="fa fa-phone"></i> {{ delegate.legislator.phone }}</h4>
+        <h4><i class="fa fa-fax"></i> {{ delegate.legislator.fax }}</h4>
+        <h4>
+        <ul class='list-inline'>
+        {% if delegate.legislator.twitter_id %}
+        <li><a href="https://twitter.com/{{ delegate.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
+        {% endif %}
+        {% if delegate.legislator.facebook_id %}
+        <li><a href="https://facebook.com/{{ delegate.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
+        {% endif %}
+        {% if delegate.legislator.youtube_url %}
+        <li><a href="{{ delegate.legislator.youtube_url }}"><i class="fa fa-youtube"></i></a>
+        {% endif %}
+        {% if delegate.legislator.oc_email %}
+        <li><a href="mailto:{{ delegate.legislator.oc_email }}"><i class="fa fa-envelope"></i></a>
+        {% endif %}
+        </ul>
+        </h4>
+
+
+        {% if delegate.footnotes.all %}
+        <table class="table">
+            <tr><th>Notes</th></tr>
+        {% for f in delegate.footnotes.all %}
+        <tr><td>[{{f.id}}] <a href="{{ f.url }}">{{ f.text }}</a></td/></tr>
+        {% endfor %}
+        </table>
+        {% endif %}
+{% endblock %}

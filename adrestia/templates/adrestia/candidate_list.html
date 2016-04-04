@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+    <table class="table table-striped">
+        <tr>
+            <th>Candidate</th>
+            <th>State</th>
+            <th>District</th>
+            <th>Image</th>
+        </tr>
+    {% for c in candidate_list %}
+    <tr>
+        <td>
+            <a href="{% url 'candidate_detail' pk=c.id %}">{{ c.name }}</a>
+        </td>
+        <td>{{ c.state }}</td>
+        <td>{{ c.district }}</td>
+        <td>
+            {% if c.image_url %}
+                <a href="{{c.profile_url}}"><img width="60px" src="{{c.image_url}}"/></a></td>
+            {% elif c.state_legislator.photo_url %}
+                <a href="{{c.url}}"><img width="60px" src="{{c.photo_url}}"/></a></td>
+            {% endif %}
+        <td>
+        <ul class='list-inline'>
+        {% if c.legislator.twitter_id %}
+        <li><a href="https://twitter.com/{{ c.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
+        {% endif %}
+        {% if c.legislator.facebook_id %}
+        <li><a href="https://facebook.com/{{ c.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
+        {% endif %}
+        {% if c.legislator.oc_email %}
+        <li><a href="mailto:{{ c.legislator.oc_email }}"><i class="fa fa-envelope"></i></a>
+        {% endif %}
+        </ul>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
