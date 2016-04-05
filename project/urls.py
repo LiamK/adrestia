@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, patterns, include
 from django.contrib import admin
 from django.views.generic import TemplateView
 from adrestia.views import *
@@ -23,9 +23,15 @@ urlpatterns = [
     url(r'^$', Home.as_view(), name='home'),
     url(r'^about/?$', TemplateView.as_view(template_name='adrestia/about.html'), name='about'),
     url(r'^delegates/?$', DelegateList.as_view(), name='delegate_list'),
-    url(r'^delegates/(?P<state>[A-Za-z]{2,2})/?$', DelegatesByState.as_view(),name='delegates_by_state'),
+    url(r'^delegates/(?P<state>[A-Za-z]{2,2})/?$', DelegateList.as_view(),name='delegates_by_state'),
     url(r'^delegates/(?P<pk>[0-9]+)/?$', DelegateDetail.as_view(), name='delegate_detail'),
     url(r'^candidates/?$', CandidateList.as_view(), name='candidate_list'),
     url(r'^candidates/(?P<pk>[0-9]+)/?$', CandidateDetail.as_view(),
         name='candidate_detail'),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ]

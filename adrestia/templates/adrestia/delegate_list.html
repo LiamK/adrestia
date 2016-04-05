@@ -1,25 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-
     {% if state %}
     <h2 class="text-center">{{state.name}} Super Delegates</h1>
     {% endif %}
     <ul class="list-group">
-    {% for d in gov_list %}
-        {% include "adrestia/delegate_row.html" %}
-    {% endfor %}
-    {% for d in sen_list %}
-        {% include "adrestia/delegate_row.html" %}
-    {% endfor %}
-    {% for d in rep_list %}
-        {% include "adrestia/delegate_row.html" %}
-    {% endfor %}
-    {% for d in dpl_list %}
-        {% include "adrestia/delegate_row.html" %}
-    {% endfor %}
-    {% for d in dnc_list %}
+    {% for d in delegate_list %}
         {% include "adrestia/delegate_row.html" %}
     {% endfor %}
     </ul>
-    There are {{ delegate_list.count }} delegates from {{ state.name }}.
+    There are {{ delegate_list.count }} delegates from {{ xstate.name }}.
 {% endblock %}

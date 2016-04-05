@@ -27,7 +27,7 @@
         </h3>
 
         {% if member_profile %}
-        <p>Estimated Net Worth: ${{member_profile.net_low|intcomma}}&ndash;${{member_profile.net_high|intcomma}}</p>
+        <p>Estimated Net Worth: ${{member_profile.net_low|intcomma}} &mdash; ${{member_profile.net_high|intcomma}}</p>
         {% endif %}
 
 
@@ -44,8 +44,9 @@
 
         <h4>
             <address>
-                {{ delegate.legislator.title_and_name }}</br>
-                {{ delegate.legislator.congress_office }}
+                {{ delegate.legislator.title_and_name }}<br/>
+                {{ delegate.legislator.congress_office }}<br/>
+                {{ delegate.legislator.city_state_zip }}
             </address>
         </h4>
         {% if delegate.legislator.phone %}

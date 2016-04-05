@@ -2,7 +2,14 @@
     <div class="row">
         <div class="col-xs-12 col-sm-3">
             <a href="{% url 'delegate_detail' pk=d.id %}">
-                {{ d.name }}, {{ d.state }} {{ d.group.abbr }} {% if d.legislator.district %}{{ d.group.abbr }} ({{d.legislator.district}}){% endif %}
+                {{ d.name }},
+                {% if d.legislator %}
+                    {{ d.group.abbr }} {% if d.legislator.district %}({{ d.legislator.state }} {{d.legislator.district}}){% endif %}
+                {% elif d.legislator %}
+                    {{ d.group.abbr }} {% if d.legislator.district %}({{ d.legislator.state }} {{d.legislator.district}}){% endif %}
+                {% else %}
+                    {{ d.group.abbr }}
+                {% endif %}
             </a>
         </div>
         <div class="col-xs-12 col-sm-3">

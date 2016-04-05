@@ -1,17 +1,14 @@
 from __future__ import unicode_literals
 
+import logging
+
+from django.conf import settings
+from django.contrib.auth.models import User
 from django.contrib.gis.db import models
-
-# Create your models here.
-
-import datetime
-from datetime import timedelta
 from django.core.cache import cache
 from django.db.models.signals import post_save, post_delete
-from django.contrib.auth.models import User
-from django.utils.text import slugify
 from django.utils.html import format_html
-import logging
+from django.utils.text import slugify
 
 log = logging.getLogger(__name__)
 
@@ -137,7 +134,7 @@ class Legislator(models.Model):
     nickname = models.CharField(max_length=24, null=True, blank=True)
     party = models.CharField(max_length=1, null=True, blank=True)
     state = models.CharField(max_length=2, null=True, blank=True)
-    district = models.CharField(max_length=24, null=True, blank=True)
+    district = models.CharField(max_length=24, null=True, blank=True, db_index=True)
     in_office = models.BooleanField()
     gender = models.CharField(max_length=1, null=True, blank=True)
     phone = models.CharField(max_length=16, null=True, blank=True)
@@ -145,11 +142,11 @@ class Legislator(models.Model):
     website = models.URLField(max_length=500, null=True, blank=True)
     webform = models.URLField(max_length=500, null=True, blank=True)
     congress_office = models.CharField(max_length=128, null=True, blank=True)
-    bioguide_id = models.CharField(unique=True, max_length=8)
-    votesmart_id = models.CharField(max_length=6)
-    fec_id = models.CharField(max_length=10)
-    govtrack_id = models.CharField(max_length=8)
-    crp_id = models.CharField(max_length=10)
+    bioguide_id = models.CharField(unique=True, max_length=8, db_index=True)
+    votesmart_id = models.CharField(max_length=6, db_index=True)
+    fec_id = models.CharField(max_length=10, db_index=True)
+    govtrack_id = models.CharField(max_length=8, db_index=True)
+    crp_id = models.CharField(max_length=10, db_index=True)
     twitter_id = models.CharField(max_length=24, null=True, blank=True)
     congresspedia_url = models.CharField(max_length=128, null=True, blank=True)
     youtube_url = models.CharField(max_length=128, null=True, blank=True)
@@ -164,6 +161,9 @@ class Legislator(models.Model):
 
     def __unicode__(self):
         return unicode("%s %s" % (self.firstname, self.lastname))
+
+    def city_state_zip(self):
+        return "%s" % (settings.WASHINGTON_DC_ADDRESS)
 
     def full_name(self):
         return unicode("%s %s" % (self.firstname, self.lastname))
@@ -187,9 +187,9 @@ class Office(models.Model):
 class StateLegislator(models.Model):
     active = models.BooleanField()
     chamber = models.CharField(max_length=16)
-    leg_id = models.CharField(max_length=16, unique=True)
+    leg_id = models.CharField(max_length=16, unique=True, db_index=True)
     level = models.CharField(max_length=16)
-    district = models.CharField(max_length=36, null=True, blank=True)
+    district = models.CharField(max_length=36, null=True, blank=True, db_index=True)
     email = models.CharField(max_length=128, null=True, blank=True)
     first_name = models.CharField(max_length=36, null=True, blank=True)
     middle_name = models.CharField(max_length=36, null=True, blank=True)
@@ -201,10 +201,10 @@ class StateLegislator(models.Model):
     state = models.CharField(max_length=2, null=True, blank=True)
     suffixes = models.CharField(max_length=24, null=True, blank=True)
     url = models.URLField(max_length=500, null=True, blank=True)
-    votesmart_id = models.CharField(max_length=6)
+    votesmart_id = models.CharField(max_length=6, db_index=True)
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
-    transparencydata_id = models.CharField(max_length=48, null=True, blank=True)
+    transparencydata_id = models.CharField(max_length=48, null=True, blank=True, db_index=True)
     all_ids = models.CharField(max_length=256, null=True, blank=True)
     country = models.CharField(max_length=2, null=True, blank=True)
 

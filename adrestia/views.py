@@ -24,29 +24,27 @@ class DelegateList(ListView):
     model = Delegate
     def get_context_data(self, **kwargs):
         context = super(DelegateList, self).get_context_data(**kwargs)
-        context['dpl_list'] = context.get('delegate_list').filter(group__abbr='DPL')
-        context['rep_list'] = context.get('delegate_list').filter(group__abbr='Rep')
-        context['sen_list'] = context.get('delegate_list').filter(group__abbr='Sen')
-        context['gov_list'] = context.get('delegate_list').filter(group__abbr='Gov')
-        context['dnc_list'] = context.get('delegate_list').filter(group__abbr='DNC')
+        queryset = self.get_queryset()
+        context['dpl_list'] = queryset.filter(group__abbr='DPL')
+        context['rep_list'] = queryset.filter(group__abbr='Rep')
+        context['sen_list'] = queryset.filter(group__abbr='Sen')
+        context['gov_list'] = queryset.filter(group__abbr='Gov')
+        context['dnc_list'] = queryset.filter(group__abbr='DNC')
+        if hasattr(self, 'state'):
+            context['state'] = self.state
         return context
 
-class DelegatesByState(ListView):
-    template_name = 'adrestia/delegate_list.html'
-    def get_context_data(self, **kwargs):
-        context = super(DelegatesByState, self).get_context_data(**kwargs)
-        context['state'] = self.state
-        context['dpl_list'] = context.get('delegate_list').filter(group__abbr='DPL')
-        context['rep_list'] = context.get('delegate_list').filter(group__abbr='Rep')
-        context['sen_list'] = context.get('delegate_list').filter(group__abbr='Sen')
-        context['gov_list'] = context.get('delegate_list').filter(group__abbr='Gov')
-        context['dnc_list'] = context.get('delegate_list').filter(group__abbr='DNC')
-        return context
     def get_queryset(self):
-        # need the state in the context 
-        self.state = State.objects.get(state=self.kwargs.get('state').upper())
-        #queryset = Delegate.objects.filter(Q(state=self.state) | Q(group__abbr='DPL'))
-        queryset = Delegate.objects.filter(Q(state__state=self.state))
+        queryset = Delegate.objects.all()
+
+        state = self.kwargs.get('state', None)
+        if state and not hasattr(self, 'state'):
+            self.state = State.objects.get(state=state.upper())
+            queryset = queryset.filter(state=self.state)
+
+        queryset = queryset.select_related(
+            'candidate', 'state_legislator', 'legislator', 'group', 'state')
+
         return queryset
 
 class DelegateDetail(DetailView):
@@ -58,25 +56,34 @@ class DelegateDetail(DetailView):
         if not self.object.legislator:
             return context
 
-        member_profile = CRP.memPFDprofile.get(
-            cid=self.object.legislator.crp_id, cycle='2014')
-        member_profile = print_dict(member_profile)
-        member_profile = member_profile['attributes']
+        try:
+            member_profile = CRP.memPFDprofile.get(
+                cid=self.object.legislator.crp_id, cycle='2014')
+            member_profile = print_dict(member_profile)
+            member_profile = member_profile['attributes']
+        except:
+            member_profile = None
 
-        contributors = CRP.candContrib.get(
-            cid=self.object.legislator.crp_id, cycle='2016')
-        contributors = print_dict(contributors)
-        meta_contributors = contributors['attributes']
-        contributors = [print_dict(c) for c in contributors['contributor']]
+        try:
+            contributors = CRP.candContrib.get(
+                cid=self.object.legislator.crp_id, cycle='2016')
+            contributors = print_dict(contributors)
+            meta_contributors = contributors['attributes']
+            contributors = [print_dict(c) for c in contributors['contributor']]
+        except:
+            contributors = None
+            meta_contributors = None
 
-        #import pprint
-        #print pprint.pprint(member_profile)
-        #print pprint.pprint(meta_contributors)
-        #print pprint.pprint(contributors)
         context['member_profile'] = member_profile
         context['contributors'] = contributors
         context['meta_contributors'] = meta_contributors
         return context
+
+    def get_queryset(self):
+        pk = self.kwargs.get('pk', None)
+        queryset = Delegate.objects.filter(pk=pk).select_related('legislator',
+                'group', 'state', 'candidate')
+        return queryset
 
 class CandidateList(ListView):
     model = Candidate
