@@ -1,0 +1,46 @@
+<div class="list-group-item">
+    <div class="row">
+        <div class="col-xs-12 col-sm-3">
+            <a href="{% url 'delegate_detail' pk=d.id %}">
+                {{ d.name }}, {{ d.state }} {{ d.group.abbr }} {% if d.legislator.district %}{{ d.group.abbr }} ({{d.legislator.district}}){% endif %}
+            </a>
+        </div>
+        <div class="col-xs-12 col-sm-3">
+                {% if d.candidate.name == 'Sanders' %}
+                    <p class="btn btn-success btn-sm pcandidate sanders">
+                    {{ d.candidate }}
+                    </p>
+                {% elif d.candidate.name == 'Clinton' %}
+                    <p class="btn btn-danger btn-sm pcandidate clinton">
+                    {{ d.candidate }}
+                    </p>
+                {% else %}
+                    <p class="btn btn-default btn-sm pcandidate uncommitted">
+                    {{ d.candidate }}
+                    </p>
+                {% endif %}
+        </div>
+        <div class="col-xs-12 col-sm-3">
+            <ul class='list-inline'>
+            {% if d.legislator.twitter_id %}
+            <li><a href="https://twitter.com/{{ d.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
+            {% endif %}
+            {% if d.legislator.facebook_id %}
+            <li><a href="https://facebook.com/{{ d.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
+            {% endif %}
+            {% if d.legislator.oc_email %}
+            <li><a href="mailto:{{ d.legislator.oc_email }}"><i class="fa fa-envelope"></i></a>
+            {% endif %}
+            </ul>
+        </div>
+        {% if d.opponents %}
+        <div class="col-xs-12 col-sm-3">
+            {% for o in d.opponents %}
+            <a href="{% url 'candidate_detail' pk=o.id %}">
+                {{ o.name }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>

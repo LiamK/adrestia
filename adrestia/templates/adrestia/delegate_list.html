@@ -1,47 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
-    <table class="table table-striped">
-        <tr>
-            <th>Delegate</th>
-            <th>State</th>
-            <th>Group</th>
-            <th>Candidate</th>
-            <th>Contact</th>
-        </tr>
-    {% for d in delegate_list %}
-    <tr>
-        <td>
-            <a href="{% url 'delegate_detail' pk=d.id %}">{{ d.name }}</a>
-        </td>
-        <td>{{ d.state }}</td>
-        <td>{{ d.group.abbr }}</td>
-        <td>
-            {% if d.candidate.name == 'Sanders' %}
-                <p class="btn btn-success btn-sm">
-                {{ d.candidate }}
-                </p>
-            {% elif d.candidate.name == 'Clinton' %}
-                <p class="btn btn-danger btn-sm">
-                {{ d.candidate }}
-                </button>
-            {% else %}
-                {{ d.candidate }}
-            {% endif %}
-        </td>
-        <td>
-        <ul class='list-inline'>
-        {% if d.legislator.twitter_id %}
-        <li><a href="https://twitter.com/{{ d.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
-        {% endif %}
-        {% if d.legislator.facebook_id %}
-        <li><a href="https://facebook.com/{{ d.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
-        {% endif %}
-        {% if d.legislator.oc_email %}
-        <li><a href="mailto:{{ d.legislator.oc_email }}"><i class="fa fa-envelope"></i></a>
-        {% endif %}
-        </ul>
-        </td>
-    </tr>
+
+    {% if state %}
+    <h2 class="text-center">{{state.name}} Super Delegates</h1>
+    {% endif %}
+    <ul class="list-group">
+    {% for d in gov_list %}
+        {% include "adrestia/delegate_row.html" %}
     {% endfor %}
-</table>
+    {% for d in sen_list %}
+        {% include "adrestia/delegate_row.html" %}
+    {% endfor %}
+    {% for d in rep_list %}
+        {% include "adrestia/delegate_row.html" %}
+    {% endfor %}
+    {% for d in dpl_list %}
+        {% include "adrestia/delegate_row.html" %}
+    {% endfor %}
+    {% for d in dnc_list %}
+        {% include "adrestia/delegate_row.html" %}
+    {% endfor %}
+    </ul>
+    There are {{ delegate_list.count }} delegates from {{ state.name }}.
 {% endblock %}

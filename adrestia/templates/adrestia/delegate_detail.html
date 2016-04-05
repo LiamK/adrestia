@@ -1,29 +1,28 @@
 {% extends "base.html" %}
 {% load humanize %}
 {% block content %}
-{{ delegate.legislator.senate_class }}
-      <script type='text/javascript'
-          src='http://www.opensecrets.org/widgets/races_widget.php?id={{delegate.legislator.state}}{{delegate.legislator.district}}'></script>
-
+<div class="row">
+    <div class="col-xs-12 col-sm-5">
         <h2>
             {% if delegate.url %}
-                <a href="{{ delegate.url }}">{{ delegate.name }}</a>
+                <a href="{{ delegate.url }}">{{ delegate.title_and_name }}</a>
             {% else %}
-                {{ delegate.name }}
+                {{ delegate.title_and_name }}
             {% endif %}
-            ({{ delegate.state }} {% if delegate.legislator.district %} {{ delegate.legislator.district }} {% endif %})
         </h2>
-        <h3>{% ifnotequal delegate.presidential_candidate.name 'Uncommitted' %}Pledged to{% endifnotequal %}
-            {% if delegate.presidential_candidate.name == "Sanders" %}
-                <span class="btn btn-success">
-                {{ delegate.presidential_candidate }}
+        <h3>{% if delegate.candidate.name != 'Uncommitted' %}Pledged to {% endif %}
+            {% if delegate.candidate.name == "Sanders" %}
+                <span class="btn btn-success pcandidate sanders">
+                {{ delegate.candidate }}
                 </span>
-            {% elif delegate.presidential_candidate.name == "Clinton" %}
-                <span class="btn btn-danger">
-                {{ delegate.presidential_candidate }}
+            {% elif delegate.candidate.name == "Clinton" %}
+                <span class="btn btn-danger pcandidate clinton">
+                {{ delegate.candidate }}
                 </span>
-            {% elif delegate.presidential_candidate.name == "Uncommitted" %}
-                {{ delegate.presidential_candidate }}
+            {% elif delegate.candidate.name == "Uncommitted" %}
+                <span class="btn btn-default pcandidate uncommitted">
+                {{ delegate.candidate }}
+                </span>
             {% endif %}
         </h3>
 
@@ -45,12 +44,16 @@
 
         <h4>
             <address>
-                {{ delegate.legislator }}</br>
+                {{ delegate.legislator.title_and_name }}</br>
                 {{ delegate.legislator.congress_office }}
             </address>
         </h4>
+        {% if delegate.legislator.phone %}
         <h4><i class="fa fa-phone"></i> {{ delegate.legislator.phone }}</h4>
+        {% endif %}
+        {% if delegate.legislator.fax %}
         <h4><i class="fa fa-fax"></i> {{ delegate.legislator.fax }}</h4>
+        {% endif %}
         <h4>
         <ul class='list-inline'>
         {% if delegate.legislator.twitter_id %}
@@ -67,14 +70,32 @@
         {% endif %}
         </ul>
         </h4>
-
-
-        {% if delegate.footnotes.all %}
-        <table class="table">
-            <tr><th>Notes</th></tr>
-        {% for f in delegate.footnotes.all %}
-        <tr><td>[{{f.id}}] <a href="{{ f.url }}">{{ f.text }}</a></td/></tr>
+    </div>
+    {% if delegate.opponents %}
+    <div class="col-xs-12 col-sm-7 opponents">
+        <h3>Opponents</h3>
+        <p>{{ delegate.title_and_name }} is being challenged by &mdash;</p>
+        <ul class="list-unstyled">
+        {% for o in delegate.opponents %}
+        <div class="candidate-thumbnail">
+        <a href="{% url 'candidate_detail' pk=o.id %}">
+            <img width=100px; src="{{ o.image_url }}">{{ o.name }}</a>
+        <a type="button" class="btn btn-success">Donate!</a> 
+        </div>
         {% endfor %}
-        </table>
+        </ul>
+    </div>
+    {% endif %}
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-4">
+        {% if delegate.footnotes.all %}
+        <h4>Notes</h4>
+        <hr/>
+        {% for f in delegate.footnotes.all %}
+        <p>[{{f.id}}] <a href="{{ f.url }}">{{ f.text }}</a></p>
+        {% endfor %}
         {% endif %}
+    </div>
+</div>
 {% endblock %}

@@ -108,6 +108,16 @@ class Delegate(models.Model):
     def __unicode__(self):
             return unicode("%s" % (self.name))
 
+    def opponents(self):
+        if self.legislator:
+            if self.name == "%s %s" % (self.legislator.firstname, self.legislator.lastname): return None
+            return Candidate.objects.filter(state=self.state, district=self.legislator.district)
+        elif self.state_legislator:
+            if self.name == self.state_legislator.full_name: return None
+            return Candidate.objects.filter(state=self.state, district=self.state_legislator.district)
+        else:
+            return None
+
     def title_and_name(self):
         if self.legislator:
             return unicode("%s. %s (%s %s)" % (

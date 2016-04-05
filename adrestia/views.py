@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db.models import Q
 from django.shortcuts import render
 from django.views.generic import ListView, TemplateView
 from django.views.generic.detail import DetailView
@@ -21,6 +22,32 @@ class Home(TemplateView):
 
 class DelegateList(ListView):
     model = Delegate
+    def get_context_data(self, **kwargs):
+        context = super(DelegateList, self).get_context_data(**kwargs)
+        context['dpl_list'] = context.get('delegate_list').filter(group__abbr='DPL')
+        context['rep_list'] = context.get('delegate_list').filter(group__abbr='Rep')
+        context['sen_list'] = context.get('delegate_list').filter(group__abbr='Sen')
+        context['gov_list'] = context.get('delegate_list').filter(group__abbr='Gov')
+        context['dnc_list'] = context.get('delegate_list').filter(group__abbr='DNC')
+        return context
+
+class DelegatesByState(ListView):
+    template_name = 'adrestia/delegate_list.html'
+    def get_context_data(self, **kwargs):
+        context = super(DelegatesByState, self).get_context_data(**kwargs)
+        context['state'] = self.state
+        context['dpl_list'] = context.get('delegate_list').filter(group__abbr='DPL')
+        context['rep_list'] = context.get('delegate_list').filter(group__abbr='Rep')
+        context['sen_list'] = context.get('delegate_list').filter(group__abbr='Sen')
+        context['gov_list'] = context.get('delegate_list').filter(group__abbr='Gov')
+        context['dnc_list'] = context.get('delegate_list').filter(group__abbr='DNC')
+        return context
+    def get_queryset(self):
+        # need the state in the context 
+        self.state = State.objects.get(state=self.kwargs.get('state').upper())
+        #queryset = Delegate.objects.filter(Q(state=self.state) | Q(group__abbr='DPL'))
+        queryset = Delegate.objects.filter(Q(state__state=self.state))
+        return queryset
 
 class DelegateDetail(DetailView):
     model = Delegate
