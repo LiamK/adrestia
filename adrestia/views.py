@@ -138,17 +138,51 @@ class CandidateDetail(DetailView):
 class ChartView(View):
     template_name = 'adrestia/chart.html'
     def get(self, request):
-        total_delegates = float(Delegate.objects.all().count())
-        candidates = PresidentialCandidate.objects.exclude(name="O'Malley").annotate(
-                dcount=Count('delegate')).order_by('name')
-        data = [
-                {
+        dtotal = float(Delegate.objects.all().count())
+        candidates = PresidentialCandidate.objects.exclude(name="O'Malley")
+        candidates = candidates.annotate(dcount=Count('delegate'))
+        candidates = candidates.order_by('name')
+
+        pledged = {
+            'Clinton':1279,
+            'Sanders':1027,
+            'Uncommitted':1959,
+        }
+        ptotal = float(sum(pledged.values()))
+        print ptotal
+
+        def series(candidates):
+            ret1 = []
+            ret2 = []
+            for c in candidates:
+                cdict1 = {
                     'name':c.name,
-                    'count':"%2d" % (c.dcount / total_delegates * 100)
+                    'scount': c.dcount, 
+                    'pcount': pledged[c.name],
+                    'data':[
+                        int('%2d'%(c.dcount/dtotal*100)),
+                        int('%2d'%(pledged[c.name]/ptotal*100)),
+                    ]
                 }
-            for c in candidates
-        ]
-        ctx = { 'data': data }
+                cdict2 = cdict1.copy()
+                if c.name == 'Clinton':
+                    clinton = cdict1.copy()
+                elif c.name == 'Sanders':
+                    sanders = cdict1.copy()
+                cdict2.pop('scount')
+                cdict2.pop('pcount')
+                ret1.append(cdict1)
+                ret2.append(cdict2)
+            return ret1, json.dumps(ret2), clinton, sanders
+        #series = lambda x:{'name':x.name,'count':c.dcount,'percent':'%2d'%(c.dcount/dtotal*100)}
+        series_data, series_json, clinton, sanders = series(candidates)
+        print series_data, series_json, clinton, sanders
+        ctx = {
+                'series_data':series_data,
+                'series_json':series_json,
+                'clinton':clinton,
+                'sanders':sanders
+                }
 
         return render(request, self.template_name, ctx)
 

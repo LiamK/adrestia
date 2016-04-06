@@ -1,27 +1,43 @@
 {% extends "base.html" %}
+{% load humanize %}
 {% block content %}
 <h2 class="text-center">Chart</h1>
-<p>{% lorem %}
-{{ data }}
+<p>This chart reveals the gulf between establishment Super Delegates and the American voters.  
+Sec. Clinton gets {{ clinton.data.0 }}% of the Super Delegates, but only {{ clinton.data.1 }}% of Democratic primary voters.</p>
+<p>{% lorem %}</p>
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 
-<div id="container" style="min-width: 320px; max-width: 800px; height: 200px; margin: 0 auto"></div>
+<div id="delegate-chart" style="min-width: 320px; max-width: 800px; height: 200px; margin: 0 auto"></div>
+<div id="delegate-table" style="min-width: 320px; max-width: 800px; height: 200px; margin: 0 auto">
+    <table class="table table-responsive table-striped">
+        <tr><th>Candidate</th><th>Pledged</th><th>Super</th></tr>
+        {% for d in series_data %}
+            <tr><td>{{d.name|intcomma}}</td><td>{{d.pcount|intcomma}}</td><td>{{d.scount|intcomma}}</td></tr>
+        {% endfor %}
+    </table>
+</div>
 
 <script>
 $(function () {
  Highcharts.setOptions({
         colors: ['#AA3333', '#559955', '#999999']
     });
-    $('#container').highcharts({
+    $('#delegate-chart').highcharts({
         chart: {
-            type: 'bar'
+            type: 'bar',
+            backgroundColor: 'rgba(255, 255, 255, 0.20)',
+/*
+            borderColor: '#FF0000',
+            borderWidth: 1
+*/
         },
         title: {
-            text: 'Super Delegate %'
+            text: 'Delegate %'
         },
         xAxis: {
-            categories: ['Super']
+            categories: ['Super', 'Pledged']
         },
         yAxis: {
             min: 0,
@@ -37,15 +53,9 @@ $(function () {
                 stacking: 'percent',
             }
         },
-        series: [
-{% for d in data %}
-        {
-            name: '{{d.name}}',
-            data: [{{d.count}}]
-        }
-{% if not forloop.last %},{% endif %}
-{% endfor %}
-        ]
+        {% autoescape off %}
+        series: eval('{{ series_json }}')
+        {% endautoescape %}
     });
 });
 </script>
