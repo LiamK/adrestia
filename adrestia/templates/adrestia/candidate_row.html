@@ -6,11 +6,11 @@
         </td>
         <td>{{ c.state }}</td>
         <td>{{ c.district }}</td>
-        <td>
+        <td class="image-shadow">
             {% if c.image_url %}
                 <a href="{{c.profile_url}}"><img width="60px" src="{{c.image_url}}"/></a></td>
             {% elif c.state_legislator.photo_url %}
-                <a href="{{c.url}}"><img width="60px" src="{{c.photo_url}}"/></a></td>
+                <a href="{{c.state_legislator.url}}"><img width="60px" src="{{c.state_legislator.photo_url}}"/></a></td>
             {% endif %}
         <td>
         <ul class='list-inline'>

@@ -1,0 +1,38 @@
+{% for office in candidate.state_legislator.offices.all %}
+<address>
+    <h4 class="office">{{ office.name }}</h4>
+    {{ candidate.name }}<br/>
+    {{ office.address }}<br/>
+    {% if office.phone %}
+    <i class="fa fa-phone"></i> {{ office.phone }}<br/>
+    {% endif %}
+    {% if office.fax %}
+    <i class="fa fa-fax"></i> {{ office.fax }}<br/>
+    {% endif %}
+    {% if office.email %}
+    <a href="mailto:{{ office.email }}"><i class="fa fa-envelope"></i> {{ office.email }}</a>
+    {% endif %}
+<address>
+    {% endfor %}
+{% if candidate.state_legislator.phone %}
+<h4><i class="fa fa-phone"></i> {{ candidate.state_legislator.phone }}</h4>
+{% endif %}
+{% if candidate.state_legislator.fax %}
+<h4><i class="fa fa-fax"></i> {{ candidate.state_legislator.fax }}</h4>
+{% endif %}
+<h4>
+<ul class='list-inline'>
+{% if candidate.state_legislator.twitter_id %}
+<li><a href="https://twitter.com/{{ candidate.state_legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
+{% endif %}
+{% if candidate.state_legislator.facebook_id %}
+<li><a href="https://facebook.com/{{ candidate.state_legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
+{% endif %}
+{% if candidate.state_legislator.youtube_url %}
+<li><a href="{{ candidate.state_legislator.youtube_url }}"><i class="fa fa-youtube"></i></a>
+{% endif %}
+{% if candidate.state_legislator.email %}
+<li><a href="mailto:{{ candidate.state_legislator.email }}"><i class="fa fa-envelope"></i></a>
+{% endif %}
+</ul>
+</h4>

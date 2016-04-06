@@ -12,15 +12,15 @@
         </h2>
         <h3>{% if delegate.candidate.name != 'Uncommitted' %}Pledged to {% endif %}
             {% if delegate.candidate.name == "Sanders" %}
-                <span class="btn btn-success pcandidate sanders">
+                <span class="sanders">
                 {{ delegate.candidate }}
                 </span>
             {% elif delegate.candidate.name == "Clinton" %}
-                <span class="btn btn-danger pcandidate clinton">
+                <span class="clinton">
                 {{ delegate.candidate }}
                 </span>
             {% elif delegate.candidate.name == "Uncommitted" %}
-                <span class="btn btn-default pcandidate uncommitted">
+                <span class="uncommitted">
                 {{ delegate.candidate }}
                 </span>
             {% endif %}
@@ -91,8 +91,7 @@
 <div class="row">
     <div class="col-xs-12 col-sm-4">
         {% if delegate.footnotes.all %}
-        <h4>Notes</h4>
-        <hr/>
+        <h4 class="note">Notes</h4>
         {% for f in delegate.footnotes.all %}
         <p>[{{f.id}}] <a href="{{ f.url }}">{{ f.text }}</a></p>
         {% endfor %}

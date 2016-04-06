@@ -1,12 +1,19 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
     {% if state %}
     <h2 class="text-center">{{state.name}} Super Delegates</h1>
     {% endif %}
+        {% crispy form %}
+        {% comment %}
+    <form action="/delegates/" method="post">
+        {% csrf_token %}
+    </form>
+        {% endcomment %}
     <ul class="list-group">
     {% for d in delegate_list %}
         {% include "adrestia/delegate_row.html" %}
     {% endfor %}
     </ul>
-    There are {{ delegate_list.count }} delegates from {{ xstate.name }}.
+    There are {{ delegate_list.count }} delegates from {{ state.name }}.
 {% endblock %}

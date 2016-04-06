@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="text-center">Chart</h1>
+<p>{% lorem %}
+{{ data }}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<div id="container" style="min-width: 320px; max-width: 800px; height: 200px; margin: 0 auto"></div>
+
+<script>
+$(function () {
+ Highcharts.setOptions({
+        colors: ['#AA3333', '#559955', '#999999']
+    });
+    $('#container').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Super Delegate %'
+        },
+        xAxis: {
+            categories: ['Super']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ''
+            }
+        },
+        legend: {
+            reversed: true
+        },
+        plotOptions: {
+            series: {
+                stacking: 'percent',
+            }
+        },
+        series: [
+{% for d in data %}
+        {
+            name: '{{d.name}}',
+            data: [{{d.count}}]
+        }
+{% if not forloop.last %},{% endif %}
+{% endfor %}
+        ]
+    });
+});
+</script>
+{% endblock %}

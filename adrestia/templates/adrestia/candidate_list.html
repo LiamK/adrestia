@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
+<p><strong>These "Bernie candidates" share the vision and values of Bernie Sanders.  We hope you will join us in supporting them. </strong>  {% lorem %}</p> 
     <table class="table table-striped">
         <tr>
             <th>Candidate</th>
             <th>State</th>
             <th>District</th>
             <th>Image</th>
+            <th></th>
         </tr>
     {% for c in candidate_list %}
     {% include "adrestia/candidate_row.html" %}

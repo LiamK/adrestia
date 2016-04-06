@@ -21,6 +21,7 @@ from adrestia.views import *
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', Home.as_view(), name='home'),
+    url(r'^chart/?$', ChartView.as_view(), name='chart'),
     url(r'^about/?$', TemplateView.as_view(template_name='adrestia/about.html'), name='about'),
     url(r'^delegates/?$', DelegateList.as_view(), name='delegate_list'),
     url(r'^delegates/(?P<state>[A-Za-z]{2,2})/?$', DelegateList.as_view(),name='delegates_by_state'),

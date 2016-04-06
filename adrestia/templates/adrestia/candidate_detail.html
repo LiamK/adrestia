@@ -7,19 +7,25 @@
             <img width="200px" src="{{ candidate.image_url}}"/>
         {% endif %}
         <h2>
+            <span class="sanders">
             {% if candidate.profile_url %}
                 <a href="{{ candidate.profile_url }}">{{ candidate.name }}</a>
             {% else %}
                 {{ candidate.name }}
             {% endif %}
-            ({{ candidate.state }} {% if candidate.district %} {{ candidate.district }} {% endif %})
+        </span>
+            <a type="button" class="btn btn-success">Donate!</a> 
         </h2>
-        <a type="button" class="btn btn-success">Donate!</a> 
+        <h3>
+        Running for: {{ candidate.state }} {% if candidate.district %} {{ candidate.district }} {% endif %}
+    </h3>
 
+        {% if candidate.profile_url %}
         <h4 class="note">Profile Page</h4>
-        <address>
-            <a href="{{ candidate.profile_url }}">{{ candidate.profile_url }}</a></br>
-        </address>
+        <p>
+            <a href="{{ candidate.profile_url }}">{{ candidate.profile_url }}</a>
+        </p>
+        {% endif %}
 
         {% if candidate.legislator %}
         {% include "adrestia/legislator_info.html" %}

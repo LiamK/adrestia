@@ -107,11 +107,13 @@ class Delegate(models.Model):
 
     def opponents(self):
         if self.legislator:
-            if self.name == "%s %s" % (self.legislator.firstname, self.legislator.lastname): return None
-            return Candidate.objects.filter(state=self.state, district=self.legislator.district)
+            qs = Candidate.objects.filter(state=self.state, district=self.legislator.district)
+            qs = qs.exclude(name__contains=self.legislator.lastname)
+            return qs
         elif self.state_legislator:
-            if self.name == self.state_legislator.full_name: return None
-            return Candidate.objects.filter(state=self.state, district=self.state_legislator.district)
+            qs = Candidate.objects.filter(state=self.state, district=self.state_legislator.district)
+            qs = qs.exclude(name__contains=self.state_legislator.last_name)
+            return qs
         else:
             return None
 

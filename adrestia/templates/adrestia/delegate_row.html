@@ -1,6 +1,6 @@
 <div class="list-group-item">
     <div class="row">
-        <div class="col-xs-12 col-sm-3">
+        <div class="col-xs-12 col-sm-4">
             <a href="{% url 'delegate_detail' pk=d.id %}">
                 {{ d.name }},
                 {% if d.legislator %}
@@ -8,26 +8,26 @@
                 {% elif d.legislator %}
                     {{ d.group.abbr }} {% if d.legislator.district %}({{ d.legislator.state }} {{d.legislator.district}}){% endif %}
                 {% else %}
-                    {{ d.group.abbr }}
+                    {{ d.group.abbr }} ({{ d.state.state }})
                 {% endif %}
             </a>
         </div>
-        <div class="col-xs-12 col-sm-3">
+        <div class="col-xs-12 col-sm-2">
                 {% if d.candidate.name == 'Sanders' %}
-                    <p class="btn btn-success btn-sm pcandidate sanders">
+                    <span class="sanders">
                     {{ d.candidate }}
-                    </p>
+                    </span>
                 {% elif d.candidate.name == 'Clinton' %}
-                    <p class="btn btn-danger btn-sm pcandidate clinton">
+                    <span class="clinton">
                     {{ d.candidate }}
-                    </p>
+                    </span>
                 {% else %}
-                    <p class="btn btn-default btn-sm pcandidate uncommitted">
+                    <span class="uncommitted">
                     {{ d.candidate }}
-                    </p>
+                    </span>
                 {% endif %}
         </div>
-        <div class="col-xs-12 col-sm-3">
+        <div class="col-xs-12 col-sm-1">
             <ul class='list-inline'>
             {% if d.legislator.twitter_id %}
             <li><a href="https://twitter.com/{{ d.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
@@ -41,11 +41,14 @@
             </ul>
         </div>
         {% if d.opponents %}
-        <div class="col-xs-12 col-sm-3">
+        <div class="col-xs-12 col-sm-5">
+            Challenger{{ d.opponents.count|pluralize }}:
             {% for o in d.opponents %}
-            <a href="{% url 'candidate_detail' pk=o.id %}">
+            {% spaceless %}
+            <span class="sanders"></span><a href="{% url 'candidate_detail' pk=o.id %}">
                 {{ o.name }}
-            </a>
+            </a>{% if not forloop.last %},{% endif %}
+            {% endspaceless %}
             {% endfor %}
         </div>
         {% endif %}
