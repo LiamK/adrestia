@@ -77,6 +77,34 @@ class Candidate(models.Model):
     def __unicode__(self):
         return unicode(self.name)
 
+    def get_delegate(self):
+        delegate = None
+        try:
+            delegate = Delegate.objects.get(
+                state=self.state,
+                legislator__district=self.district,
+                )
+            return delegate
+        except Delegate.DoesNotExist:
+            pass
+            #log.debug('No delegate found for %s', self)
+        except Delegate.MultipleObjectsReturned:
+            log.warn('Multiple matches for %s', self)
+
+        try:
+            delegate = Delegate.objects.get(
+                state=self.state,
+                state_legislator__district=self.district,
+                )
+            return delegate
+        except Delegate.DoesNotExist:
+            pass
+            #log.debug('No delegate found for %s', self)
+        except Delegate.MultipleObjectsReturned:
+            log.warn('Multiple matches for %s', self)
+
+        return None
+
 
 class Footnote(models.Model):
     url = models.URLField(max_length=500, null=True, blank=True)
