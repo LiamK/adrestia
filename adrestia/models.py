@@ -98,6 +98,7 @@ class Delegate(models.Model):
             null=True, blank=True)
     state_legislator = models.ForeignKey('StateLegislator', to_field='leg_id',
             null=True, blank=True)
+    opponents = models.ManyToManyField('Candidate')
 
     class Meta:
         ordering = ('name',)
@@ -105,7 +106,7 @@ class Delegate(models.Model):
     def __unicode__(self):
             return unicode("%s" % (self.name))
 
-    def opponents(self):
+    def get_opponents(self):
         if self.legislator:
             qs = Candidate.objects.filter(state=self.state, district=self.legislator.district)
             qs = qs.exclude(name__contains=self.legislator.lastname)

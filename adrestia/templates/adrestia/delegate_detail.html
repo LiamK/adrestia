@@ -9,6 +9,9 @@
             {% else %}
                 {{ delegate.title_and_name }}
             {% endif %}
+            {% if delegate.candidate.name == "Sanders" %}
+            <a type="button" class="btn btn-success">Donate!</a> 
+            {% endif %}
         </h2>
         <h3>{% if delegate.candidate.name != 'Uncommitted' %}Pledged to {% endif %}
             {% if delegate.candidate.name == "Sanders" %}
@@ -72,13 +75,13 @@
         </ul>
         </h4>
     </div>
-    {% if delegate.opponents %}
+    {% if delegate.opponents.all %}
     <div class="col-xs-12 col-sm-7 opponents">
         <h3>Opponents</h3>
         <p>{{ delegate.title_and_name }} is being challenged by &mdash;</p>
         <ul class="list-unstyled">
-        {% for o in delegate.opponents %}
-        <div class="candidate-thumbnail">
+        {% for o in delegate.opponents.all %}
+        <div class="img-rounded candidate-thumbnail">
         <a href="{% url 'candidate_detail' pk=o.id %}">
             <img width=100px; src="{{ o.image_url }}">{{ o.name }}</a>
         <a type="button" class="btn btn-success">Donate!</a> 

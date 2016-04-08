@@ -40,10 +40,10 @@
             {% endif %}
             </ul>
         </div>
-        {% if d.opponents %}
+        {% if d.opponents.all %}
         <div class="col-xs-12 col-sm-4">
-            Challenger{{ d.opponents.count|pluralize }}:
-            {% for o in d.opponents %}
+            Challenger{{ d.opponents.all.count|pluralize }}:
+            {% for o in d.opponents.all %}
             {% spaceless %}
             <span class="sanders"></span><a href="{% url 'candidate_detail' pk=o.id %}">
                 {{ o.name }}

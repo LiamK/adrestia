@@ -15,5 +15,7 @@
         {% include "adrestia/delegate_row.html" %}
     {% endfor %}
     </ul>
-    There are {{ delegate_list.count }} delegates from {{ state.name }}.
+    <strong class="text-muted">
+    {{ delegate_list.count }} delegates met your search criteria.
+    </strong>
 {% endblock %}

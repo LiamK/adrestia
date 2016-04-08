@@ -15,8 +15,8 @@
 {% if candidate.legislator.youtube_url %}
 <li><a href="{{ candidate.legislator.youtube_url }}"><i class="fa fa-youtube"></i></a>
 {% endif %}
-{% if candidate.legislator.oc_email %}
-<li><a href="mailto:{{ candidate.legislator.oc_email }}"><i class="fa fa-envelope"></i></a>
-{% endif %}
 </ul>
+{% if candidate.legislator.oc_email %}
+<li><a href="mailto:{{ candidate.legislator.oc_email }}"><i class="fa fa-envelope"></i> {{ candidate.legislator.oc_email }}</a>
+{% endif %}
 </h4>

@@ -1,7 +1,10 @@
+import logging
 from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse
 from django.db.models import Q, Count
 from django.shortcuts import render
+from django.core.urlresolvers import reverse
+from django.utils.http import urlquote
 from django.views.generic import ListView, TemplateView, FormView, View
 from django.views.generic.detail import DetailView
 from adrestia.models import *
@@ -9,6 +12,8 @@ import sunlight
 from crpapi import CRP
 import json
 from .forms import DelegateForm
+
+log = logging.getLogger(__name__)
 
 def print_dict(d):
     new = {}
@@ -22,38 +27,42 @@ def print_dict(d):
 class Home(TemplateView):
     template_name = 'adrestia/home.html'
 
-class DelegateList(ListView, FormView):
+class DelegateList(ListView):
     model = Delegate
-    form_class = DelegateForm
 
     def post(self, request, *args, **kwargs):
         # create a form instance and populate it with data from the request:
         form = DelegateForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            print form.cleaned_data
-            state = form.cleaned_data.get('state', None)
-            group = form.cleaned_data.get('group', None)
-            candidate = form.cleaned_data.get('candidate', None)
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            url = '/delegates/'
-            if state:
-                url += state
-            if group or candidate:
-                url += '?'
-            if group:
-                url += '&group=%s' % group
-            if candidate:
-                url += '&candidate=%s' % candidate
+            #print form.cleaned_data
+            state = form.cleaned_data.get('state', '')
+            group = form.cleaned_data.get('group', '')
+            candidate = form.cleaned_data.get('candidate', '')
+            has_opponents = form.cleaned_data.get('has_opponents', '')
+
+            url = reverse('delegate_list', kwargs={'state':state} if state else {})
+            url += '?&group={}&candidate={}&has_opponents={}'.format(
+                    group.abbr if group else '',
+                    candidate.name if candidate else '',
+                    has_opponents if has_opponents == True else '',
+                    )
+
+            log.info('Returning url: %s', url)
             return HttpResponseRedirect(url)
         else:
-            print form.errors
+            log.error(form.errors)
 
 
     def get_context_data(self, **kwargs):
+        initial = {}
+
         context = super(DelegateList, self).get_context_data(**kwargs)
+
+        group = self.request.GET.get('group', None)
+        candidate = self.request.GET.get('candidate', None)
+        has_opponents = self.request.GET.get('has_opponents', None)
+
         queryset = self.get_queryset()
         context['dpl_list'] = queryset.filter(group__abbr='DPL')
         context['rep_list'] = queryset.filter(group__abbr='Rep')
@@ -62,27 +71,43 @@ class DelegateList(ListView, FormView):
         context['dnc_list'] = queryset.filter(group__abbr='DNC')
         if hasattr(self, 'state'):
             context['state'] = self.state
+            initial['state'] = self.state
+
+        if group: initial['group'] = group
+        if candidate: initial['candidate'] = candidate
+        if has_opponents: initial['has_opponents'] = has_opponents
+
+        context['form'] = DelegateForm(initial=initial)
+
         return context
 
     def get_queryset(self):
         qs = Delegate.objects.all()
-        print dir(self.request)
 
         state = self.kwargs.get('state', None)
         group = self.request.GET.get('group', None)
         candidate = self.request.GET.get('candidate', None)
+        has_opponents = self.request.GET.get('has_opponents', None)
 
-        print 'State is: %s' % state
+        log.info("{}, {}, {}".format(state, group, candidate))
+
         if state and not hasattr(self, 'state'):
             self.state = State.objects.get(state=state.upper())
-            print 'Setting state to State: %s' % self.state
             qs = qs.filter(state=self.state)
 
         if group: qs = qs.filter(group__abbr=group)
 
         if candidate: qs = qs.filter(candidate__name=candidate)
 
-        qs = qs.select_related('candidate', 'state_legislator', 'legislator', 'group', 'state')
+        if has_opponents: qs = qs.exclude(opponents=None)
+
+        qs = qs.select_related(
+                'candidate',
+                'state_legislator',
+                'legislator',
+                'group',
+                'state')
+        qs = qs.prefetch_related('opponents')
 
         return qs
 
@@ -120,8 +145,12 @@ class DelegateDetail(DetailView):
 
     def get_queryset(self):
         pk = self.kwargs.get('pk', None)
-        queryset = Delegate.objects.filter(pk=pk).select_related('legislator',
-                'state_legislator', 'group', 'state', 'candidate')
+        queryset = Delegate.objects.filter(pk=pk).select_related(
+                'legislator',
+                'state_legislator',
+                'group',
+                'state',
+                'candidate')
         return queryset
 
 class CandidateList(ListView):
