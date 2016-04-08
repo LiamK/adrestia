@@ -6,6 +6,7 @@ colorlog==2.6.1
 Django==1.9.4
 django-appconf==1.0.1
 django-crispy-forms==1.6.0
+django-debug-toolbar==1.4
 django-email-obfuscator==0.1.4
 django-extensions==1.6.1
 django-filter==0.13.0
