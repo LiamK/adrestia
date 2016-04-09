@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 SITE_ID = 1
 
+LOCKDOWN_FORM = 'lockdown.forms.AuthForm'
+LOCKDOWN_AUTHFORM_STAFF_ONLY = True
+
 # The database only contains the Office Building/Number
 WASHINGTON_DC_ADDRESS = 'Washington, DC 20515'
 
@@ -19,18 +22,6 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'e)c^miz4f0rm4j6#-45)tg-4fo@q+xnvm*)xj3%t4780ms3#hj'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -47,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.staticfiles',
     'gunicorn',
+    'lockdown',
     'maintenancemode',
     'adrestia',
     'django_extensions',
@@ -67,6 +59,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
+    'lockdown.middleware.LockdownMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'

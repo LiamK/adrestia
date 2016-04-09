@@ -1,3 +1,4 @@
+{% load email_obfuscator %}
 {% for office in candidate.state_legislator.offices.all %}
 <address>
     <h4 class="office">{{ office.name }}</h4>
@@ -10,7 +11,7 @@
     <i class="fa fa-fax"></i> {{ office.fax }}<br/>
     {% endif %}
     {% if office.email %}
-    <a href="mailto:{{ office.email }}"><i class="fa fa-envelope"></i> {{ office.email }}</a>
+    <a href="mailto:{{ office.email|obfuscate }}"><i class="fa fa-envelope"></i> {{ office.email|obfuscate }}</a>
     {% endif %}
 <address>
     {% endfor %}
@@ -33,6 +34,6 @@
 {% endif %}
 </ul>
 {% if candidate.state_legislator.email %}
-<a href="mailto:{{ candidate.state_legislator.email }}"><i class="fa fa-envelope"></i> {{ candidate.state_legislator.email }}</a>
+<a href="mailto:{{ candidate.state_legislator.email|obfuscate }}"><i class="fa fa-envelope"></i></a>
 {% endif %}
 </h4>

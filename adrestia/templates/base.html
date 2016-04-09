@@ -34,14 +34,16 @@
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
+        <link href='http://fonts.googleapis.com/css?family=Oleo+Script' rel='stylesheet' type='text/css'>
 
         <link rel="stylesheet" href="{% static 'adrestia/css/awesome-bootstrap-checkbox.css' %}">
         <link rel="stylesheet" href="{% static 'adrestia/css/base.css' %}">
     </head>
     <body>
-{% include "adrestia/navbar.html" %}
-<div class="container">
-    {% block content %}{% endblock %}
-</div>
+        {% include "adrestia/navbar.html" %}
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+        {% include "adrestia/footer.html" %}
     </body>
 <html>

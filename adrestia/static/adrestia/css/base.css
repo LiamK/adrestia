@@ -2,6 +2,10 @@
     font-family: USDeclaration;
     src: url("../fonts/USDeclaration.ttf");
 }
+@font-face {
+    font-family: "Birds of a Feather";
+    src: url("../fonts/bfeather.ttf");
+}
 body { 
     background: url("../images/old-and-worn-parchment-paper-494x494.jpg") no-repeat center center fixed; 
     -webkit-background-size: cover;
@@ -21,6 +25,20 @@ h1 {
     margin-bottom: 2.7rem;
     opacity: 0.8;
 }
+div.header {
+    float:none;
+    position: relative;
+    margin-top: 3rem;
+}
+h1:before {
+    font-family: "Birds of a Feather";
+    content: "@";
+    font-size: 0.4em;
+    position: absolute;
+    top: -34px;
+    left: 0px;
+    color: darkbrown;
+}
 h4.note {
     border-bottom: 1px solid #898;
     width: 100%;
@@ -32,6 +50,80 @@ h4.office {
     width: 100%;
 }
 
+hr { 
+  border: 0; 
+  height: 30px; 
+  border-style: solid; 
+  border-color: #262; 
+  border-width: 1px 0 0 0; 
+  border-radius: 20px; 
+} 
+hr:before { 
+  display: block; 
+  content: ""; 
+  height: 30px; 
+  margin-top: -31px; 
+  border-style: solid; 
+  border-color: #262; 
+  border-width: 0 0 1px 0; 
+  border-radius: 20px; 
+}
+
+.intro a {
+    font-weight: bold;
+}
+/*
+.letter {
+    margin-top:20px;
+    font-family: 'Oleo Script';
+    font-size: 1.2em;
+}
+*/
+.letter
+{
+    margin-top:20px;
+    margin-bottom:20px;
+    font-family: 'Oleo Script';
+    font-size: 1.2em;
+    position: relative;
+    width: 500px;
+    padding: 50px;
+    margin: 0 auto;
+    background-color: #E5DDD8;
+    -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2), inset 0 0 50px rgba(0, 0, 0, 0.1);
+}
+.letter:before, .letter:after
+{
+    position: absolute;
+    width: 40%;
+    height: 10px;
+    content: ' ';
+    left: 12px;
+    bottom: 12px;
+    background: transparent;
+    -webkit-transform: skew(-5deg) rotate(-5deg);
+    -moz-transform: skew(-5deg) rotate(-5deg);
+    -ms-transform: skew(-5deg) rotate(-5deg);
+    -o-transform: skew(-5deg) rotate(-5deg);
+    transform: skew(-5deg) rotate(-5deg);
+    -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    z-index: -1;
+} 
+
+.letter:after
+{
+    left: auto;
+    right: 12px;
+    -webkit-transform: skew(5deg) rotate(5deg);
+    -moz-transform: skew(5deg) rotate(5deg);
+    -ms-transform: skew(5deg) rotate(5deg);
+    -o-transform: skew(5deg) rotate(5deg);
+    transform: skew(5deg) rotate(5deg);
+}
 /* candidate labels */
 span.clinton {
     color: #a33;
@@ -105,8 +197,8 @@ span.uncommitted:before {
     border-color: #595;
 }
 
-.navbar-brand {
-    font-family: USDeclaration;
+.navbar-default .navbar-brand {
+    font-family: "Birds of a Feather";
     font-size: 1.5rem;
     color: #242;
 }

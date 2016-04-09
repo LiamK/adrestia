@@ -1,3 +1,4 @@
+{% load email_obfuscator %}
 {% if candidate.legislator.phone %}
 <h4><i class="fa fa-phone"></i> {{ candidate.legislator.phone }}</h4>
 {% endif %}
@@ -15,8 +16,8 @@
 {% if candidate.legislator.youtube_url %}
 <li><a href="{{ candidate.legislator.youtube_url }}"><i class="fa fa-youtube"></i></a>
 {% endif %}
-</ul>
 {% if candidate.legislator.oc_email %}
-<li><a href="mailto:{{ candidate.legislator.oc_email }}"><i class="fa fa-envelope"></i> {{ candidate.legislator.oc_email }}</a>
+<li><a href="mailto:{{ candidate.legislator.oc_email|obfuscate }}"><i class="fa fa-envelope"></i></a>
 {% endif %}
+</ul>
 </h4>

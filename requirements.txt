@@ -10,6 +10,7 @@ django-debug-toolbar==1.4
 django-email-obfuscator==0.1.4
 django-extensions==1.6.1
 django-filter==0.13.0
+django-lockdown==1.2
 django-maintenancemode==0.11.2
 django-profiles==0.2
 django-registration==2.0.4

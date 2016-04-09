@@ -16,9 +16,9 @@ class DelegateForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(DelegateForm, self).__init__(*args, **kwargs)
 
-        self.fields['state'].empty_label = 'Select State'
-        self.fields['group'].empty_label = 'Select Group'
-        self.fields['candidate'].empty_label = 'Select Candidate'
+        self.fields['state'].empty_label = 'Any State'
+        self.fields['group'].empty_label = 'Any Group'
+        self.fields['candidate'].empty_label = 'Any Candidate'
 
         self.helper = FormHelper()
         self.helper.form_id = 'id-delegate-form'

@@ -5,8 +5,6 @@ from models import Delegate, Candidate
 
 log = logging.getLogger(__name__)
 
-log.debug('importing %s', __name__)
-
 # Signals
 @receiver(post_save, sender=Delegate)
 def add_opponents(sender, instance, **kwargs):

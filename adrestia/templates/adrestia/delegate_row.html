@@ -1,3 +1,4 @@
+{% load email_obfuscator %}
 <div class="list-group-item">
     <div class="row">
         <div class="col-xs-12 col-sm-3">
@@ -36,7 +37,7 @@
             <li><a href="https://facebook.com/{{ d.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
             {% endif %}
             {% if d.legislator.oc_email %}
-            <li><a href="mailto:{{ d.legislator.oc_email }}"><i class="fa fa-envelope"></i></a>
+            <li><a href="mailto:{{ d.legislator.oc_email|obfuscate }}"><i class="fa fa-envelope"></i></a>
             {% endif %}
             </ul>
         </div>

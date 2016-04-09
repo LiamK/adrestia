@@ -1,4 +1,4 @@
-
+{% load email_obfuscator %}
     <tr>
         <td>
             <a href="{% url 'candidate_detail' pk=c.id %}">{{ c.name }}
@@ -21,7 +21,7 @@
         <li><a href="https://facebook.com/{{ c.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
         {% endif %}
         {% if c.legislator.oc_email %}
-        <li><a href="mailto:{{ c.legislator.oc_email }}"><i class="fa fa-envelope"></i></a>
+        <li><a href="mailto:{{ c.legislator.oc_email|obfuscate }}"><i class="fa fa-envelope"></i></a>
         {% endif %}
         </ul>
         </td>
