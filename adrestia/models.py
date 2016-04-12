@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import logging
 import hashlib
 import requests
+import imghdr
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -73,14 +74,27 @@ class PresidentialCandidate(models.Model):
         return unicode(self.name)
 
 class Candidate(models.Model):
-    LEVELS = [(None, 'Any Level'), ('Federal', 'Federal'), ('State', 'State')]
-    OFFICES = [(None, 'Any Chamber'), ('Senate', 'Senate'), ('House', 'House')]
+    LEVELS = [
+            (None, 'Any Level'),
+            ('Federal', 'Federal'),
+            ('State', 'State'),
+            ('Local', 'Local'),
+            ]
+    OFFICES = [
+            (None, 'Any Office'),
+            ('Senate', 'Senate'),
+            ('House', 'House'),
+            ('Governor', 'Governor'),
+            ('Lt. Governor', 'Lt. Governor'),
+            ('Mayor', 'Mayor'),
+            ('Secretary of State', 'Secretary of State')
+            ]
     name = models.CharField(max_length=36)
     state = models.ForeignKey(State, null=True)
-    level = models.CharField(max_length=12, choices=LEVELS, null=True)
+    level = models.CharField(max_length=24, choices=LEVELS, null=True)
     office = models.CharField(max_length=24, choices=OFFICES, null=True)
     district = models.CharField(max_length=36, null=True, blank=True)
-    status = models.CharField(max_length=12, null=True)
+    status = models.CharField(max_length=24, null=True)
     serving = models.BooleanField()
     running = models.BooleanField()
     winner = models.BooleanField(default=False)
@@ -94,8 +108,8 @@ class Candidate(models.Model):
 
     profile_url = models.URLField(max_length=500, null=True, blank=True)
     website_url = models.URLField(max_length=500, null=True, blank=True)
-    facebook_url = models.URLField(max_length=500, null=True, blank=True)
-    twitter_url = models.URLField(max_length=500, null=True, blank=True)
+    facebook_id = models.CharField(max_length=64, null=True, blank=True)
+    twitter_id = models.CharField(max_length=64, null=True, blank=True)
     donate_url = models.URLField(max_length=500, null=True, blank=True)
     endorsement_url = models.URLField(max_length=500, null=True, blank=True)
     image_url = models.URLField(max_length=500, null=True, blank=True,
@@ -110,10 +124,7 @@ class Candidate(models.Model):
     def __unicode__(self):
         return unicode(self.name)
 
-    def save(self, *args, **kwargs):
-        print 'Candidate.save()'
-        print self.image
-        super(Candidate, self).save(*args, **kwargs)
+    def copy_image(self):
         if not self.image:
             if self.image_url:
                 url = self.image_url
@@ -125,15 +136,64 @@ class Candidate(models.Model):
             if url:
                 filename = url.split('/')[-1]
                 print 'filename', filename
+                log.debug('Copying %s from %s', filename, url)
                 image_file = NamedTemporaryFile(delete=True)
-                image_content = requests.get(url).content
-                image_file.write(image_content)
-                image_file.flush()
+                try:
+                    req = requests.get(url)
+                    req.raise_for_status()
+                    image_file.write(req.content)
+                    image_file.flush()
+                    # imghdr.what() tests the image data contained in the file named by
+                    # filename, and returns a string describing the image type.
+                    # If optional h is provided, the filename is ignored and h is
+                    # assumed to contain the byte stream to test.
+                    assert imghdr.what(image_file.name)
+                except requests.exceptions.RequestException, e:
+                    log.error('%s', e)
+                    return
+                except AssertionError:
+                    log.error('Not an image file: %s, %s', filename, url)
+                    return
 
-                #self.image.save(image_file, File(image_file))
-                #image_content = ContentFile(requests.get(self.image_url).content)
-                #self.image.save(image_, image_content)
                 self.image.save(filename, File(image_file))
+
+#    def save(self, *args, **kwargs):
+#        print 'Candidate.save("%s -- %s)' % (args, kwargs)
+#        print self.image
+#        super(Candidate, self).save(*args, **kwargs)
+#        if kwargs.get('delete_image'):
+#            return
+#
+#        if not self.image:
+#            if self.image_url:
+#                url = self.image_url
+#            elif self.state_legislator and self.state_legislator.photo_url:
+#                url = self.state_legislator.photo_url
+#            else:
+#                return
+#
+#            if url:
+#                filename = url.split('/')[-1]
+#                print 'filename', filename
+#                image_file = NamedTemporaryFile(delete=True)
+#                try:
+#                    req = requests.get(url)
+#                    req.raise_for_status()
+#                    image_file.write(req.content)
+#                    image_file.flush()
+#                    # imghdr.what() tests the image data contained in the file named by
+#                    # filename, and returns a string describing the image type.
+#                    # If optional h is provided, the filename is ignored and h is
+#                    # assumed to contain the byte stream to test.
+#                    assert imghdr.what(image_file.name)
+#                except requests.exceptions.RequestException, e:
+#                    log.error('%s', e)
+#                    return
+#                except AssertionError:
+#                    log.error('Not an image file: %s, %s', filename, url)
+#                    return
+#
+#                self.image.save(filename, File(image_file))
 
     def get_delegate(self):
         delegate = None

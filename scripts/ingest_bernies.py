@@ -10,10 +10,11 @@ import re
 import StringIO
 import logging
 import pytz
+import pprint
 
 from sunlight import openstates
 
-from superdelegates.models import *
+from adrestia.models import *
 
 # set encoding
 reload(sys)
@@ -38,7 +39,13 @@ def run():
     line_buffer = StringIO.StringIO('\n'.join(lines))
 
     reader = csv.DictReader(line_buffer, restval='')
+
+    multiple_legislators = []
+    missing_legislators = []
+
     for r in reader:
+        # new fields not in data
+        serving = running = winner = False
 
         name = r.get('Name')
         if not name:
@@ -49,12 +56,13 @@ def run():
             #continue;
         state = state_obj.state.lower()
 
-        status = r.get('Status')
-        if status.startswith('Serving'): status = 'Serving'
+        status = r.get('Status').strip()
+        if status.startswith('Serving'): serving = True
+        if 'Re-election' in status: running = True
+        if status == 'Candidate': running = True
 
         district = r.get('District')
         level = r.get('Level')
-        profile_url = r.get('Sanders Dem Profile')
         notes = r.get('Notes')
         image_url = r.get('img')
         office = r.get('Office')
@@ -63,6 +71,16 @@ def run():
         except ValueError:
             primary_date = None
 
+        profile_url = r.get('Sanders Dem Profile')
+        endorsement_url = r.get('Endorsement')
+        website_url = r.get('Website')
+        donate_url = r.get('Donate')
+        facebook_id = r.get('Facebook')
+        twitter_id = r.get('Twitter')
+        if facebook_id:
+            facebook_id = re.sub(r"https*://facebook.com/", '', facebook_id)
+        if twitter_id:
+            twitter_id = re.sub(r"https*://twitter.com/", '', twitter_id)
 
         tmpname = name
         tmpname = tmpname.replace(', Jr.', '')
@@ -72,10 +90,10 @@ def run():
         firstname = names[0]
         lastname = names[-1:][0]
 
-        if level not in ('State', 'Federal'):
-            continue
-        if office not in ('House', 'Senate'):
-            continue
+#        if level not in ('State', 'Federal'):
+#            continue
+#        if office not in ('House', 'Senate'):
+#            continue
 
         # expat changes
         if district == 'VT': district = '0' ## One at-large rep from VT
@@ -112,6 +130,11 @@ def run():
         # create candidate here, then tweak below
         new_values = {
             'profile_url':profile_url,
+            'website_url':website_url,
+            'twitter_id':twitter_id,
+            'facebook_id':facebook_id,
+            'donate_url':donate_url,
+            'endorsement_url':endorsement_url,
             'notes':notes,
             'image_url':image_url,
             'primary_date':primary_date,
@@ -119,6 +142,9 @@ def run():
             'office':office,
             'district':district,
             'status':status,
+            'serving':serving,
+            'running':running,
+            'winner':winner,
         }
         # treat the combination of state and name as unique for now, but
         # don't enforce
@@ -127,11 +153,11 @@ def run():
                 name=name,
                 defaults=new_values
                 )
-        print candidate
+        print '%s %s' % ('Created' if created else 'Updated', candidate)
 
         # First go through the incumbents and cross-reference with sunlight
         # openstates dataset to get information
-        if status == 'Serving':
+        if 'Serving' in status:
             legislators = None
             if level == 'Federal':
                 if office == 'House':
@@ -184,11 +210,12 @@ def run():
             if legislators:
                 if len(legislators) == 1:
                     leg_obj = legislators[0]
-                    print name
                     if type(leg_obj) == dict:
                         # these values are showing up in the json, but are not documented.
                         # id is a duplicate of leg_id that conflicts with # the 'id' in the Django model
                         leg_obj.pop('id', None)
+                        leg_obj.pop('nimsp_candidate_id', None)
+                        leg_obj.pop('nimsp_id', None)
                         leg_obj.pop('csrfmiddlewaretoken', None)
                         leg_obj.pop('nickname', None)
                         leg_obj.pop('office_phone', None)
@@ -207,7 +234,12 @@ def run():
                                 '%Y-%m-%d %H:%M:%S')
                         leg_obj['updated_at'] = tzaware_from_string(leg_obj['updated_at'],
                                 '%Y-%m-%d %H:%M:%S')
-                        state_leg, created = StateLegislator.objects.update_or_create(**leg_obj)
+
+                        leg_id = leg_obj.pop('leg_id')
+
+
+
+                        state_leg, created = StateLegislator.objects.update_or_create(leg_id=leg_id, defaults=leg_obj)
                         candidate.state_legislator = state_leg
                         candidate.district = leg_obj['district']
 
@@ -220,11 +252,13 @@ def run():
                         candidate.legislator = leg_obj
                     candidate.save()
                 else:
-                    print name,
+                    multiple_legislators.append( [(l, type(l)) for l in legislators] )
                     print [(l, type(l)) for l in legislators]
                     #log.info(name)
                     #print name, state, district, ' -- ', legislators
             else: 
+                missing_legislators.append("%s (%s %s) %s %s %s %s %s" % ( name, firstname,
+                        lastname, state.upper(), level, office, district, status))
                 print("%s (%s %s) %s %s %s %s %s" % ( name, firstname,
                         lastname, state.upper(), level, office, district, status))
                 #log.error("%s (%s %s) %s %s %s %s %s", name, firstname,
@@ -236,5 +270,10 @@ def run():
         else:
             print "Unknown status: '%s'" % status
 
+    print "These need to be processed manually"
+    print "Multiples"
+    print pprint.pprint(multiple_legislators)
+    print "Missing from Sunlight data"
+    print pprint.pprint(missing_legislators)
     sys.exit(0)
 

@@ -4,8 +4,7 @@
 <div class="list-group-item">
     <div class="row">
         <div class="col-xs-3 col-sm-3">
-            <a href="{% url 'candidate_detail' pk=c.id %}">{{ c.name }}
-                    {% if c.status == 'Serving' %}(Incumbent) {% endif %}</a>
+            <a href="{% url 'candidate_detail' pk=c.id %}">{{ c.name }}</a>
         </div>
         <div class="col-xs-2 col-sm-2">
             {{ c.state }}&nbsp;{{ c.district }}
@@ -27,29 +26,42 @@
         </div>
         <div class="col-xs-12 col-sm-2">
             <ul class='list-inline'>
-            {% if c.legislator.twitter_id %}
-            <li><a href="https://twitter.com/{{ c.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
+            {% if c.twitter_id %}
+            <li><a target="_blank" href="https://twitter.com/{{ c.twitter_id }}"><i class="fa fa-twitter"></i></a>
+            {% elif c.legislator.twitter_id %}
+            <li><a target="_blank" href="https://twitter.com/{{ c.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
             {% endif %}
-            {% if c.legislator.facebook_id %}
-            <li><a href="https://facebook.com/{{ c.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
+            {% if c.facebook_id %}
+            <li><a target="_blank" href="https://facebook.com/{{ c.facebook_id }}"><i class="fa fa-facebook"></i></a>
+            {% elif c.legislator.facebook_id %}
+            <li><a target="_blank" href="https://facebook.com/{{ c.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
             {% endif %}
             {% if c.legislator.oc_email %}
             <li><a href="mailto:{{ c.legislator.oc_email|obfuscate }}"><i class="fa fa-envelope"></i></a>
+            {% endif %}
+            {% if c.website_url %}
+            <li><a target="_blank" href="{{ c.website_url }}"><i class="fa fa-globe"></i></a>
+            {% endif %}
+            {% if c.donate_url %}
+            <li><a target="_blank" href="{{ c.donate_url }}"><i class="fa fa-usd"></i></a>
             {% endif %}
             </ul>
         </div>
         <div class="col-xs-12 col-sm-3 image-shadow">
                 {% if c.image %}
                     {% thumbnail c.image "x75" as im %} 
-                    <img class="thumbnail-img"
-                        src="{{im.url}}"
+                    <img src="{{im.url}}"
                         width="{{im.width}}"
                         height="{{im.height}}"/>
                     {% endthumbnail %}
+
+                {% comment %}
                 {% elif c.image_url %}
                     <a href="{{c.profile_url}}"><img class="thumbnail-img" src="{{c.image_url}}"/></a>
                 {% elif c.state_legislator.photo_url %}
                     <a href="{{c.state_legislator.url}}"><img class="thumbnail-img" src="{{c.state_legislator.photo_url}}"/></a>
+                {% endcomment %}
+
                 {% endif %}
         </div>
     </div>

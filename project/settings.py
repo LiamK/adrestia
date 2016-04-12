@@ -178,6 +178,10 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'color',
         },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'color',
+        },
     },
     'loggers': {
         'django': {
@@ -185,6 +189,10 @@ LOGGING = {
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'adrestia': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        },
+        'sorl.thumbnail': {
             'handlers': ['console'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },

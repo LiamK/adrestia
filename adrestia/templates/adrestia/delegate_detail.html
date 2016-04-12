@@ -88,13 +88,10 @@
         <a href="{% url 'candidate_detail' pk=o.id %}">
             {% if o.image %}
                 {% thumbnail o.image "x200" as im %}
-                <img class="thumbnail-img"
-                    src="{{im.url}}"
-                    xwidth="{{im.width}}"
-                    xheight="{{im.height}}"/>
+                <img src="{{im.url}}"
+                    width="{{im.width}}"
+                    height="{{im.height}}"/>
                 {% endthumbnail %}
-            {% elif o.image_url %}
-                <img src="{{ o.image_url }}">
             {% endif %}
             {{ o.name }}</a>
         <a type="button" class="btn btn-success">Donate!</a> 

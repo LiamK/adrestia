@@ -1,45 +1,71 @@
 {% extends "base.html" %}
 {% load humanize %}
 {% load thumbnail %}
+{% load email_obfuscator %}
 {% block title %}Bernie Candidates{% endblock %}
 {% block content %}
+<script>
+$(function () {
+      $('[data-toggle="popover"]').popover()
+})
+</script>
 <div class="row">
     <div class="col-xs-12 col-sm-5">
         {% if candidate.image %}
             {% thumbnail candidate.image "x200" as im %} 
-            <img class="thumbnail-img"
-                src="{{im.url}}"
+            <img src="{{im.url}}"
                 width="{{im.width}}"
                 height="{{im.height}}"/>
             {% endthumbnail %}
-        {% elif candidate.image_url %}
-            <img width="200px" src="{{ candidate.image_url}}"/>
         {% endif %}
         <h2>
             <span class="sanders">
             {% if candidate.profile_url %}
-                <a href="{{ candidate.profile_url }}">{{ candidate.name }}</a>
+            <a href="{{ candidate.profile_url }}">{{ candidate.name }}</a>
             {% else %}
                 {{ candidate.name }}
             {% endif %}
         </span>
-            <a type="button" class="btn btn-success">Donate!</a> 
+        {% if candidate.donate_url %}
+            <a type="button" href="{{ candidate.donate_url }}" class="btn btn-success">Donate!</a> 
+        {% else %}
+        <a type="button" href="#"
+            class="btn btn-warning",
+            data-toggle="popover",
+            title="Hey!",
+            data-trigger="focus",
+            data-content="We don't have a link to this candidate's donation page!  To update candidate information, please contact {{ 'info@dearsuperdelegate.com'|obfuscate }}",
+            >Donate!</a> 
+        {% endif %}
         </h2>
         <h3>
         Running for: {{ candidate.state }} {% if candidate.district %} {{ candidate.district }} {% endif %}
     </h3>
 
+        <h4 class="note">Links</h4>
         {% if candidate.profile_url %}
-        <h4 class="note">Profile Page</h4>
-        <p>
-            <a href="{{ candidate.profile_url }}">{{ candidate.profile_url }}</a>
-        </p>
+            <p><a href="{{ candidate.profile_url }}"><i class="fa fa-user"></i> Profile</a></p>
+        {% endif %}
+        {% if candidate.website_url %}
+            <p><a href="{{ candidate.website_url }}"><i class="fa fa-globe"></i> Website</a></p>
+        {% endif %}
+        {% if candidate.facebook_id %}
+            <p><a href="https://facebook.com/{{ candidate.facebook_id }}"><i class="fa fa-facebook"></i> Facebook</a></p>
+        {% endif %}
+        {% if candidate.twitter_id %}
+            <p><a href="https://twitter.com/{{ candidate.twitter_id }}"><i class="fa fa-twitter"></i> Twitter</a></p>
+        {% endif %}
+        {% if candidate.endorsement_url %}
+            <p><a href="{{ candidate.endorsement_url }}"><i class="fa fa-thumbs-up"></i> Endorsement</a></p>
         {% endif %}
 
-        {% if candidate.legislator %}
-        {% include "adrestia/legislator_info.html" %}
-        {% elif candidate.state_legislator %} 
-        {% include "adrestia/state_legislator_info.html" %}
+        {% if candidate.legislator  or candidate.state_legislator %}
+            <h4 class="note">More Info</h4>
+            {% if candidate.legislator %}
+            {% include "adrestia/legislator_info.html" %}
+            {% elif candidate.state_legislator %} 
+            {% include "adrestia/state_legislator_info.html" %}
+            {% endif %}
         {% endif %}
     </div>
 </div>
