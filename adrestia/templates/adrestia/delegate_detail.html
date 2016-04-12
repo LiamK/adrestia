@@ -4,6 +4,11 @@
 {% load thumbnail %}
 {% block title %}Super Delegates{% endblock %}
 {% block content %}
+<script>
+$(function () {
+      $('[data-toggle="popover"]').popover()
+})
+</script>
 <div class="row">
     <div class="col-xs-12 col-sm-5">
         <h2>
@@ -11,9 +16,6 @@
                 <a href="{{ delegate.url }}">{{ delegate.title_and_name }}</a>
             {% else %}
                 {{ delegate.title_and_name }}
-            {% endif %}
-            {% if delegate.candidate.name == "Sanders" %}
-            <a type="button" class="btn btn-success">Donate!</a> 
             {% endif %}
         </h2>
         <h3>{% if delegate.candidate.name != 'Uncommitted' %}Pledged to {% endif %}
@@ -94,7 +96,20 @@
                 {% endthumbnail %}
             {% endif %}
             {{ o.name }}</a>
-        <a type="button" class="btn btn-success">Donate!</a> 
+
+                {% if o.donate_url %}
+                    <a type="button" href="{{ o.donate_url }}" class="btn btn-success">Donate!</a> 
+                {% else %}
+                <a type="button" href="#"
+                    class="btn btn-warning",
+                    data-toggle="popover",
+                    title="Hey!",
+                    data-trigger="focus",
+                    data-content="We don't have a link to this candidate's donation page!  To update candidate information, please contact {{ 'info@dearsuperdelegate.com'|obfuscate }}",
+                    >Donate!</a> 
+                {% endif %}
+
+
         </div>
         {% endfor %}
         </ul>
