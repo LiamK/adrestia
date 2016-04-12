@@ -12,10 +12,6 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 SITE_ID = 1
 
-#LOCKDOWN_FORM = 'lockdown.forms.AuthForm'
-LOCKDOWN_PASSWORDS = ['MeghanR0cks']
-#LOCKDOWN_AUTHFORM_STAFF_ONLY = True
-
 # The database only contains the Office Building/Number
 WASHINGTON_DC_ADDRESS = 'Washington, DC 20515'
 
