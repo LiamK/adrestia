@@ -11,7 +11,7 @@ from adrestia.models import *
 import sunlight
 from crpapi import CRP
 import json
-from .forms import DelegateForm
+from .forms import DelegateForm, CandidateForm
 
 log = logging.getLogger(__name__)
 
@@ -155,14 +155,87 @@ class DelegateDetail(DetailView):
 
 class CandidateList(ListView):
     model = Candidate
+    def post(self, request, *args, **kwargs):
+        # create a form instance and populate it with data from the request:
+        form = CandidateForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            #print form.cleaned_data
+            state = form.cleaned_data.get('state', '')
+            level = form.cleaned_data.get('level', '')
+            office = form.cleaned_data.get('office', '')
+
+            url = reverse('candidate_list', kwargs={'state':state} if state else {})
+            url += '?&level={}&office={}&'.format(
+                    level if level else '',
+                    office if office else ''
+                    )
+
+            log.info('Returning url: %s', url)
+            return HttpResponseRedirect(url)
+        else:
+            log.error(form.errors)
+
+#    def get(self, request, *args, **kwargs):
+#        format = self.request.GET.get('format', None)
+#        if not format:
+#            return super(CandidateList, self).get(request, *args, **kwargs)
+#        else:
+#            return HttpResponse(json.dumps(self.get_queryset()))
+
+
+
+    def get_context_data(self, **kwargs):
+        initial = {}
+
+        context = super(CandidateList, self).get_context_data(**kwargs)
+
+        level = self.request.GET.get('level', None)
+        office = self.request.GET.get('office', None)
+
+        if hasattr(self, 'state'):
+            context['state'] = self.state
+            initial['state'] = self.state
+
+        if level: initial['level'] = level
+        if office: initial['office'] = office
+
+        context['form'] = CandidateForm(initial=initial)
+
+        return context
+
     def get_queryset(self):
-        pk = self.kwargs.get('pk', None)
-        queryset = Candidate.objects.all().select_related('legislator',
-                'state_legislator', 'state')
-        return queryset
+        qs = Candidate.objects.all()
+
+        state = self.kwargs.get('state', None)
+        level = self.request.GET.get('level', None)
+        office = self.request.GET.get('office', None)
+
+        log.info("{}, {}, {}".format(state, level, office))
+
+        if state and not hasattr(self, 'state'):
+            self.state = State.objects.get(state=state.upper())
+            qs = qs.filter(state=self.state)
+
+        if level: qs = qs.filter(level=level)
+
+        if office: qs = qs.filter(office=office)
+
+        qs = qs.select_related(
+                'state_legislator',
+                'legislator',
+                'state')
+
+        return qs
+
 
 class CandidateDetail(DetailView):
     model = Candidate
+    def get_queryset(self):
+        pk = self.kwargs.get('pk', None)
+        queryset = Candidate.objects.filter(pk=pk).select_related('legislator',
+                'state_legislator', 'state')
+        return queryset
 
 class ChartView(View):
     template_name = 'adrestia/chart.html'
@@ -178,7 +251,6 @@ class ChartView(View):
             'Uncommitted':1959,
         }
         ptotal = float(sum(pledged.values()))
-        print ptotal
 
         def series(candidates):
             ret1 = []

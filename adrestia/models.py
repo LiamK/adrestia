@@ -1,16 +1,31 @@
 from __future__ import unicode_literals
 
 import logging
+import hashlib
+import requests
 
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.gis.db import models
 from django.core.cache import cache
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
+from django.core.files.base import ContentFile
 from django.db.models.signals import post_save, post_delete
 from django.utils.html import format_html
 from django.utils.text import slugify
 
 log = logging.getLogger(__name__)
+
+def make_digest(instance, filename):
+    """ Make digest filename, with leading Candidate id number """
+    print 'make_digest...'
+    ext = filename.split('.')[-1]
+    m = hashlib.md5()
+    m.update(filename)
+    filename = "%d-%s.%s" % (instance.id, m.hexdigest(), ext)
+    return filename
+
 
 class Zip(models.Model):
     code = models.CharField(max_length=5, unique=True)
@@ -29,6 +44,8 @@ class State(models.Model):
     name = models.CharField(max_length=36)
     fips_state = models.CharField(max_length=2, default='ZZ')
     census_region_name = models.CharField(max_length=12, default='ZZ')
+    primary_date = models.DateField(null=True, blank=True)
+    general_date = models.DateField(null=True, blank=True)
 
     class Meta:
         ordering = ('state',)
@@ -56,26 +73,67 @@ class PresidentialCandidate(models.Model):
         return unicode(self.name)
 
 class Candidate(models.Model):
+    LEVELS = [(None, 'Any Level'), ('Federal', 'Federal'), ('State', 'State')]
+    OFFICES = [(None, 'Any Chamber'), ('Senate', 'Senate'), ('House', 'House')]
     name = models.CharField(max_length=36)
     state = models.ForeignKey(State, null=True)
-    level = models.CharField(max_length=12, null=True)
-    office = models.CharField(max_length=24, null=True)
+    level = models.CharField(max_length=12, choices=LEVELS, null=True)
+    office = models.CharField(max_length=24, choices=OFFICES, null=True)
     district = models.CharField(max_length=36, null=True, blank=True)
     status = models.CharField(max_length=12, null=True)
-    profile_url = models.URLField(max_length=500, null=True, blank=True)
+    serving = models.BooleanField()
+    running = models.BooleanField()
+    winner = models.BooleanField(default=False)
     notes = models.TextField(null=True, blank=True)
-    image_url = models.URLField(max_length=500, null=True, blank=True)
     primary_date = models.DateField(null=True, blank=True)
     legislator = models.ForeignKey('Legislator', to_field='bioguide_id',
             null=True, blank=True)
     state_legislator = models.ForeignKey('StateLegislator', to_field='leg_id',
             null=True, blank=True)
 
+
+    profile_url = models.URLField(max_length=500, null=True, blank=True)
+    website_url = models.URLField(max_length=500, null=True, blank=True)
+    facebook_url = models.URLField(max_length=500, null=True, blank=True)
+    twitter_url = models.URLField(max_length=500, null=True, blank=True)
+    donate_url = models.URLField(max_length=500, null=True, blank=True)
+    endorsement_url = models.URLField(max_length=500, null=True, blank=True)
+    image_url = models.URLField(max_length=500, null=True, blank=True,
+            help_text='Enter an image URL here and the image will be uploaded')
+    image = models.ImageField(null=True, blank=True, upload_to=make_digest,
+            help_text='Enter a local image file her to upload')
+
+
     class Meta:
         ordering = ('name',)
 
     def __unicode__(self):
         return unicode(self.name)
+
+    def save(self, *args, **kwargs):
+        print 'Candidate.save()'
+        print self.image
+        super(Candidate, self).save(*args, **kwargs)
+        if not self.image:
+            if self.image_url:
+                url = self.image_url
+            elif self.state_legislator and self.state_legislator.photo_url:
+                url = self.state_legislator.photo_url
+            else:
+                return
+
+            if url:
+                filename = url.split('/')[-1]
+                print 'filename', filename
+                image_file = NamedTemporaryFile(delete=True)
+                image_content = requests.get(url).content
+                image_file.write(image_content)
+                image_file.flush()
+
+                #self.image.save(image_file, File(image_file))
+                #image_content = ContentFile(requests.get(self.image_url).content)
+                #self.image.save(image_, image_content)
+                self.image.save(filename, File(image_file))
 
     def get_delegate(self):
         delegate = None

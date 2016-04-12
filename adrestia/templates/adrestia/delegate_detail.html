@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load humanize %}
 {% load email_obfuscator %}
+{% load thumbnail %}
+{% block title %}Super Delegates{% endblock %}
 {% block content %}
 <div class="row">
     <div class="col-xs-12 col-sm-5">
@@ -77,14 +79,24 @@
         </h4>
     </div>
     {% if delegate.opponents.all %}
-    <div class="col-xs-12 col-sm-7 opponents">
+    <div class="col-xs-12 col-sm-7">
         <h3>Opponents</h3>
         <p>{{ delegate.title_and_name }} is being challenged by &mdash;</p>
         <ul class="list-unstyled">
         {% for o in delegate.opponents.all %}
-        <div class="img-rounded candidate-thumbnail">
+        <div class="img-rounded opponent">
         <a href="{% url 'candidate_detail' pk=o.id %}">
-            <img width=100px; src="{{ o.image_url }}">{{ o.name }}</a>
+            {% if o.image %}
+                {% thumbnail o.image "x200" as im %}
+                <img class="thumbnail-img"
+                    src="{{im.url}}"
+                    xwidth="{{im.width}}"
+                    xheight="{{im.height}}"/>
+                {% endthumbnail %}
+            {% elif o.image_url %}
+                <img src="{{ o.image_url }}">
+            {% endif %}
+            {{ o.name }}</a>
         <a type="button" class="btn btn-success">Donate!</a> 
         </div>
         {% endfor %}

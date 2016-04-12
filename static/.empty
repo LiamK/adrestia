@@ -1,0 +1,2 @@
+This is here so git can commit the directory.
+Static files are copied here by collectstatic during deployment.

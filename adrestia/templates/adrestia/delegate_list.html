@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% block title %}Super Delegates{% endblock %}
 {% block content %}
 
     {% if state %}
     <h2 class="text-center">{{state.name}} Super Delegates</h1>
+    {% else %}
+    <h2 class="text-center">Meet the Super Delegates</h1>
     {% endif %}
 
     {% crispy form %}

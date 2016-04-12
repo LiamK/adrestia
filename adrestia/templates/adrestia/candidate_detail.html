@@ -1,9 +1,18 @@
 {% extends "base.html" %}
 {% load humanize %}
+{% load thumbnail %}
+{% block title %}Bernie Candidates{% endblock %}
 {% block content %}
 <div class="row">
     <div class="col-xs-12 col-sm-5">
-        {% if candidate.image_url %}
+        {% if candidate.image %}
+            {% thumbnail candidate.image "x200" as im %} 
+            <img class="thumbnail-img"
+                src="{{im.url}}"
+                width="{{im.width}}"
+                height="{{im.height}}"/>
+            {% endthumbnail %}
+        {% elif candidate.image_url %}
             <img width="200px" src="{{ candidate.image_url}}"/>
         {% endif %}
         <h2>

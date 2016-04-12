@@ -23,12 +23,15 @@ urlpatterns = [
     url(r'^$', Home.as_view(), name='home'),
     url(r'^chart/?$', ChartView.as_view(), name='chart'),
     url(r'^about/?$', TemplateView.as_view(template_name='adrestia/about.html'), name='about'),
+    url(r'^privacy_policy/?$', TemplateView.as_view(template_name='adrestia/privacy_policy.html'), name='privacy_policy'),
     url(r'^delegates/?$', DelegateList.as_view(), name='delegate_list'),
     url(r'^delegates/(?P<state>[A-Za-z]{2,2})/?$', DelegateList.as_view(),name='delegate_list'),
     url(r'^delegates/(?P<pk>[0-9]+)/?$', DelegateDetail.as_view(), name='delegate_detail'),
     url(r'^candidates/?$', CandidateList.as_view(), name='candidate_list'),
+    url(r'^candidates/(?P<state>[A-Za-z]{2,2})/?$', CandidateList.as_view(),name='candidate_list'),
     url(r'^candidates/(?P<pk>[0-9]+)/?$', CandidateDetail.as_view(),
         name='candidate_detail'),
+    url(r'^api/', include('adrestia.api.urls')),
 ]
 
 if settings.DEBUG:

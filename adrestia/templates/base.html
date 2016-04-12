@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Delegate List</title>
+        <title>{% block title %}{% endblock %}</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1, user-scalable=no">
@@ -38,6 +38,8 @@
 
         <link rel="stylesheet" href="{% static 'adrestia/css/awesome-bootstrap-checkbox.css' %}">
         <link rel="stylesheet" href="{% static 'adrestia/css/base.css' %}">
+
+        <script src="{% static 'adrestia/js/google_analytics.js' %}"></script>
     </head>
     <body>
         {% include "adrestia/navbar.html" %}

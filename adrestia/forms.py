@@ -2,7 +2,7 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Field, Submit
-from .models import State, DNCGroup, PresidentialCandidate
+from .models import State, DNCGroup, PresidentialCandidate, Candidate
 
 class StateModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
@@ -45,3 +45,30 @@ class DelegateForm(forms.Form):
     candidate = forms.ModelChoiceField(label='',
             to_field_name='name', queryset=PresidentialCandidate.objects.all().order_by('name'), required=False)
     has_opponents = forms.BooleanField(label='Opponent?', required=False)
+
+class CandidateForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(CandidateForm, self).__init__(*args, **kwargs)
+
+        self.fields['state'].empty_label = 'Any State'
+        self.fields['level'].empty_label = 'Any Level'
+        self.fields['office'].empty_label = 'Any Office'
+
+        self.helper = FormHelper()
+        self.helper.form_id = 'id-candidate-form'
+        self.helper.form_class = 'form-inline'
+        self.helper.field_template = 'adrestia/bootstrap3/layout/inline_field.html'
+        self.helper.form_method = 'post'
+        self.helper.form_action = 'candidate_list'
+
+        self.helper.add_input(Submit('submit', 'Submit'))
+        self.helper.layout = Layout(
+                Field('state', template=self.helper.field_template),
+                Field('level', template=self.helper.field_template),
+                Field('office', template=self.helper.field_template),
+                )
+
+    state = StateModelChoiceField(label='',
+            to_field_name='state', queryset=State.objects.all().order_by('name'), required=False)
+    level = forms.ChoiceField(label='', choices=Candidate.LEVELS, required=False)
+    office = forms.ChoiceField(label='', choices=Candidate.OFFICES, required=False)

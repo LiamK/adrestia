@@ -1,28 +1,56 @@
 {% load email_obfuscator %}
-    <tr>
-        <td>
+{% load adrestia_tags %}
+{% load thumbnail %}
+<div class="list-group-item">
+    <div class="row">
+        <div class="col-xs-3 col-sm-3">
             <a href="{% url 'candidate_detail' pk=c.id %}">{{ c.name }}
-                {% if c.status == 'Serving' %}(Incumbent) {% endif %}</a>
-        </td>
-        <td>{{ c.state }}</td>
-        <td>{{ c.district }}</td>
-        <td class="image-shadow">
-            {% if c.image_url %}
-                <a href="{{c.profile_url}}"><img width="60px" src="{{c.image_url}}"/></a></td>
-            {% elif c.state_legislator.photo_url %}
-                <a href="{{c.state_legislator.url}}"><img width="60px" src="{{c.state_legislator.photo_url}}"/></a></td>
+                    {% if c.status == 'Serving' %}(Incumbent) {% endif %}</a>
+        </div>
+        <div class="col-xs-2 col-sm-2">
+            {{ c.state }}&nbsp;{{ c.district }}
+        </div>
+        <div class="col-xs-2 col-sm-2">
+            {% incumbent_or_opponent c %}
+            {% comment %}
+            {% contains c.name c.legislator.lastname as legislator_match %}
+            {% if legislator_match %}
+                Incumbent
+            {% elif c.legislator %}
+                {{ c.legislator.firstname }} {{ c.legislator.lastname }}
+            {% elif c.state_legislator and contains c.name c.state_legislater.last_name %}
+                Incumbent
+            {% elif c.state_legislator %}
+                {{ c.state_legislator.full_name }}
             {% endif %}
-        <td>
-        <ul class='list-inline'>
-        {% if c.legislator.twitter_id %}
-        <li><a href="https://twitter.com/{{ c.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
-        {% endif %}
-        {% if c.legislator.facebook_id %}
-        <li><a href="https://facebook.com/{{ c.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
-        {% endif %}
-        {% if c.legislator.oc_email %}
-        <li><a href="mailto:{{ c.legislator.oc_email|obfuscate }}"><i class="fa fa-envelope"></i></a>
-        {% endif %}
-        </ul>
-        </td>
-    </tr>
+            {% endcomment %}
+        </div>
+        <div class="col-xs-12 col-sm-2">
+            <ul class='list-inline'>
+            {% if c.legislator.twitter_id %}
+            <li><a href="https://twitter.com/{{ c.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
+            {% endif %}
+            {% if c.legislator.facebook_id %}
+            <li><a href="https://facebook.com/{{ c.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
+            {% endif %}
+            {% if c.legislator.oc_email %}
+            <li><a href="mailto:{{ c.legislator.oc_email|obfuscate }}"><i class="fa fa-envelope"></i></a>
+            {% endif %}
+            </ul>
+        </div>
+        <div class="col-xs-12 col-sm-3 image-shadow">
+                {% if c.image %}
+                    {% thumbnail c.image "x75" as im %} 
+                    <img class="thumbnail-img"
+                        src="{{im.url}}"
+                        width="{{im.width}}"
+                        height="{{im.height}}"/>
+                    {% endthumbnail %}
+                {% elif c.image_url %}
+                    <a href="{{c.profile_url}}"><img class="thumbnail-img" src="{{c.image_url}}"/></a>
+                {% elif c.state_legislator.photo_url %}
+                    <a href="{{c.state_legislator.url}}"><img class="thumbnail-img" src="{{c.state_legislator.photo_url}}"/></a>
+                {% endif %}
+        </div>
+    </div>
+</div>

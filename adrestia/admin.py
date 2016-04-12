@@ -1,9 +1,31 @@
 from django.contrib import admin
 from .models import *
 
+
 class CandidateAdmin(admin.ModelAdmin):
-    list_display = ('name', 'state', 'district', 'level', 'office')
-    list_filter = ('level', 'office', 'status', 'state')
+    list_display = ('name', 'state', 'district', 'level', 'office',
+            #'status',
+    'serving', 'running', 
+            'winner',
+'website_url',
+'facebook_url',
+'twitter_url',
+'donate_url',
+'endorsement_url',
+'image',
+    )
+    list_filter = ('level', 'office', 'status', 'serving', 'running',
+            'winner', 'state')
+    list_editable = ('office', 'level', 'serving', 'running',
+            #'status',
+            'winner',
+'website_url',
+'facebook_url',
+'twitter_url',
+'donate_url',
+'endorsement_url',
+'image',
+            )
     search_fields = ('name',)
 
 class FootnoteAdmin(admin.ModelAdmin):
@@ -28,7 +50,9 @@ class LegislatorAdmin(admin.ModelAdmin):
     search_fields = ('firstname', 'lastname', 'nickname')
 
 class StateAdmin(admin.ModelAdmin):
-    list_display = ('name', 'state')
+    list_display = ('name', 'state', 'census_region_name', 'primary_date', 'general_date')
+    list_editable = ('primary_date', 'general_date')
+    list_filter = ('census_region_name',)
     search_fields = ('name',)
 
 class OfficeInline(admin.TabularInline):

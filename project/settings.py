@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 SITE_ID = 1
 
-LOCKDOWN_FORM = 'lockdown.forms.AuthForm'
-LOCKDOWN_AUTHFORM_STAFF_ONLY = True
+#LOCKDOWN_FORM = 'lockdown.forms.AuthForm'
+LOCKDOWN_PASSWORDS = ['MeghanR0cks']
+#LOCKDOWN_AUTHFORM_STAFF_ONLY = True
 
 # The database only contains the Office Building/Number
 WASHINGTON_DC_ADDRESS = 'Washington, DC 20515'
@@ -45,11 +46,14 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'email_obfuscator',
     'colorlog',
+    'storages',
+    'sorl.thumbnail',
+    'rest_framework',
 ]
 
 MIDDLEWARE_CLASSES = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
+    #'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -58,7 +62,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    #'django.middleware.cache.FetchFromCacheMiddleware',
     'lockdown.middleware.LockdownMiddleware',
 ]
 
@@ -116,20 +120,28 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.9/howto/static-files/
-
-STATIC_URL = '/static/'
-
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 CRISPY_FAIL_SILENTLY = False
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    #'DEFAULT_PERMISSION_CLASSES': [
+        #'playaevents.api.permissions.ApiUserPermission',
+    #],
+    'DEFAULT_FILTER_BACKENDS': ['rest_framework.filters.DjangoFilterBackend'],
+    #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_PAGINATION_CLASS': None,
+    'PAGE_SIZE': 100,
+}
+
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
         'LOCATION': [
-            'XXX 127.0.0.1:11211',
+            '127.0.0.1:11211',
         ],
         'OPTIONS': {
             'KEY_PREFIX':'A',

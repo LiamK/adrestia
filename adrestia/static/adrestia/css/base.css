@@ -6,6 +6,21 @@
     font-family: "Birds of a Feather";
     src: url("../fonts/bfeather.ttf");
 }
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 40px;
+  padding-top:10px;
+  background-color: rgba(0, 33, 0, .10);
+}
 body { 
     background: url("../images/old-and-worn-parchment-paper-494x494.jpg") no-repeat center center fixed; 
     -webkit-background-size: cover;
@@ -13,6 +28,8 @@ body {
     -o-background-size: cover;
     background-size: cover;
     background-color: #DFDABB;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
 }
 
 h1, h2, h3, h4, h5 {
@@ -50,21 +67,21 @@ h4.office {
     width: 100%;
 }
 
-hr { 
+hr.fancy { 
   border: 0; 
   height: 30px; 
   border-style: solid; 
-  border-color: #262; 
+  border-color: #464; 
   border-width: 1px 0 0 0; 
   border-radius: 20px; 
 } 
-hr:before { 
+hr.fancy:before { 
   display: block; 
   content: ""; 
   height: 30px; 
   margin-top: -31px; 
   border-style: solid; 
-  border-color: #262; 
+  border-color: #464; 
   border-width: 0 0 1px 0; 
   border-radius: 20px; 
 }
@@ -159,26 +176,39 @@ span.uncommitted:before {
     font-weight:bold;
 }
 
-.candidate-thumbnail {
+div.opponent {
     font-size: 4rem;
     border: 1px solid #595;
     padding: 5px;
 }
-.candidate-thumbnail img {
+div.opponent img {
     border: none;
+    width:75px;
     margin-right:0.5em;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
 }
 .image-shadow img {
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
 }
-.opponents {
-    /*border-left: 1px solid #595;*/
+
+/* bootstrap */
+.thumbnail {
+    background-color: transparent;
+}
+.thumbnail-img {
 }
 
 /* crispy form group */
-#id-delegate-form {
+#id-delegate-form,
+#id-candidate-form {
     margin-bottom: 1rem;
+}
+#delegate-chart,
+#delegate-table {
+    min-width: 320px;
+    max-width: 800px;
+    min-height: 200px;
+    margin: 0 auto;
 }
 
 

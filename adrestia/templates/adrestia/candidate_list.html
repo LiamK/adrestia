@@ -1,16 +1,28 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Bernie Candidates{% endblock %}
 {% block content %}
-<p><strong>These "Bernie candidates" share the vision and values of Bernie Sanders.  We hope you will join us in supporting them. </strong>  {% lorem %}</p> 
-    <table class="table table-striped">
-        <tr>
-            <th>Candidate</th>
-            <th>State</th>
-            <th>District</th>
-            <th>Image</th>
-            <th></th>
-        </tr>
+    {% if state %}
+    <h2 class="text-center">{{state.name}} Candidates</h1>
+    {% else %}
+    <h2 class="text-center">Meet the Candidates</h1>
+    {% endif %}
+    
+    <p><strong>These "Bernie candidates" share the vision and values
+    of Bernie Sanders.  We hope you will join us in supporting
+    them.</strong></p>
+
+    {% crispy form %}
+
+    <ul class="list-group">
     {% for c in candidate_list %}
-    {% include "adrestia/candidate_row.html" %}
+        {% include "adrestia/candidate_row.html" %}
     {% endfor %}
+    </ul>
+
+    <strong class="text-muted">
+    {{ candidate_list.count }} candidates met your search criteria.
+    </strong>
+
 </table>
 {% endblock %}

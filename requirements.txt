@@ -1,6 +1,7 @@
 # pip requirements file which describes the necessary
 # distributions required to run this project.
 
+boto==2.39.0
 bs4==0.0.1
 colorlog==2.6.1
 Django==1.9.4
@@ -15,7 +16,9 @@ django-maintenancemode==0.11.2
 django-profiles==0.2
 django-registration==2.0.4
 django-rest-swagger==0.3.5
+django-storages==1.4.1
 djangorestframework==3.3.2
+djangorestframework-csv==1.4.1
 docutils==0.12
 drf-extensions==0.2.8
 gunicorn==19.4.5
@@ -34,6 +37,7 @@ PyYAML==3.11
 requests==2.9.1
 simplejson==3.8.2
 six==1.10.0
+sorl-thumbnail==12.3
 sunlight==1.2.9
 Werkzeug==0.11.4
 
