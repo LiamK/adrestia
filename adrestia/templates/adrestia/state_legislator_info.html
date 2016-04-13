@@ -24,16 +24,16 @@
 <h4>
 <ul class='list-inline'>
 {% if candidate.state_legislator.twitter_id %}
-<li><a href="https://twitter.com/{{ candidate.state_legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
+<li><a target="_blank" href="https://twitter.com/{{ candidate.state_legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
 {% endif %}
 {% if candidate.state_legislator.facebook_id %}
-<li><a href="https://facebook.com/{{ candidate.state_legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
+<li><a target="_blank" href="https://facebook.com/{{ candidate.state_legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
 {% endif %}
 {% if candidate.state_legislator.youtube_url %}
-<li><a href="{{ candidate.state_legislator.youtube_url }}"><i class="fa fa-youtube"></i></a>
+<li><a target="_blank" href="{{ candidate.state_legislator.youtube_url }}"><i class="fa fa-youtube"></i></a>
 {% endif %}
 </ul>
 {% if candidate.state_legislator.email %}
-<a href="mailto:{{ candidate.state_legislator.email|obfuscate }}"><i class="fa fa-envelope"></i></a>
+<a target="_blank" href="mailto:{{ candidate.state_legislator.email|obfuscate }}"><i class="fa fa-envelope"></i></a>
 {% endif %}
 </h4>

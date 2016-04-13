@@ -12,11 +12,162 @@ from django.core.cache import cache
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.core.files.base import ContentFile
+from django.db.models import Q
 from django.db.models.signals import post_save, post_delete
 from django.utils.html import format_html
 from django.utils.text import slugify
 
 log = logging.getLogger(__name__)
+
+"""
+Party abbreviations
+
+"A Connecticut Party", "AC",
+"American First Coalition", "AF",
+"American Heritage Party", "AH",
+"American Independent Pty", "AI",
+"Alaskan Independence", "AK",
+"American Constitution", "AN",
+"American", "AM",
+"Blue Enigma Party", "BE",
+"Builders Party", "BD",
+"Boston Tea", "BT",
+"Better Schools", "B ",
+"Buchanan Reform", "BR",
+"Concerned Citizens", "CC",
+"Centrist Party", "CE",
+"Citizens First", "CF",
+"Connecticut Independent", "CI",
+"Cool Moose", "CM",
+"Constitutional", "CN",
+"Concerns of People", "CP",
+"Conservative", "C ",
+"Constitution", "CS",
+"CT for Lieberman", "CL",
+"DC Statehood Green Party", "DC",
+"Democrat", "D ",
+"Ecology Party of Florida", "EP",
+"End Suffolk Legislature", "E ",
+"Fair", "FA",
+"Free Energy Party", "FE",
+"Fusion Independent", "F ",
+"Freedom", "FR",
+"Friends United", "Fr",
+"Farmers & Small Business", "FB",
+"Freedom Socialist", "FS",
+"Family Values Party", "FV",
+"Green Coalition Party", "GC",
+"Greens No To War", "GN",
+"Green", "GR",
+"Grass Roots Party", "G ",
+"Healthcare Party", "HC",
+"Home Protection", "HP",
+"Heartquake '08", "HQ",
+"Independent American", "IA",
+"Independent Fusion", "IF",
+"Independent Grassroots", "IL",
+"Independent Green", "GI",
+"Independent", "I ",
+"Independence", "IN",
+"Integrity Party", "IT",
+"Independent Party", "IP",
+"Independent Party of DE", "ID",
+"Independent Party of HI", "IH",
+"Independent-Progressive", "IR",
+"Ind. Save Our Children", "IC",
+"Liberal", "L ",
+"Looking Back Party", "LO",
+"Labor and Farm", "LA",
+"Libertarian", "LB",
+"Long Island First", "LF",
+"Legalize Marijuana", "LM",
+"Louisiana Taxpayers", "LT",
+"Liberty Union", "LU",
+"Liberty Union/Progressiv", "LP",
+"Maryland Independent Par", "MI",
+"Marijuana Party", "MJ",
+"Make Marijuana Legal", "MM",
+"Mountain Party", "MN",
+"Marijuana Reform Party", "MR",
+"New Alliance", "NA",
+"Nebraska", "NE",
+"New", "N ",
+"No Home Heat Tax", "NH",
+"Natural Law Party", "NL",
+"New Mexico Independent P", "NM",
+"No New Taxes", "NT",
+"No", "NO",
+"Non-Partisan", "NP",
+"No Party Affiliation", "NF",
+"No Party Designation", "ND",
+"Objectivist", "OB",
+"One Earth", "OE",
+"Open", "OP",
+"128 District", "OT",
+"Other", "AO",
+"Pacific", "PC",
+"Pacific Green", "PN",
+"Patriot Party", "PP",
+"Pacifist", "PA",
+"Personal Choice", "PH",
+"Petitioning Candidate", "PE",
+"Party of Ethics & Tradit", "P ",
+"Peace and Freedom", "PF",
+"Peace and Justice", "PJ",
+"Pro Life Conservative", "PL",
+"Populist", "PO",
+"Peace Party of Oregon", "PX",
+"Progressive", "PG",
+"Prohibition", "PR",
+"Preserve Our Town", "PS",
+"Party for Socialism and", "SX",
+"Property Tax Cut", "PT",
+"People of Vermont", "PV",
+"Protect Working Families", "PW",
+"Republican", "R ",
+"Resource Party", "RS",
+"Randolph for Congress", "RC",
+"Restore Justice-Freedom", "RJ",
+"Reform Minnesota", "RM",
+"Reform Party", "RF",
+"Republican Moderate", "RD",
+"Right to Life", "RL",
+"School Choice", "SC",
+"Socialism", "SL",
+"Save Seniors", "SS",
+"Socialist Equality", "SE",
+"Save Medicare", "S ",
+"Socialist", "SO",
+"Socialist USA", "SU",
+"Star Tax Cut", "ST",
+"Student First", "SF",
+"Socialist Workers Party", "SW",
+"To Be Determined", "TB",
+"The Better Life", "BL",
+"Tax Cut", "T ",
+"Tax Cut Now", "TC",
+"The Go", "TG",
+"Term Limits", "TL",
+"Timesizing", "TS",
+"United Citizen", "UC",
+"Unaffiliated", "UN",
+"Unenrolled", "U ",
+"United", "UD",
+"U.S. Taxpayers Party", "TX",
+"Unity", "UY",
+"Veterans Party", "VT",
+"Vermont Grassroots", "GS",
+"Voice of the People", "V ",
+"Voters Rights Party", "VP",
+"Working Class Party", "WC",
+"Working Families", "WF",
+"West Side Neighbors", "WN",
+"We the People", "WP",
+"Workers for Vermont", "WV",
+"Workers World", "WW",
+"Yes", "YS",
+
+"""
 
 def make_digest(instance, filename):
     """ Make digest filename, with leading Candidate id number """
@@ -89,12 +240,23 @@ class Candidate(models.Model):
             ('Mayor', 'Mayor'),
             ('Secretary of State', 'Secretary of State')
             ]
+    PARTIES = [
+            ('D', 'D'),
+            ('R', 'R'),
+            ('AI', 'AI'),
+            ('PF', 'PF'),
+            ('G', 'G'),
+            ('GI', 'GI'),
+            ('IR', 'IR'),
+            ('IP', 'IP'),
+            ('R', 'R'),
+        ]
     name = models.CharField(max_length=36)
     state = models.ForeignKey(State, null=True)
     level = models.CharField(max_length=24, choices=LEVELS, null=True)
     office = models.CharField(max_length=24, choices=OFFICES, null=True)
     district = models.CharField(max_length=36, null=True, blank=True)
-    status = models.CharField(max_length=24, null=True)
+    status = models.CharField(max_length=24, null=True, blank=True)
     serving = models.BooleanField()
     running = models.BooleanField()
     winner = models.BooleanField(default=False)
@@ -104,12 +266,14 @@ class Candidate(models.Model):
             null=True, blank=True)
     state_legislator = models.ForeignKey('StateLegislator', to_field='leg_id',
             null=True, blank=True)
+    party = models.CharField(max_length=2, choices=PARTIES, null=True, blank=True,
+            help_text='See for abbreviations: http://abcnews.go.com/Politics/party-abbreviations/story?id=10865978')
 
 
-    profile_url = models.URLField(max_length=500, null=True, blank=True)
-    website_url = models.URLField(max_length=500, null=True, blank=True)
     facebook_id = models.CharField(max_length=64, null=True, blank=True)
     twitter_id = models.CharField(max_length=64, null=True, blank=True)
+    profile_url = models.URLField(max_length=500, null=True, blank=True)
+    website_url = models.URLField(max_length=500, null=True, blank=True)
     donate_url = models.URLField(max_length=500, null=True, blank=True)
     endorsement_url = models.URLField(max_length=500, null=True, blank=True)
     image_url = models.URLField(max_length=500, null=True, blank=True,
@@ -198,11 +362,13 @@ class Candidate(models.Model):
     def get_delegate(self):
         delegate = None
         try:
-            delegate = Delegate.objects.get(
-                state=self.state,
-                legislator__district=self.district,
-                )
-            return delegate
+            if self.legislator:
+                delegate = Delegate.objects.get(
+                    ~Q(name__contains=self.legislator.lastname),
+                    state=self.state,
+                    legislator__district=self.district,
+                    )
+                return delegate
         except Delegate.DoesNotExist:
             pass
             #log.debug('No delegate found for %s', self)
@@ -210,11 +376,13 @@ class Candidate(models.Model):
             log.warn('Multiple matches for %s', self)
 
         try:
-            delegate = Delegate.objects.get(
-                state=self.state,
-                state_legislator__district=self.district,
-                )
-            return delegate
+            if self.state_legislator:
+                delegate = Delegate.objects.get(
+                    ~Q(name__contains=self.state_legislator.last_name),
+                    state=self.state,
+                    state_legislator__district=self.district,
+                    )
+                return delegate
         except Delegate.DoesNotExist:
             pass
             #log.debug('No delegate found for %s', self)
@@ -245,6 +413,13 @@ class Delegate(models.Model):
     state_legislator = models.ForeignKey('StateLegislator', to_field='leg_id',
             null=True, blank=True)
     opponents = models.ManyToManyField('Candidate')
+    facebook_id = models.CharField(max_length=64, null=True, blank=True)
+    twitter_id = models.CharField(max_length=64, null=True, blank=True)
+    webform_url = models.URLField(max_length=500, null=True, blank=True)
+    website_url = models.URLField(max_length=500, null=True, blank=True)
+    phone = models.CharField(max_length=16, null=True, blank=True)
+    fax = models.CharField(max_length=16, null=True, blank=True)
+    address = models.CharField(max_length=256, null=True, blank=True)
 
     class Meta:
         ordering = ('name',)

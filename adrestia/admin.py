@@ -3,29 +3,43 @@ from .models import *
 
 
 class CandidateAdmin(admin.ModelAdmin):
-    list_display = ('name', 'state', 'district', 'level', 'office',
-            #'status',
-    'serving', 'running', 
-            'winner',
-'website_url',
-'facebook_id',
-'twitter_id',
-'donate_url',
-'endorsement_url',
-'image',
-    )
+    class Media:
+        css = {
+            'all':('admin/css/adrestia_admin.css',)
+        }
+    list_display = (
+        'name',
+        'state',
+        'district',
+        'level',
+        'office',
+        'party',
+        'serving',
+        'running',
+        'winner',
+        'website_url',
+        'facebook_id',
+        'twitter_id',
+        'donate_url',
+        'endorsement_url',
+        'image',
+        )
     list_filter = ('level', 'office', 'status', 'serving', 'running',
             'winner', 'state')
-    list_editable = ('office', 'level', 'serving', 'running',
-            #'status',
-            'winner',
-'website_url',
-'facebook_id',
-'twitter_id',
-'donate_url',
-'endorsement_url',
-'image',
-            )
+    list_editable = (
+        'office',
+        'level',
+        'serving',
+        'running',
+        'winner',
+        'party',
+        'website_url',
+        'facebook_id',
+        'twitter_id',
+        'donate_url',
+        'endorsement_url',
+        'image',
+        )
     search_fields = ('name',)
 
 class FootnoteAdmin(admin.ModelAdmin):

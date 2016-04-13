@@ -86,6 +86,11 @@ hr.fancy:before {
   border-radius: 20px; 
 }
 
+/* a class like the pre element */
+.pre {
+    white-space: pre;
+}
+
 .intro a {
     font-weight: bold;
 }

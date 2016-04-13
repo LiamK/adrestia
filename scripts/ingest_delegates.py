@@ -6,7 +6,7 @@ from bs4.diagnose import diagnose
 import csv
 import re
 
-from superdelegates.models import *
+from adrestia.models import *
 
 WIKIPEDIA_PREFIX = 'http://en.wikipedia.org'
 url = WIKIPEDIA_PREFIX + '/wiki/List_of_Democratic_Party_superdelegates,_2016'
@@ -40,7 +40,7 @@ def run():
 
     # Write out each row
     for r in rows:
-        delegate, state, group, candidate = r.find_all('td')
+        delegate, state, group, cd, candidate = r.find_all('td')
         # These are the <sup> (footnote) tags
         candidate_sup = candidate.find('sup')
         group_sup = group.find('sup')
@@ -87,7 +87,7 @@ def run():
         candidate, created = PresidentialCandidate.objects.get_or_create(name=candidate)
         dstate, created = State.objects.get_or_create(state=state,
                 defaults = {'name':'default'})
-        delegate, created = Delegate.objects.get_or_create(
+        delegate, created = Delegate.objects.update_or_create(
             name=delegate,
             state=dstate,
             defaults = {
@@ -106,18 +106,22 @@ def run():
 
         # hopefully these wont't change
         if group_sup_text:
-            footnote, created = Footnote.objects.get_or_create(
+            footnote, created = Footnote.objects.update_or_create(
                     id=group_sup_num,
-                    url=group_sup_url,
-                    text=group_sup_text,
-                    )
+                    defaults={
+                        'url':group_sup_url,
+                        'text':group_sup_text,
+                    }
+                )
             delegate.footnotes.add(footnote)
 
         if candidate_sup_text:
-            footnote, created = Footnote.objects.get_or_create(
+            footnote, created = Footnote.objects.update_or_create(
                     id=candidate_sup_num,
-                    url=candidate_sup_url,
-                    text=candidate_sup_text,
+                    defaults={
+                        'url':candidate_sup_url,
+                        'text':candidate_sup_text,
+                    }
                     )
             delegate.footnotes.add(footnote)
 

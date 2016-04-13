@@ -21,13 +21,13 @@ $(function () {
         <h2>
             <span class="sanders">
             {% if candidate.profile_url %}
-            <a href="{{ candidate.profile_url }}">{{ candidate.name }}</a>
+            <a target="_blank" href="{{ candidate.profile_url }}">{{ candidate.name }}</a>
             {% else %}
                 {{ candidate.name }}
             {% endif %}
         </span>
         {% if candidate.donate_url %}
-            <a type="button" href="{{ candidate.donate_url }}" class="btn btn-success">Donate!</a> 
+            <a type="button" target="_blank" href="{{ candidate.donate_url }}" class="btn btn-success">Donate!</a> 
         {% else %}
         <a type="button" href="#"
             class="btn btn-warning",
@@ -39,28 +39,30 @@ $(function () {
         {% endif %}
         </h2>
         <h3>
-        Running for: {{ candidate.state }} {% if candidate.district %} {{ candidate.district }} {% endif %}
+            {% if candidate.serving %}Incumbent<br/>{% endif %}
+            {% if candidate.running %}Running for:{% endif %}
+            {{ candidate.state }} {% if candidate.district %} {{ candidate.district }} {% endif %}
     </h3>
 
         <h4 class="note">Links</h4>
         {% if candidate.profile_url %}
-            <p><a href="{{ candidate.profile_url }}"><i class="fa fa-user"></i> Profile</a></p>
+            <p><a target="_blank" href="{{ candidate.profile_url }}"><i class="fa fa-user"></i> Profile</a></p>
         {% endif %}
         {% if candidate.website_url %}
-            <p><a href="{{ candidate.website_url }}"><i class="fa fa-globe"></i> Website</a></p>
+            <p><a target="_blank" href="{{ candidate.website_url }}"><i class="fa fa-globe"></i> Website</a></p>
         {% endif %}
         {% if candidate.facebook_id %}
-            <p><a href="https://facebook.com/{{ candidate.facebook_id }}"><i class="fa fa-facebook"></i> Facebook</a></p>
+            <p><a target="_blank" href="https://facebook.com/{{ candidate.facebook_id }}"><i class="fa fa-facebook"></i> Facebook</a></p>
         {% endif %}
         {% if candidate.twitter_id %}
-            <p><a href="https://twitter.com/{{ candidate.twitter_id }}"><i class="fa fa-twitter"></i> Twitter</a></p>
+            <p><a target="_blank" href="https://twitter.com/{{ candidate.twitter_id }}"><i class="fa fa-twitter"></i> Twitter</a></p>
         {% endif %}
         {% if candidate.endorsement_url %}
-            <p><a href="{{ candidate.endorsement_url }}"><i class="fa fa-thumbs-up"></i> Endorsement</a></p>
+            <p><a target="_blank" href="{{ candidate.endorsement_url }}"><i class="fa fa-thumbs-up"></i> Endorsement</a></p>
         {% endif %}
 
         {% if candidate.legislator  or candidate.state_legislator %}
-            <h4 class="note">More Info</h4>
+            <h3 class="">More Info</h4>
             {% if candidate.legislator %}
             {% include "adrestia/legislator_info.html" %}
             {% elif candidate.state_legislator %} 

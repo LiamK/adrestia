@@ -30,14 +30,26 @@
         </div>
         <div class="col-xs-12 col-sm-2">
             <ul class='list-inline'>
-            {% if d.legislator.twitter_id %}
-            <li><a href="https://twitter.com/{{ d.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
+            {% if d.twitter_id %}
+            <li><a target="_blank" href="https://twitter.com/{{ d.twitter_id }}"><i class="fa fa-twitter"></i></a>
+            {% elif d.legislator.twitter_id %}
+            <li><a target="_blank" href="https://twitter.com/{{ d.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
             {% endif %}
-            {% if d.legislator.facebook_id %}
-            <li><a href="https://facebook.com/{{ d.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
+            {% if d.facebook_id %}
+            <li><a target="_blank" href="https://facebook.com/{{ d.facebook_id }}"><i class="fa fa-facebook"></i></a>
+            {% elif d.legislator.facebook_id %}
+            <li><a target="_blank" href="https://facebook.com/{{ d.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
             {% endif %}
-            {% if d.legislator.oc_email %}
+            {% if d.email %}
+            <li><a href="mailto:{{ d.email|obfuscate }}"><i class="fa fa-envelope"></i></a>
+            {% elif d.legislator.oc_email %}
             <li><a href="mailto:{{ d.legislator.oc_email|obfuscate }}"><i class="fa fa-envelope"></i></a>
+            {% endif %}
+            {% if d.webform_url %}
+            <li><a href="{{ d.webform_url }}"><i class="fa fa-envelope-o"></i></a>
+            {% endif %}
+            {% if d.website_url %}
+            <li><a href="{{ d.website_url }}"><i class="fa fa-globe"></i></a>
             {% endif %}
             </ul>
         </div>
