@@ -321,44 +321,6 @@ class Candidate(models.Model):
 
                 self.image.save(filename, File(image_file))
 
-#    def save(self, *args, **kwargs):
-#        print 'Candidate.save("%s -- %s)' % (args, kwargs)
-#        print self.image
-#        super(Candidate, self).save(*args, **kwargs)
-#        if kwargs.get('delete_image'):
-#            return
-#
-#        if not self.image:
-#            if self.image_url:
-#                url = self.image_url
-#            elif self.state_legislator and self.state_legislator.photo_url:
-#                url = self.state_legislator.photo_url
-#            else:
-#                return
-#
-#            if url:
-#                filename = url.split('/')[-1]
-#                print 'filename', filename
-#                image_file = NamedTemporaryFile(delete=True)
-#                try:
-#                    req = requests.get(url)
-#                    req.raise_for_status()
-#                    image_file.write(req.content)
-#                    image_file.flush()
-#                    # imghdr.what() tests the image data contained in the file named by
-#                    # filename, and returns a string describing the image type.
-#                    # If optional h is provided, the filename is ignored and h is
-#                    # assumed to contain the byte stream to test.
-#                    assert imghdr.what(image_file.name)
-#                except requests.exceptions.RequestException, e:
-#                    log.error('%s', e)
-#                    return
-#                except AssertionError:
-#                    log.error('Not an image file: %s, %s', filename, url)
-#                    return
-#
-#                self.image.save(filename, File(image_file))
-
     def get_delegate(self):
         delegate = None
         try:

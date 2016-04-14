@@ -51,14 +51,11 @@ $(function () {
         {% endif %}
 
         {% if delegate.address %}
-        <h4>
-{% comment %}
-delegate.address must be flush left here, due to class 'pre'
-{% endcomment %}
-<address class='pre'>
-{{ delegate.address }}
-</address>
-        </h4>
+            <h4>
+                <address class=''>
+                    {{ delegate.address|linebreaksbr }}
+                </address>
+            </h4>
         {% elif delegate.legislator.city_state_zip %}
         <h4>
             <address>

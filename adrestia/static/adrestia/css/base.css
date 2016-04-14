@@ -87,8 +87,8 @@ hr.fancy:before {
 }
 
 /* a class like the pre element */
-.pre {
-    white-space: pre;
+.election, .smiley {
+    font-weight: bold;
 }
 
 .intro a {

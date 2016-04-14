@@ -10,7 +10,7 @@
             {{ c.state }}&nbsp;{{ c.district }}
         </div>
         <div class="col-xs-2 col-sm-2">
-            {% incumbent_or_opponent c %}
+            {% incumbent_or_opponent c %}<br/>{% election_info c %}
             {% comment %}
             {% contains c.name c.legislator.lastname as legislator_match %}
             {% if legislator_match %}

@@ -2,6 +2,7 @@
 {% load humanize %}
 {% load thumbnail %}
 {% load email_obfuscator %}
+{% load adrestia_tags %}
 {% block title %}Bernie Candidates{% endblock %}
 {% block content %}
 <script>
@@ -41,7 +42,9 @@ $(function () {
         <h3>
             {% if candidate.serving %}Incumbent<br/>{% endif %}
             {% if candidate.running %}Running for:{% endif %}
-            {{ candidate.state }} {% if candidate.district %} {{ candidate.district }} {% endif %}
+            {{ candidate.state }} {% if candidate.district %} {{ candidate.district }} {% endif %}<br/>
+            {% incumbent_or_opponent candidate %}
+            {% election_info candidate %}
     </h3>
 
         <h4 class="note">Links</h4>

@@ -25,6 +25,7 @@ class CandidateSerializer(serializers.ModelSerializer):
             'running',
             'winner',
             'notes',
+            'party',
             #'primary_date',
             #'legislator',
             #'state_legislator',
