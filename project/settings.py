@@ -26,6 +26,7 @@ INTERNAL_IPS = [ '127.0.0.1' ]
 
 INSTALLED_APPS = [
     'crispy_forms',
+    'grappelli',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -124,13 +125,17 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ],
     #'DEFAULT_PERMISSION_CLASSES': [
-        #'playaevents.api.permissions.ApiUserPermission',
+        #'...api.permissions.ApiUserPermission',
     #],
     'DEFAULT_FILTER_BACKENDS': ['rest_framework.filters.DjangoFilterBackend'],
     #'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'DEFAULT_PAGINATION_CLASS': None,
     'PAGE_SIZE': 100,
 }
+
+GRAPPELLI_ADMIN_TITLE = 'Dear Super Delegate,'
+GRAPPELLI_SWITCH_USER = True
+GRAPPELLI_SWITCH_USER_ORIGINAL = lambda x: True
 
 
 CACHES = {
@@ -153,6 +158,9 @@ LOGGING = {
         'verbose': {
             'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
         },
+        'standard': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
         'simple': {
             'format': '%(levelname)s %(message)s'
         },
@@ -174,22 +182,22 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'color',
         },
-        'console': {
+        'standard': {
             'class': 'logging.StreamHandler',
-            'formatter': 'color',
+            'formatter': 'standard',
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console', 'standard'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
         },
         'adrestia': {
-            'handlers': ['console'],
+            'handlers': ['console', 'standard'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
         'sorl.thumbnail': {
-            'handlers': ['console'],
+            'handlers': ['console', 'standard'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
     },

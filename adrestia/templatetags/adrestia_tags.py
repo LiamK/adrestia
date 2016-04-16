@@ -1,8 +1,11 @@
 import re
 import datetime
+import logging
 from django import template
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
+
+log = logging.getLogger(__name__)
 
 register = template.Library()
 
@@ -72,7 +75,7 @@ def election_info(c):
               else:
                   ret = '<i class="fa fa-frown-o text-danger smiley"></i>'
   except Exception, e:
-      print 'Error in filter', e
+      log.error('Tag error: %s', e)
 
   #ret_str = ', '.join(ret)
   return format_html('{}', mark_safe(ret))

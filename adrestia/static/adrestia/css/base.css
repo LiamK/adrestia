@@ -1,5 +1,5 @@
 @font-face {
-    font-family: USDeclaration;
+    font-family: "USDeclaration";
     src: url("../fonts/USDeclaration.ttf");
 }
 @font-face {
@@ -36,7 +36,7 @@ h1, h2, h3, h4, h5 {
     color: #353;
 }
 h1 {
-    font-family: USDeclaration;
+    font-family: "USDeclaration";
     font-size: 4rem;
     color: #242;
     margin-bottom: 2.7rem;

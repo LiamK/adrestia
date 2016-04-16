@@ -18,7 +18,13 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 from adrestia.views import *
 
+handler400 = 'adrestia.views.error_400'
+handler403 = 'adrestia.views.error_403'
+handler404 = 'adrestia.views.error_404'
+handler500 = 'adrestia.views.error_500'
+
 urlpatterns = [
+    url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^$', Home.as_view(), name='home'),
     url(r'^chart/?$', ChartView.as_view(), name='chart'),

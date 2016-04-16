@@ -23,7 +23,16 @@ def print_dict(d):
         new[k.replace('@', '')] = v
     return new
 
-# Create your views here.
+def error_400(request, exception, template_name='adrestia/400.html'):
+    return render(request, template_name)
+def error_403(request, exception, template_name='adrestia/403.html'):
+    return render(request, template_name)
+def error_404(request, exception, template_name='adrestia/404.html'):
+    return render(request, template_name)
+def error_500(request, exception, template_name='adrestia/500.html'):
+    return render(request, template_name)
+
+
 class Home(TemplateView):
     template_name = 'adrestia/home.html'
 

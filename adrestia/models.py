@@ -241,15 +241,15 @@ class Candidate(models.Model):
             ('Secretary of State', 'Secretary of State')
             ]
     PARTIES = [
-            ('D', 'D'),
-            ('R', 'R'),
-            ('AI', 'AI'),
-            ('PF', 'PF'),
-            ('G', 'G'),
-            ('GI', 'GI'),
-            ('IR', 'IR'),
-            ('IP', 'IP'),
-            ('R', 'R'),
+            ('D',  'Democrat'),
+            ('R',  'Republican'),
+            ('G',  'Green'),
+            ('GI', 'Independent Green'),
+            ('IR', 'Independent-Progressive'),
+            ('IP', 'Independent Party'),
+            ('AI', 'American Independent'),
+            ('PF', 'Peace and Freedom'),
+            ('UN', 'Unaffiliated'),
         ]
     name = models.CharField(max_length=36)
     state = models.ForeignKey(State, null=True)
@@ -279,7 +279,7 @@ class Candidate(models.Model):
     image_url = models.URLField(max_length=500, null=True, blank=True,
             help_text='Enter an image URL here and the image will be uploaded')
     image = models.ImageField(null=True, blank=True, upload_to=make_digest,
-            help_text='Enter a local image file her to upload')
+            help_text='Enter a local image file here to upload')
 
 
     class Meta:

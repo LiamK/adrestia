@@ -46,10 +46,10 @@
             <li><a href="mailto:{{ d.legislator.oc_email|obfuscate }}"><i class="fa fa-envelope"></i></a>
             {% endif %}
             {% if d.webform_url %}
-            <li><a href="{{ d.webform_url }}"><i class="fa fa-envelope-o"></i></a>
+            <li><a target="_blank" href="{{ d.webform_url }}"><i class="fa fa-envelope-o"></i></a>
             {% endif %}
             {% if d.website_url %}
-            <li><a href="{{ d.website_url }}"><i class="fa fa-globe"></i></a>
+            <li><a target="_blank" href="{{ d.website_url }}"><i class="fa fa-globe"></i></a>
             {% endif %}
             </ul>
         </div>

@@ -22,6 +22,7 @@ class CandidateAdmin(admin.ModelAdmin):
         'twitter_id',
         'donate_url',
         'endorsement_url',
+        'image_url',
         'image',
         )
     list_filter = ('level', 'office', 'status', 'serving', 'running',
@@ -38,6 +39,7 @@ class CandidateAdmin(admin.ModelAdmin):
         'twitter_id',
         'donate_url',
         'endorsement_url',
+        'image_url',
         'image',
         )
     search_fields = ('name',)
