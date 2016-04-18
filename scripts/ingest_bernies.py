@@ -78,10 +78,23 @@ def run():
         facebook_id = r.get('Facebook')
         twitter_id = r.get('Twitter')
         if facebook_id:
-            facebook_id = re.sub(r"https*://facebook.com/", '', facebook_id)
+            m = re.search(
+                r'https?://(www.)?facebook.com/(\w#!/)?(pages/)?(([\w-]/)*)?(?P<id>[\w.-]+)',
+                facebook_id)
+            if m:
+                facebook_id = m.group('id')
+            else:
+                log.error('Bad facebook id: %s', facebook_id)
         if twitter_id:
-            twitter_id = re.sub(r"https*://twitter.com/", '', twitter_id)
-            twitter_id = re.sub(r"^@", '', twitter_id)
+            try:
+                twitter_id = re.sub(r'\?.*', '', twitter_id)
+                m = re.search(r'^(https*://twitter.com/|@)([A-Za-z0-9_]+)$', twitter_id)
+                if m: 
+                    twitter_id = m.group(2)
+                assert len(twitter_id) <= 15
+            except AssertionError:
+                log.error('Twitter id too long: %s', twitter_id)
+        continue
 
         tmpname = name
         tmpname = tmpname.replace(', Jr.', '')
