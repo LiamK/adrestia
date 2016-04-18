@@ -43,7 +43,7 @@ class DelegateForm(forms.Form):
     group = GroupModelChoiceField(label='',
             to_field_name='abbr', queryset=DNCGroup.objects.all().order_by('name'), required=False)
     candidate = forms.ModelChoiceField(label='',
-            to_field_name='name', queryset=PresidentialCandidate.objects.all().order_by('name'), required=False)
+            to_field_name='name', queryset=PresidentialCandidate.objects.all(), required=False)
     has_opponents = forms.BooleanField(label='Opponent?', required=False)
 
 class CandidateForm(forms.Form):

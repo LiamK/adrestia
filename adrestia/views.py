@@ -1,7 +1,7 @@
 import logging
 from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponse
-from django.db.models import Q, Count
+from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.db.models import Q, Count, Sum, Case, When
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.utils.http import urlquote
@@ -29,7 +29,7 @@ def error_403(request, exception, template_name='adrestia/403.html'):
     return render(request, template_name)
 def error_404(request, exception, template_name='adrestia/404.html'):
     return render(request, template_name)
-def error_500(request, exception, template_name='adrestia/500.html'):
+def error_500(request, template_name='adrestia/500.html'):
     return render(request, template_name)
 
 
@@ -246,32 +246,76 @@ class CandidateDetail(DetailView):
                 'state_legislator', 'state')
         return queryset
 
-class ChartView(View):
-    template_name = 'adrestia/chart.html'
-    def get(self, request):
-        dtotal = float(Delegate.objects.all().count())
-        candidates = PresidentialCandidate.objects.exclude(name="O'Malley")
-        candidates = candidates.annotate(dcount=Count('delegate'))
-        candidates = candidates.order_by('name')
+def get_chart_context(state_abbr=None):
+        # Get the super delegates
+        delegates = Delegate.objects.all()
 
-        pledged = {
-            'Clinton':1279,
-            'Sanders':1027,
-            'Uncommitted':1959,
-        }
-        ptotal = float(sum(pledged.values()))
+        try:
+            if state_abbr:
+                state = State.objects.get(state=state_abbr)
+            else:
+                state = None
+        except State.DoesNotExist:
+            raise Http404
+
+        if state:
+            delegates = delegates.filter(state__state=state)
+        dtotal = float(delegates.count())
+
+        # get the annotated presidential candidates
+        if state:
+            candidates = PresidentialCandidate.objects.exclude(name="O'Malley").annotate(
+                dcount=Count(
+                    Case(
+                        When(
+                            delegate__state__state=state,
+                            then=1,
+                        )
+                    )
+                )
+            )
+
+        else:
+            candidates = PresidentialCandidate.objects.exclude(name="O'Malley")
+            candidates = candidates.annotate(dcount=Count('delegate'))
+
+        # ordering is important 
+        candidates = candidates.order_by('id')
+
+
+        # Get the pledged delegate counts
+        pledged = DelegateSummary.objects.all()
+        if state:
+            pledged = pledged.filter(state__state=state)
+        pledged = pledged.aggregate(
+                Sanders=Sum('sanders_pledged'),
+                Clinton=Sum('clinton_pledged'),
+                No_Endorsement=Sum('available_pledged'),
+                )
+        try:
+            ptotal = float(sum(pledged.values()))
+            assert ptotal > 0
+        except AssertionError:
+            raise Http404
+
+
+        log.debug('pledged: %s', pledged)
+        log.debug('ptotal: %s', ptotal)
 
         def series(candidates):
             ret1 = []
             ret2 = []
+            clinton = {}
+            sanders = {}
             for c in candidates:
+                hack_name = c.name.replace(' ', '_')
                 cdict1 = {
                     'name':c.name,
                     'scount': c.dcount, 
-                    'pcount': pledged[c.name],
+                    'pcount': pledged[hack_name],
                     'data':[
                         int('%2d'%(c.dcount/dtotal*100)),
-                        int('%2d'%(pledged[c.name]/ptotal*100)),
+                        int('%2d'%(pledged[hack_name]/ptotal*100)),
                     ]
                 }
                 cdict2 = cdict1.copy()
@@ -284,17 +328,28 @@ class ChartView(View):
                 ret1.append(cdict1)
                 ret2.append(cdict2)
             return ret1, json.dumps(ret2), clinton, sanders
-        #series = lambda x:{'name':x.name,'count':c.dcount,'percent':'%2d'%(c.dcount/dtotal*100)}
         series_data, series_json, clinton, sanders = series(candidates)
-        print series_data, series_json, clinton, sanders
+
+
+
         ctx = {
                 'series_data':series_data,
                 'series_json':series_json,
                 'clinton':clinton,
-                'sanders':sanders
+                'sanders':sanders,
+                'state':state,
                 }
+        return ctx
 
-        return render(request, self.template_name, ctx)
+class ChartView(View):
+    def get(self, request, **kwargs):
+        state = self.kwargs.get('state', None)
+        if state:
+            template_name = 'adrestia/state_chart.html'
+        else:
+            template_name = 'adrestia/chart.html'
+        ctx = get_chart_context(state)
+        return render(request, template_name, ctx)
 
 
 

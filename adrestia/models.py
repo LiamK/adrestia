@@ -21,6 +21,7 @@ log = logging.getLogger(__name__)
 
 """
 Party abbreviations
+"Minnesota Democratic-Farmer-Labor Party", "DFL",
 
 "A Connecticut Party", "AC",
 "American First Coalition", "AF",
@@ -219,7 +220,7 @@ class PresidentialCandidate(models.Model):
     name = models.CharField(max_length=36, unique=True)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('id',)
 
     def __unicode__(self):
         return unicode(self.name)
@@ -241,16 +242,19 @@ class Candidate(models.Model):
             ('Secretary of State', 'Secretary of State')
             ]
     PARTIES = [
-            ('D',  'Democrat'),
-            ('R',  'Republican'),
-            ('G',  'Green'),
-            ('GI', 'Independent Green'),
-            ('IR', 'Independent-Progressive'),
-            ('IP', 'Independent Party'),
-            ('AI', 'American Independent'),
-            ('PF', 'Peace and Freedom'),
-            ('UN', 'Unaffiliated'),
+            ('D',   'Democrat'),
+            ('G',   'Green'),
+            ('GI',  'Independent Green'),
+            ('DFL', 'Minnesota Democratic-Farmer-Labor Party'),
+            ('IR',  'Independent-Progressive'),
+            ('IP',  'Independent Party'),
+            ('AI',  'American Independent'),
+            ('PF',  'Peace and Freedom'),
+            ('R',   'Republican'),
+            ('UN',  'Unaffiliated'),
         ]
+    PARTY_DICT = dict(PARTIES)
+
     name = models.CharField(max_length=36)
     state = models.ForeignKey(State, null=True)
     level = models.CharField(max_length=24, choices=LEVELS, null=True)
@@ -287,6 +291,25 @@ class Candidate(models.Model):
 
     def __unicode__(self):
         return unicode(self.name)
+
+    def title_and_name(self, additional=False):
+        print self.name, self.serving, self.legislator, self.state_legislator
+        if self.serving:
+            if self.legislator:
+                ret = unicode("%s. %s" % (self.title, self.name))
+                if additional:
+                    ret += unicode(" (%s %s)" % (self.state, self.legislator.district))
+            elif self.state_legislator:
+                if self.state_legislator.chamber == 'upper': title = 'State Sen'
+                elif self.state_legislator.chamber == 'lower': title = 'State Rep'
+                ret = unicode("%s. %s" % (title, self.name))
+                if additional:
+                    ret += unicode(" (%s %s)" % (self.state, self.state_legislator.district))
+        else:
+            ret = unicode("%s" % (self.name))
+            if additional:
+                ret += unicode(" (%s)" % (self.state))
+        return ret
 
     def copy_image(self):
         if not self.image:
@@ -401,15 +424,20 @@ class Delegate(models.Model):
         else:
             return None
 
-    def title_and_name(self):
+    def title_and_name(self, additional=False):
         if self.legislator:
-            return unicode("%s. %s (%s %s)" % (
-                self.group.abbr, self.name, self.state, self.legislator.district))
+            ret = unicode("%s. %s" % (self.group.abbr, self.name))
+            if additional:
+                ret += unicode(" (%s %s)" % (self.state, self.legislator.district))
         elif self.state_legislator:
-            return unicode("%s. %s (%s %s)" % (
-                self.group.abbr, self.name, self.state, self.state_legislator.district))
+            ret = unicode("%s. %s" % (self.group.abbr, self.name))
+            if additional:
+                ret += unicode(" (%s %s)" % (self.state, self.state_legislator.district))
         else:
-            return unicode("%s %s (%s)" % (self.group.abbr, self.name, self.state))
+            ret = unicode("%s %s" % (self.group.abbr, self.name))
+            if additional:
+                ret += unicode(" (%s)" % (self.state))
+        return ret
 
 class Legislator(models.Model):
     title = models.CharField(max_length=3, null=True, blank=True)
@@ -500,3 +528,20 @@ class StateLegislator(models.Model):
     def __unicode__(self):
         return unicode("%s %s" % (self.first_name,self.last_name))
 
+class DelegateSummary(models.Model):
+    state = models.OneToOneField(State)
+    allocation_pledged = models.IntegerField(default=0)
+    allocation_unpledged = models.IntegerField(default=0)
+    available_pledged = models.IntegerField(default=0)
+    available_unpledged = models.IntegerField(default=0)
+    sanders_pledged = models.IntegerField(default=0)
+    sanders_unpledged = models.IntegerField(default=0)
+    clinton_pledged = models.IntegerField(default=0)
+    clinton_unpledged = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ('state__name',)
+        verbose_name_plural = 'delegate_summaries'
+
+    def __unicode__(self):
+        return unicode("%s" % (self.state.state))

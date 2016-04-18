@@ -1,9 +1,10 @@
 {% load email_obfuscator %}
+{% load adrestia_tags %}
 {% spaceless %}
 {% for office in candidate.state_legislator.offices.all %}
 <h4 class="office">{{ office.name }}</h4>
 <address class=''>
-    {{ candidate.name }}<br/>
+    {% title_and_name candidate %}<br/>
     {{ office.address|linebreaksbr }}</br>
 {% if office.phone %}
 <i class="fa fa-phone"></i> {{ office.phone }}<br/>

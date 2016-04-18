@@ -4,9 +4,9 @@
 {% block content %}
 
     {% if state %}
-    <h2 class="text-center">{{state.name}} Super Delegates</h1>
+    <h2 class="text-center">{{state.name}} Super Delegates<sup><a href="{% url 'state_chart' state.state %}">chart</a></sup></h2>
     {% else %}
-    <h2 class="text-center">Meet the Super Delegates</h1>
+    <h2 class="text-center">Meet the Super Delegates</h2>
     {% endif %}
 
     {% crispy form %}

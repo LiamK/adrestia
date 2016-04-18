@@ -11,7 +11,7 @@ $(function () {
 })
 </script>
 <div class="row">
-    <div class="col-xs-12 col-sm-5">
+    <div class="col-xs-12 col-sm-7">
         {% if candidate.image %}
             {% thumbnail candidate.image "x200" as im %} 
             <img src="{{im.url}}"
@@ -22,9 +22,9 @@ $(function () {
         <h2>
             <span class="sanders">
             {% if candidate.profile_url %}
-            <a target="_blank" href="{{ candidate.profile_url }}">{{ candidate.name }}</a>
+            <a target="_blank" href="{{ candidate.profile_url }}">{% title_and_name candidate True %}</a>
             {% else %}
-                {{ candidate.name }}
+                {% title_and_name candidate True %}
             {% endif %}
         </span>
         {% if candidate.donate_url %}
@@ -35,34 +35,36 @@ $(function () {
             data-toggle="popover",
             title="Hey!",
             data-trigger="focus",
-            data-content="We don't have a link to this candidate's donation page!  To update candidate information, please contact {{ 'info@dearsuperdelegate.com'|obfuscate }}",
+            data-content="We don't have a link to this candidate's donation page!  To update candidate information, please contact {{ 'update@dearsuperdelegate.com'|obfuscate }}",
             >Donate!</a> 
         {% endif %}
         </h2>
         <h3>
-            {% if candidate.serving %}Incumbent<br/>{% endif %}
-            {% if candidate.running %}Running for:{% endif %}
+            Status: {% incumbent_or_opponent candidate %},
             {{ candidate.state }} {% if candidate.district %} {{ candidate.district }} {% endif %}<br/>
-            {% incumbent_or_opponent candidate %}
+            Party: {% party candidate %}
             {% election_info candidate %}
     </h3>
 
-        <h4 class="note">Links</h4>
-        {% if candidate.profile_url %}
-            <p><a target="_blank" href="{{ candidate.profile_url }}"><i class="fa fa-user"></i> Profile</a></p>
+        {% if candidate.profile_url or candidate.website_url or candidate.facebook_id or candidate.twitter_id or candidate.endorsement_url %}
+            <h4 class="note">Links</h4>
+            {% if candidate.profile_url %}
+                <p><a target="_blank" href="{{ candidate.profile_url }}"><i class="fa fa-user"></i> Profile</a></p>
+            {% endif %}
+            {% if candidate.website_url %}
+                <p><a target="_blank" href="{{ candidate.website_url }}"><i class="fa fa-globe"></i> Website</a></p>
+            {% endif %}
+            {% if candidate.facebook_id %}
+                <p><a target="_blank" href="https://facebook.com/{{ candidate.facebook_id }}"><i class="fa fa-facebook"></i> Facebook</a></p>
+            {% endif %}
+            {% if candidate.twitter_id %}
+                <p><a target="_blank" href="https://twitter.com/{{ candidate.twitter_id }}"><i class="fa fa-twitter"></i> Twitter</a></p>
+            {% endif %}
+            {% if candidate.endorsement_url %}
+                <p><a target="_blank" href="{{ candidate.endorsement_url }}"><i class="fa fa-thumbs-up"></i> Endorsement</a></p>
+            {% endif %}
         {% endif %}
-        {% if candidate.website_url %}
-            <p><a target="_blank" href="{{ candidate.website_url }}"><i class="fa fa-globe"></i> Website</a></p>
-        {% endif %}
-        {% if candidate.facebook_id %}
-            <p><a target="_blank" href="https://facebook.com/{{ candidate.facebook_id }}"><i class="fa fa-facebook"></i> Facebook</a></p>
-        {% endif %}
-        {% if candidate.twitter_id %}
-            <p><a target="_blank" href="https://twitter.com/{{ candidate.twitter_id }}"><i class="fa fa-twitter"></i> Twitter</a></p>
-        {% endif %}
-        {% if candidate.endorsement_url %}
-            <p><a target="_blank" href="{{ candidate.endorsement_url }}"><i class="fa fa-thumbs-up"></i> Endorsement</a></p>
-        {% endif %}
+
 
         {% if candidate.legislator  or candidate.state_legislator %}
             <h3 class="">More Info</h4>

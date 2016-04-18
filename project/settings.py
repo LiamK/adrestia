@@ -151,6 +151,7 @@ CACHES = {
     }
 }
 
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -176,6 +177,18 @@ LOGGING = {
                 'CRITICAL': 'bold_red',
             },
         },
+        'simple_color': {
+            '()': 'colorlog.ColoredFormatter',
+            'format': '%(log_color)s%(levelname)-6s %(message)s',
+            'datefmt': '[%d/%b/%Y %H:%M:%S]',
+            'log_colors': {
+                'DEBUG':    'bold_black',
+                'INFO':     'white',
+                'WARNING':  'yellow',
+                'ERROR':    'red',
+                'CRITICAL': 'bold_red',
+            },
+        },
     },
     'handlers': {
         'console': {
@@ -185,6 +198,10 @@ LOGGING = {
         'standard': {
             'class': 'logging.StreamHandler',
             'formatter': 'standard',
+        },
+        'stdout': {
+            'class': 'project.utils.StreamHandlerStdOut',
+            'formatter': 'simple_color',
         },
     },
     'loggers': {
@@ -198,6 +215,10 @@ LOGGING = {
         },
         'sorl.thumbnail': {
             'handlers': ['console', 'standard'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        },
+        '': {
+            'handlers': ['stdout'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
     },

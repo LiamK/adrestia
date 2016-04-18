@@ -63,7 +63,7 @@ def run():
 
         district = r.get('District')
         level = r.get('Level')
-        notes = r.get('Notes')
+        notes = r.get('Notes').lstrip('*').strip()
         image_url = r.get('img')
         office = r.get('Office')
         try:

@@ -9,8 +9,8 @@
         <div class="col-xs-2 col-sm-2">
             {{ c.state }}&nbsp;{{ c.district }}
         </div>
-        <div class="col-xs-2 col-sm-2">
-            {% incumbent_or_opponent c %}<br/>{% election_info c %}
+        <div class="col-xs-2 col-sm-3">
+            {% incumbent_or_opponent c %}&nbsp;{% election_info c %}
             {% comment %}
             {% contains c.name c.legislator.lastname as legislator_match %}
             {% if legislator_match %}
@@ -47,7 +47,7 @@
             {% endif %}
             </ul>
         </div>
-        <div class="col-xs-12 col-sm-3 image-shadow">
+        <div class="col-xs-12 col-sm-2 image-shadow">
                 {% if c.image %}
                     {% thumbnail c.image "x75" as im %} 
                     <img src="{{im.url}}"

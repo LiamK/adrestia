@@ -4,6 +4,7 @@ import logging
 from django import template
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
+from adrestia.models import Candidate
 
 log = logging.getLogger(__name__)
 
@@ -23,16 +24,24 @@ def contains(value, arg):
   return arg in value
 
 @register.simple_tag
+def title_and_name(obj, additional=False):
+  """
+  Usage:
+  """
+  return mark_safe(obj.title_and_name(additional=additional))
+
+@register.simple_tag
 def incumbent_or_opponent(c):
   """
   Usage:
   """
   ret = []
   today = datetime.date.today()
-  leadup = datetime.timedelta(days=14)
   try:
       if c.serving: ret.append('Incumbent')
       if c.running: ret.append('Running')
+      if not ret:
+          ret.append('Unknown')
       # passed
       if today > c.state.primary_date:
           if not c.winner: ret = ['Defeated']
@@ -44,6 +53,13 @@ def incumbent_or_opponent(c):
 #      ret.add('Incumbent')
 
   return format_html('{}', mark_safe(', '.join(ret)))
+
+@register.simple_tag
+def party(c):
+  """
+  Usage:
+  """
+  return mark_safe(Candidate.PARTY_DICT[c.party])
 
 @register.simple_tag
 def election_info(c):
@@ -58,10 +74,10 @@ def election_info(c):
       # leadup
       if today <= c.state.primary_date:
           if c.state.primary_date - leadup < today:
-              ret = '<span class="text-success election">Primary: %s</span>' % c.state.primary_date.strftime(fmt);
+              ret = '<br/><span class="text-success election">Primary: %s</span>' % c.state.primary_date.strftime(fmt);
       elif today <= c.state.general_date:
           if c.state.general_date - leadup < today:
-              ret = '<span class="text-success election">General: %s</span>' % c.state.general_date.strftime(fmt);
+              ret = '<br/><span class="text-success election">General: %s</span>' % c.state.general_date.strftime(fmt);
       # passed
       if today > c.state.primary_date:
           if today < c.state.general_date:

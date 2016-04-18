@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block title %}State Chart{% endblock %}
+
+{% block content %}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<h2 class="text-center">{{ state.name }} Delegates</h1>
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-3 col-sm-6">
+            <p>Comparison of pledged and unpledged "Super" delegates</p>
+            <div id="delegate-chart"></div>
+            <div id="delegate-table">
+                <table class="table table-responsive table-striped">
+                    <tr><th>Candidate</th><th>Pledged</th><th>Super</th></tr>
+                    {% for d in series_data %}
+                        <tr><td>{{d.name|intcomma}}</td>
+                            <td>{{d.pcount|intcomma}}</td>
+                            <td>{{d.scount|intcomma}}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(function () {
+ Highcharts.setOptions({
+        colors: ['#AA3333', '#559955', '#999999']
+    });
+    $('#delegate-chart').highcharts({
+        chart: {
+            type: 'bar',
+            backgroundColor: 'rgba(255, 255, 255, 0.20)',
+/*
+            borderColor: '#FF0000',
+            borderWidth: 1
+*/
+        },
+        title: {
+            text: 'Delegate %'
+        },
+        xAxis: {
+            categories: ['Super', 'Pledged']
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: ''
+            }
+        },
+        legend: {
+            reversed: true
+        },
+        plotOptions: {
+            series: {
+                stacking: 'percent',
+            }
+        },
+        {% autoescape off %}
+        series: eval('{{ series_json }}')
+        {% endautoescape %}
+    });
+});
+</script>
+{% endblock %}

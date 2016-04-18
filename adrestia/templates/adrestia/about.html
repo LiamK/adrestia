@@ -1,12 +1,16 @@
 {% extends "base.html" %}
+{% load email_obfuscator %}
 {% block title %}About{% endblock %}
 {% block content %}
 
 <h2 class="text-center">About</h1>
 <div class="row">
-    <div class="col-xs-12 col-sm-6">
-        <p>We're trying to create a more democratic Democratic party, and get Bernie and allies elected!
-        If you find this site useful and would like to help out, please consider making a donation.</p>
+    <div class="col-xs-12 col-sm-offset-1 col-sm-5">
+        <h3>Thanks for visiting</h3>
+        <p>We're trying to create a more democratic Democratic party, and get Bernie and allies elected!</p>
+        <p>Please send any corrections or additions to {{ 'update@dearsuperdelegate.com'|obfuscate_mailto }}.</p>
+        <p>Special thanks to <a target="_blank" href="https://www.facebook.com/expatsforsanders/">Expats for Sanders</a> for compiling the list of pro-Bernie candidates.
+        <p>If you find this site useful and would like to help out, please consider making a donation.</p>
         <p>Help spread the word</p>
         <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://dearsuperdelegate.com" data-text="Dear Super Delegate," data-via="infosuperdel" data-related="infosuperdel" data-hashtags="dearsuperdelegate">Tweet</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -18,14 +22,14 @@
             <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
         </form>
     </div>
-    <div class="col-xs-12 col-sm-6">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-5">
         <h3>Technical Notes</h3>
         <h4>Data Sources</h4>
             <ul class="list-unstyled">
-            <li><a href="https://sunlightfoundation.com/">Sunlight Foundation</a></li>
-            <li><a href="https://opensecrets.org/">Open Secrets</a></li>
-            <li><a href="https://docs.google.com/spreadsheets/d/1MZGzbSWESE8t18GGzrgc2FfL0b5tz-vmNf-F_-w5yN4/edit">Sanders Democrats</a></li>
-            <li><a href="https://en.wikipedia.org/wiki/List_of_Democratic_Party_superdelegates,_2016">List of Democratic Party superdelegates, 2016</a></li>
+            <li><a target="_blank" href="https://sunlightfoundation.com/">Sunlight Foundation</a></li>
+            <li><a target="_blank" href="https://opensecrets.org/">Open Secrets</a></li>
+            <li><a target="_blank" href="https://docs.google.com/spreadsheets/d/1MZGzbSWESE8t18GGzrgc2FfL0b5tz-vmNf-F_-w5yN4/edit">Sanders Democrats</a></li>
+            <li><a target="_blank" href="https://en.wikipedia.org/wiki/List_of_Democratic_Party_superdelegates,_2016">List of Democratic Party superdelegates, 2016</a></li>
         </ul>
         <h4>Privacy Policy</h4>
         <p>Clink to view our <a href="{% url 'privacy_policy' %}">privacy policy</a>.

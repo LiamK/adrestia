@@ -1,17 +1,30 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+import logging
 import sys
+import pprint
 import urllib2
 from bs4 import BeautifulSoup
 from bs4.diagnose import diagnose
 import csv
 import re
 
+from django.db.utils import IntegrityError
+
 from adrestia.models import *
 
 WIKIPEDIA_PREFIX = 'http://en.wikipedia.org'
 url = WIKIPEDIA_PREFIX + '/wiki/List_of_Democratic_Party_superdelegates,_2016'
 
+log = logging.getLogger(__name__)
+log.info('Begin super delegate ingest')
+
 def run():
+    # Get set of db objects, to compare with new objects added
+    new_delegate_set = set()
+    created_delegate_set = set()
+    db_delegate_set = {"%s %s" % (d.state.state, d.name) for d in Delegate.objects.all()}
+
     response = urllib2.urlopen(url)
     wiki_html = response.read().decode('utf-8')
 
@@ -40,10 +53,11 @@ def run():
 
     # Write out each row
     for r in rows:
-        delegate, state, group, cd, candidate = r.find_all('td')
+        delegate, state, group, candidate = r.find_all('td')
         # These are the <sup> (footnote) tags
         candidate_sup = candidate.find('sup')
         group_sup = group.find('sup')
+        delegate_html = delegate
 
         try:
             candidate_sup_text = candidate_sup.a.get('href', None)
@@ -77,32 +91,44 @@ def run():
         delegate, state, group, candidate = [x.text for x in (delegate, state, group, candidate)]
         candidate = candidate.strip()
         state = state[:2] # cut off extraneous footnote, e.g. "DA[note 1]"
+        if state == u'—':
+            state = '--'
         delegate = delegate.replace('[3]', '') # cut off extraneous footnote, e.g. "DA[note 1]"
         group = re.sub(r'\[\d+\]', '', group)
         candidate = re.sub(r'\s*\[\d+\]\s*', '', candidate)
         group = group.replace('.', '')
+        group = group.replace('[note 2]', '')
+        group = group.replace('[note 3]', '')
 
         dnc_group, created = DNCGroup.objects.get_or_create(abbr=group,
-                defaults = {'name':'default'} )
+            defaults = {'name':'default'} )
         candidate, created = PresidentialCandidate.objects.get_or_create(name=candidate)
         dstate, created = State.objects.get_or_create(state=state,
                 defaults = {'name':'default'})
-        delegate, created = Delegate.objects.update_or_create(
-            name=delegate,
-            state=dstate,
-            defaults = {
-                'url':delegate_url,
-                'group':dnc_group,
-                'candidate':candidate,
-            }
-        )
-        # if not created, update with potentially new values
-        if not created:
-            delegate.url = delegate_url
-            delegate.state = dstate
-            delegate.group = dnc_group
-            delegate.candidate = candidate
-        print delegate
+        try:
+            log.debug('%s (%s)', delegate, state)
+            delegate, created = Delegate.objects.update_or_create(
+                name=delegate,
+                state=dstate,
+                defaults = {
+                    'url':delegate_url,
+                    'group':dnc_group,
+                    'candidate':candidate,
+                }
+            )
+            new_delegate_set.add("%s %s" % (state, delegate.name))
+            if created:
+                log.warn('Created: %s', delegate)
+                created_delegate_set.add("%s %s" % (state, delegate.name))
+        except IntegrityError, e:
+            log.error("%s: %s", e, delegate)
+            continue
+        except Delegate.DoesNotExist:
+            log.error("Does not exist: %s", delegate)
+            continue
+        except Delegate.MultipleObjectsReturned:
+            log.error("Multiple Objects Returned: %s (%s)", delegate, state)
+            continue
 
         # hopefully these wont't change
         if group_sup_text:
@@ -124,4 +150,14 @@ def run():
                     }
                     )
             delegate.footnotes.add(footnote)
+
+    print 'CREATED'
+    pprint.pprint(created_delegate_set)
+
+    # This should be the same as created
+    print 'NEW not in DB'
+    pprint.pprint(new_delegate_set - db_delegate_set)
+
+    print 'DB but not NEW -- REMOVE'
+    pprint.pprint(db_delegate_set - new_delegate_set)
 

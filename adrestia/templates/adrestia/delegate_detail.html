@@ -2,6 +2,7 @@
 {% load humanize %}
 {% load email_obfuscator %}
 {% load thumbnail %}
+{% load adrestia_tags %}
 {% block title %}Super Delegates{% endblock %}
 {% block content %}
 <script>
@@ -13,12 +14,12 @@ $(function () {
     <div class="col-xs-12 col-sm-5">
         <h2>
             {% if delegate.url %}
-                <a href="{{ delegate.url }}">{{ delegate.title_and_name }}</a>
+                <a href="{{ delegate.url }}">{% title_and_name delegate True %}</a>
             {% else %}
                 {{ delegate.title_and_name }}
             {% endif %}
         </h2>
-        <h3>{% if delegate.candidate.name != 'Uncommitted' %}Pledged to {% endif %}
+        <h3>{% if delegate.candidate.name != 'No Endorsement' %}Pledged to {% endif %}
             {% if delegate.candidate.name == "Sanders" %}
                 <span class="sanders">
                 {{ delegate.candidate }}
@@ -27,7 +28,7 @@ $(function () {
                 <span class="clinton">
                 {{ delegate.candidate }}
                 </span>
-            {% elif delegate.candidate.name == "Uncommitted" %}
+            {% elif delegate.candidate.name == "No Endorsement" %}
                 <span class="uncommitted">
                 {{ delegate.candidate }}
                 </span>
@@ -59,7 +60,7 @@ $(function () {
         {% elif delegate.legislator.city_state_zip %}
         <h4>
             <address>
-                {{ delegate.legislator.title_and_name }}<br/>
+                {% title_and_name delegate %}<br/>
                 {{ delegate.legislator.congress_office }}<br/>
                 {{ delegate.legislator.city_state_zip }}
             </address>

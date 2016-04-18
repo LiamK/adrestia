@@ -47,12 +47,27 @@ class CandidateAdmin(admin.ModelAdmin):
 class FootnoteAdmin(admin.ModelAdmin):
     list_display = ('text', 'url')
     search_fields = ('text',)
+
 class FootnoteInline(admin.TabularInline):
     verbose_name = 'footnote'
     can_delete = False
     model = Delegate.footnotes.through
     raw_id_fields = ('footnote',)
     extra = 0
+
+class DelegateSummaryAdmin(admin.ModelAdmin):
+    list_display = (
+        'state',
+        'allocation_pledged',
+        'allocation_unpledged',
+        'available_pledged',
+        'available_unpledged',
+        'sanders_pledged',
+        'sanders_unpledged',
+        'clinton_pledged',
+        'clinton_unpledged',
+    )
+
 class DelegateAdmin(admin.ModelAdmin):
     list_display = ('name', 'state', 'group', 'candidate')
     list_filter = ('group', 'candidate', 'state')
@@ -89,6 +104,7 @@ class StateLegislatorAdmin(admin.ModelAdmin):
 
 admin.site.register(Candidate, CandidateAdmin)
 admin.site.register(Delegate, DelegateAdmin)
+admin.site.register(DelegateSummary, DelegateSummaryAdmin)
 admin.site.register(Legislator, LegislatorAdmin)
 admin.site.register(StateLegislator, StateLegislatorAdmin)
 admin.site.register(State, StateAdmin)
