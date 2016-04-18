@@ -212,6 +212,7 @@ class DNCGroup(models.Model):
 
     class Meta:
         ordering = ('abbr',)
+        verbose_name_plural = 'DNC Groups'
 
     def __unicode__(self):
         return unicode(self.name)
@@ -541,7 +542,7 @@ class DelegateSummary(models.Model):
 
     class Meta:
         ordering = ('state__name',)
-        verbose_name_plural = 'delegate_summaries'
+        verbose_name_plural = 'delegate summaries'
 
     def __unicode__(self):
         return unicode("%s" % (self.state.state))

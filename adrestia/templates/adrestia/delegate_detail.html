@@ -19,7 +19,7 @@ $(function () {
                 {{ delegate.title_and_name }}
             {% endif %}
         </h2>
-        <h3>{% if delegate.candidate.name != 'No Endorsement' %}Pledged to {% endif %}
+        <h3>{% if delegate.candidate.name != 'Uncommitted' %}Pledged to {% endif %}
             {% if delegate.candidate.name == "Sanders" %}
                 <span class="sanders">
                 {{ delegate.candidate }}
@@ -28,7 +28,7 @@ $(function () {
                 <span class="clinton">
                 {{ delegate.candidate }}
                 </span>
-            {% elif delegate.candidate.name == "No Endorsement" %}
+            {% elif delegate.candidate.name == "Uncommitted" %}
                 <span class="uncommitted">
                 {{ delegate.candidate }}
                 </span>

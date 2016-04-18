@@ -290,7 +290,7 @@ def get_chart_context(state_abbr=None):
         pledged = pledged.aggregate(
                 Sanders=Sum('sanders_pledged'),
                 Clinton=Sum('clinton_pledged'),
-                No_Endorsement=Sum('available_pledged'),
+                Uncommitted=Sum('available_pledged'),
                 )
         try:
             ptotal = float(sum(pledged.values()))
@@ -308,6 +308,7 @@ def get_chart_context(state_abbr=None):
             clinton = {}
             sanders = {}
             for c in candidates:
+                # This may be removed, depends on Uncommitted/No Endorsement
                 hack_name = c.name.replace(' ', '_')
                 cdict1 = {
                     'name':c.name,

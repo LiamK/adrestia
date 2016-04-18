@@ -81,6 +81,7 @@ def run():
             facebook_id = re.sub(r"https*://facebook.com/", '', facebook_id)
         if twitter_id:
             twitter_id = re.sub(r"https*://twitter.com/", '', twitter_id)
+            twitter_id = re.sub(r"^@", '', twitter_id)
 
         tmpname = name
         tmpname = tmpname.replace(', Jr.', '')

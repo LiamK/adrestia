@@ -133,12 +133,12 @@ def run():
         # hopefully these wont't change
         if group_sup_text:
             footnote, created = Footnote.objects.update_or_create(
-                    id=group_sup_num,
-                    defaults={
-                        'url':group_sup_url,
-                        'text':group_sup_text,
-                    }
-                )
+                id=group_sup_num,
+                defaults={
+                    'url':group_sup_url,
+                    'text':group_sup_text,
+                }
+            )
             delegate.footnotes.add(footnote)
 
         if candidate_sup_text:
