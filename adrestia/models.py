@@ -240,7 +240,9 @@ class Candidate(models.Model):
             ('Governor', 'Governor'),
             ('Lt. Governor', 'Lt. Governor'),
             ('Mayor', 'Mayor'),
-            ('Secretary of State', 'Secretary of State')
+            ('Secretary of State', 'Secretary of State'),
+            ('City Council', 'City Council'),
+            ('County Council', 'County Council'),
             ]
     PARTIES = [
             ('D',   'Democrat'),
@@ -306,6 +308,9 @@ class Candidate(models.Model):
                 ret = unicode("%s. %s" % (title, self.name))
                 if additional:
                     ret += unicode(" (%s %s)" % (self.state, self.state_legislator.district))
+            else:
+                log.error('Candidate serving but no sunlight record: %s', self)
+                ret = unicode("%s" % (self.name))
         else:
             ret = unicode("%s" % (self.name))
             if additional:

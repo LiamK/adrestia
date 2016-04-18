@@ -9,7 +9,7 @@ import re
 import pprint
 from StringIO import StringIO
 
-from superdelegates.models import *
+from adrestia.models import *
 
 # set encoding
 reload(sys)
@@ -35,22 +35,34 @@ def run():
         name = d.name
         name = name.replace(', Jr.', '')
         name = name.replace(' III', '')
-        names = name.split()
-        firstname = names[0]
-        lastname = names[-1:][0]
+        names1 = name.split()
+        names2 = name.split(' ', 1)
+        firstname1 = names1[0]
+        lastname1 = names1[-1:][0]
+        firstname2 = names2[0]
+        lastname2 = names2[-1:][0]
         try:
             legislator = Legislator.objects.get(
-                (Q(firstname__startswith=firstname) &
-                Q(lastname__startswith=lastname)) |
-                (Q(nickname__startswith=firstname) &
-                Q(lastname__startswith=lastname)))
+                (Q(firstname__startswith=firstname1) &
+                Q(lastname__startswith=lastname1)) |
+                (Q(firstname__startswith=firstname2) &
+                Q(lastname__startswith=lastname2)) |
+                (Q(nickname__startswith=firstname1) &
+                Q(lastname__startswith=lastname1)))
             print legislator
             d.legislator = legislator
             d.save()
         except:
+#        except Legislator.DoesNotExist:
+#            print '%s does not exists' % d
+#        except Legislator.MultipleObjectsReturned:
+#            print '%s multiple objects' % d
             try:
                 legislators = Legislator.objects.filter(
-                    lastname=lastname, state=d.state.state)
+		    Q(state=d.state.state) &
+                    (Q(lastname=lastname1) |
+                     Q(lastname=lastname2))
+                )
                 if legislators.count() == 1:
                     legislator = legislators[0]
                     print legislator
