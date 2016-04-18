@@ -185,14 +185,6 @@ class CandidateList(ListView):
         else:
             log.error(form.errors)
 
-#    def get(self, request, *args, **kwargs):
-#        format = self.request.GET.get('format', None)
-#        if not format:
-#            return super(CandidateList, self).get(request, *args, **kwargs)
-#        else:
-#            return HttpResponse(json.dumps(self.get_queryset()))
-
-
 
     def get_context_data(self, **kwargs):
         initial = {}
@@ -298,10 +290,6 @@ def get_chart_context(state_abbr=None):
         except AssertionError:
             raise Http404
 
-
-        log.debug('pledged: %s', pledged)
-        log.debug('ptotal: %s', ptotal)
-
         def series(candidates):
             ret1 = []
             ret2 = []
@@ -331,8 +319,6 @@ def get_chart_context(state_abbr=None):
             return ret1, json.dumps(ret2), clinton, sanders
         series_data, series_json, clinton, sanders = series(candidates)
 
-
-
         ctx = {
                 'series_data':series_data,
                 'series_json':series_json,
@@ -351,6 +337,4 @@ class ChartView(View):
             template_name = 'adrestia/chart.html'
         ctx = get_chart_context(state)
         return render(request, template_name, ctx)
-
-
 
