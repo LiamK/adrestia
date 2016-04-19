@@ -1,0 +1,13 @@
+<span class="chart-picker">
+    View the Super Delegate chart for a particular
+</span>
+<div class="dropdown chart-picker">
+    <a class="dropdown-toggle" id="chart" data-toggle="dropdown" expanded="false">
+        State
+    </a>
+    <ul class="dropdown-menu scrollable-menu" role="menu">
+        {% for s in states %}
+        <li><a href="{% url 'state_chart' s.state %}">{{s.name}}</a></li>
+        {% endfor %}
+    </ul>
+</div>

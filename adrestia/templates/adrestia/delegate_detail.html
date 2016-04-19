@@ -14,7 +14,7 @@ $(function () {
     <div class="col-xs-12 col-sm-5">
         <h2>
             {% if delegate.url %}
-                <a href="{{ delegate.url }}">{% title_and_name delegate True %}</a>
+                <a target="_blank" href="{{ delegate.url }}">{% title_and_name delegate True %}</a>
             {% else %}
                 {{ delegate.title_and_name }}
             {% endif %}
@@ -47,8 +47,8 @@ $(function () {
         <li>{{c.attributes.org_name}} ${{c.attributes.total|intcomma}}</li>
         {% endfor %}
         </ul>
-        <p class="small"><a href="{{meta_contributors.source}}">{{meta_contributors.origin}}</a></p>
-        <p class="small">{{meta_contributors.notice}}</p>
+        <p class="small">Source: <a target="_blank" href="{{meta_contributors.source}}">{{meta_contributors.origin}}</a><br/>
+        <span class="small">{{meta_contributors.notice}}</span></p>
         {% endif %}
 
         {% if delegate.address %}
@@ -69,7 +69,7 @@ $(function () {
 
 
         {% if delegate.website_url %}
-        <h4><i class="fa fa-globe"></i> <a href="{{ delegate.website_url }}">{{ delegate.website_url }}</a></h4>
+        <h4><i class="fa fa-globe"></i> <a target="_blank" href="{{ delegate.website_url }}">{{ delegate.website_url }}</a></h4>
         {% endif %}
         {% if delegate.phone %}
         <h4><i class="fa fa-phone"></i> {{ delegate.phone }}</h4>
@@ -95,7 +95,7 @@ $(function () {
         <li><a target="_blank" href="https://facebook.com/{{ delegate.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
         {% endif %}
         {% if delegate.legislator.youtube_url %}
-        <li><a href="{{ delegate.legislator.youtube_url }}"><i class="fa fa-youtube"></i></a>
+        <li><a target="_blank" href="{{ delegate.legislator.youtube_url }}"><i class="fa fa-youtube"></i></a>
         {% endif %}
         {% if delegate.email %}
         <li><a href="mailto:{{ delegate.email|obfuscate }}"><i class="fa fa-envelope"></i></a>
@@ -103,7 +103,7 @@ $(function () {
         <li><a href="mailto:{{ delegate.legislator.oc_email|obfuscate }}"><i class="fa fa-envelope"></i></a>
         {% endif %}
         {% if delegate.webform_url %}
-        <li><a href="{{ delegate.webform_url }}"><i class="fa fa-envelope-o"></i></a>
+        <li><a target="_blank" href="{{ delegate.webform_url }}"><i class="fa fa-envelope-o"></i></a>
         {% endif %}
         </ul>
         </h4>
@@ -126,7 +126,7 @@ $(function () {
             {{ o.name }}</a>
 
                 {% if o.donate_url %}
-                    <a type="button" href="{{ o.donate_url }}" class="btn btn-success">Donate!</a> 
+                    <a type="button" target="_blank" href="{{ o.donate_url }}" class="btn btn-success">Donate!</a> 
                 {% else %}
                 <a type="button" href="#"
                     class="btn btn-warning",
@@ -149,7 +149,7 @@ $(function () {
         {% if delegate.footnotes.all %}
         <h4 class="note">Notes</h4>
         {% for f in delegate.footnotes.all %}
-        <p>[{{f.id}}] <a href="{{ f.url }}">{{ f.text }}</a></p>
+        <p>[{{f.id}}] <a target="_blank" href="{{ f.url }}">{{ f.text }}</a></p>
         {% endfor %}
         {% endif %}
     </div>

@@ -241,6 +241,7 @@ class CandidateDetail(DetailView):
 def get_chart_context(state_abbr=None):
         # Get the super delegates
         delegates = Delegate.objects.all()
+        states = State.objects.exclude(name='Unassigned').order_by('name')
 
         try:
             if state_abbr:
@@ -325,6 +326,7 @@ def get_chart_context(state_abbr=None):
                 'clinton':clinton,
                 'sanders':sanders,
                 'state':state,
+                'states':states,
                 }
         return ctx
 

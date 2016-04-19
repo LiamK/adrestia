@@ -98,6 +98,9 @@ hr.fancy:before {
 .intro a {
     font-weight: bold;
 }
+.intro p {
+    font-size: 1.15em;
+}
 /*
 .letter {
     margin-top:20px;
@@ -198,6 +201,22 @@ div.opponent img {
 .image-shadow img {
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.25);
 }
+div.chart-picker {
+    display:inline-block;
+    font-size:1.3em;
+    font-weight:bold;
+}
+span.chart-picker {
+    font-size:1.3em;
+    font-weight:bold;
+}
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+    background-color: #DBD5BD;
+    border-color: #aba;
+}
 
 /* bootstrap */
 .thumbnail {
@@ -253,3 +272,4 @@ div.opponent img {
     background-color: #DBD5BD;
     border-color: #aba;
 }
+

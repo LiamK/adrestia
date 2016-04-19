@@ -11,11 +11,11 @@
         <p>This chart reveals the gulf between establishment Super
         Delegates and the American voters.  Sec. Clinton gets
         {{ clinton.data.0 }}% of the Super Delegates, but only
-        {{ clinton.data.1 }}% of Democratic primary voters.</p>
+        {{ clinton.data.1 }}% of pledged delegates that people voted for.</p>
 
-        <p> Why is it that the superdelegates are so out of step with
-        the voters?  Superdelegates are free to vote for whomever they
-        want. Here it is summed up by one well-known superdelegate: </p>
+        <p> Why is it that the Super Delegates are so out of step with
+        the voters?  Super Delegates are free to vote for whomever they
+        like. Here it is summed up by one well-known Super Delegate: </p>
 
         <blockquote>
             @D_Born @BernieSanders Super delegates don't "represent
@@ -25,7 +25,7 @@
         </blockquote>
 
             <p>
-                Many of the superdelegates made early pledges to
+                Many of the Super Delegates made early pledges to
                 Sec. Clinton, even before other candidates had announced.
                 That is part of the game.  Early endorsements have the
                 effect of discouraging would-be challengers.  </p>
@@ -58,49 +58,10 @@
                         </tr>
                     {% endfor %}
                 </table>
+                {% include "adrestia/chart_picker.html" %}
             </div>
         </div>
     </div>
 </div>
-
-<script>
-$(function () {
- Highcharts.setOptions({
-        colors: ['#AA3333', '#559955', '#999999']
-    });
-    $('#delegate-chart').highcharts({
-        chart: {
-            type: 'bar',
-            backgroundColor: 'rgba(255, 255, 255, 0.20)',
-/*
-            borderColor: '#FF0000',
-            borderWidth: 1
-*/
-        },
-        title: {
-            text: 'Delegate %'
-        },
-        xAxis: {
-            categories: ['Super', 'Pledged']
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: ''
-            }
-        },
-        legend: {
-            reversed: true
-        },
-        plotOptions: {
-            series: {
-                stacking: 'percent',
-            }
-        },
-        {% autoescape off %}
-        series: eval('{{ series_json }}')
-        {% endautoescape %}
-    });
-});
-</script>
+{% include "adrestia/chart.js" %}
 {% endblock %}

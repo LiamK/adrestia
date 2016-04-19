@@ -20,49 +20,10 @@
                         </tr>
                     {% endfor %}
                 </table>
+                {% include "adrestia/chart_picker.html" %}
             </div>
         </div>
     </div>
 </div>
-
-<script>
-$(function () {
- Highcharts.setOptions({
-        colors: ['#AA3333', '#559955', '#999999']
-    });
-    $('#delegate-chart').highcharts({
-        chart: {
-            type: 'bar',
-            backgroundColor: 'rgba(255, 255, 255, 0.20)',
-/*
-            borderColor: '#FF0000',
-            borderWidth: 1
-*/
-        },
-        title: {
-            text: 'Delegate %'
-        },
-        xAxis: {
-            categories: ['Super', 'Pledged']
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: ''
-            }
-        },
-        legend: {
-            reversed: true
-        },
-        plotOptions: {
-            series: {
-                stacking: 'percent',
-            }
-        },
-        {% autoescape off %}
-        series: eval('{{ series_json }}')
-        {% endautoescape %}
-    });
-});
-</script>
+{% include "adrestia/chart.js" %}
 {% endblock %}
