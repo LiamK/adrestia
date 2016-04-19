@@ -6,7 +6,13 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1, user-scalable=no">
-        <link rel="canonical" href="https://dearsuperdelegates.com/">
+        <meta property="og:site_name" content="Dear Superdelegate,">
+        <meta property="og:url" content="{% block og_url %}{% endblock %}">
+        <meta property="og:title" content="{% block og_title %}{% endblock %}">
+        <meta property="og:description" content="{% block og_description %}{% endblock %}">
+        <meta property="og:image" content="{% block og_image %}{% endblock %}">
+        <meta property="og:type" content="website">
+        <link rel="canonical" href="http://dearsuperdelegate.com/">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
         {% comment %}

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load humanize %}
-{% block title %}State Chart{% endblock %}
+{% block title %}State Superdelegate Chart{% endblock %}
 
 {% block content %}
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -20,7 +20,15 @@
                         </tr>
                     {% endfor %}
                 </table>
+                <p class="chart-picker">
+                Who are the <a href="{% url 'delegate_list' state.state %}">
+                    {{ state.name }} Superdelegates
+                </a>?
+                </p>
                 {% include "adrestia/chart_picker.html" %}
+                <p class="chart-picker">
+                    View the <a href="{% url 'chart' %}">national chart</a>
+                </p>
             </div>
         </div>
     </div>

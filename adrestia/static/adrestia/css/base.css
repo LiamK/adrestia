@@ -206,7 +206,7 @@ div.chart-picker {
     font-size:1.3em;
     font-weight:bold;
 }
-span.chart-picker {
+span.chart-picker, p.chart-picker {
     font-size:1.3em;
     font-weight:bold;
 }
