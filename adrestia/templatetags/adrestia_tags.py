@@ -31,6 +31,39 @@ def title_and_name(obj, additional=False):
   return mark_safe(obj.title_and_name(additional=additional))
 
 @register.simple_tag
+def candidate_office(c):
+  """
+  Usage:
+  """
+  ret = []
+
+  state = c.state
+  level = c.level
+  office = c.office
+  district = c.district
+
+  try:
+      if level == 'Federal':
+          ret.append(district)
+      elif level == 'Local':
+          ret.append(office)
+          ret.append(district)
+      elif level == 'State':
+          if office in ('Governor', 'Lt. Governor', 'Secretary of State'):
+              ret.append(office)
+          else:
+              ret.append(level)
+              ret.append(office)
+              ret.append(district)
+      if not ret:
+          ret.append('Unknown')
+  except:
+      log.error('Unknown error')
+      pass
+
+  return format_html('{} {}', mark_safe(state), mark_safe(' '.join(ret)))
+
+@register.simple_tag
 def incumbent_or_opponent(c):
   """
   Usage:

@@ -172,11 +172,10 @@ Party abbreviations
 
 def make_digest(instance, filename):
     """ Make digest filename, with leading Candidate id number """
-    print 'make_digest...'
     ext = filename.split('.')[-1]
     m = hashlib.md5()
     m.update(filename)
-    filename = "%d-%s.%s" % (instance.id, m.hexdigest(), ext)
+    filename = "%s.%s" % (m.hexdigest(), ext)
     return filename
 
 
@@ -262,31 +261,46 @@ class Candidate(models.Model):
     state = models.ForeignKey(State, null=True)
     level = models.CharField(max_length=24, choices=LEVELS, null=True)
     office = models.CharField(max_length=24, choices=OFFICES, null=True)
-    district = models.CharField(max_length=36, null=True, blank=True)
+    district = models.CharField(max_length=36, null=True, blank=True,
+        help_text='Fed or State house district name or number, Junior '
+                  'Seat or Senior Seat for Fed Senate, City for Mayor')
     status = models.CharField(max_length=24, null=True, blank=True)
-    serving = models.BooleanField()
-    running = models.BooleanField()
-    winner = models.BooleanField(default=False)
-    notes = models.TextField(null=True, blank=True)
-    primary_date = models.DateField(null=True, blank=True)
+    serving = models.BooleanField(
+        help_text='Check this candidate is the incumbent')
+    running = models.BooleanField(
+        help_text='Running for office or re-election')
+    winner = models.BooleanField(default=False,
+        help_text='Check this if candidate has won their election')
+    notes = models.TextField(null=True, blank=True, 
+        help_text='Additional information displayed on page')
+    primary_date = models.DateField(null=True, blank=True,
+        help_text='Deprecated.  This field is ignored. See State.')
     legislator = models.ForeignKey('Legislator', to_field='bioguide_id',
-            null=True, blank=True)
-    state_legislator = models.ForeignKey('StateLegislator', to_field='leg_id',
-            null=True, blank=True)
-    party = models.CharField(max_length=2, choices=PARTIES, null=True, blank=True,
-            help_text='See for abbreviations: http://abcnews.go.com/Politics/party-abbreviations/story?id=10865978')
+        null=True, blank=True,
+        help_text='Enter Legislator if this candidate is the incumbent')
+    state_legislator = models.ForeignKey('StateLegislator',
+        to_field='leg_id', null=True, blank=True,
+        help_text='Enter State Legislator if this candidate is the incumbent')
+    party = models.CharField(max_length=2, choices=PARTIES,
+        null=True, blank=True,
+        help_text='See for abbreviations: http://abcnews.go.com/Politics/party-abbreviations/story?id=10865978')
 
-
-    facebook_id = models.CharField(max_length=64, null=True, blank=True)
-    twitter_id = models.CharField(max_length=64, null=True, blank=True)
-    profile_url = models.URLField(max_length=500, null=True, blank=True)
+    facebook_id = models.CharField(max_length=64, null=True, blank=True,
+        help_text='Use Facebook ID, not URL')
+    twitter_id = models.CharField(max_length=64, null=True, blank=True,
+        help_text='Use Twitter ID, not URL')
+    profile_url = models.URLField(max_length=500, null=True, blank=True,
+        help_text='Expat profile URL')
     website_url = models.URLField(max_length=500, null=True, blank=True)
     donate_url = models.URLField(max_length=500, null=True, blank=True)
     endorsement_url = models.URLField(max_length=500, null=True, blank=True)
+    webform_url = models.URLField(max_length=500, null=True, blank=True,
+        help_text='Enter URL of web form if available')
+    email = models.EmailField(null=True, blank=True)
     image_url = models.URLField(max_length=500, null=True, blank=True,
-            help_text='Enter an image URL here and the image will be uploaded')
+        help_text='Enter image URL here and the image will be uploaded')
     image = models.ImageField(null=True, blank=True, upload_to=make_digest,
-            help_text='Enter a local image file here to upload')
+        help_text='Enter a local image file here to upload')
 
 
     class Meta:
@@ -351,32 +365,31 @@ class Candidate(models.Model):
                 self.image.save(filename, File(image_file))
 
     def get_delegate(self):
-        delegate = None
         try:
-            if self.legislator:
+            if self.level == 'Federal': 
                 delegate = Delegate.objects.get(
-                    ~Q(name__contains=self.legislator.lastname),
+                    ~Q(name=self.name),
                     state=self.state,
                     legislator__district=self.district,
                     )
                 return delegate
         except Delegate.DoesNotExist:
             pass
-            #log.debug('No delegate found for %s', self)
+            log.debug('No delegate found for %s', self)
         except Delegate.MultipleObjectsReturned:
             log.warn('Multiple matches for %s', self)
 
         try:
-            if self.state_legislator:
+            if self.level == 'State':
                 delegate = Delegate.objects.get(
-                    ~Q(name__contains=self.state_legislator.last_name),
+                    ~Q(name=self.name),
                     state=self.state,
                     state_legislator__district=self.district,
                     )
                 return delegate
         except Delegate.DoesNotExist:
             pass
-            #log.debug('No delegate found for %s', self)
+            log.debug('No delegate found for %s', self)
         except Delegate.MultipleObjectsReturned:
             log.warn('Multiple matches for %s', self)
 
@@ -425,6 +438,9 @@ class Delegate(models.Model):
             return qs
         elif self.state_legislator:
             qs = Candidate.objects.filter(state=self.state, district=self.state_legislator.district)
+            # hack to prevent matching on self!
+            # only a problem if two candidates with the same last name 
+            # are running for the same seat
             qs = qs.exclude(name__contains=self.state_legislator.last_name)
             return qs
         else:
@@ -474,7 +490,7 @@ class Legislator(models.Model):
     official_rss = models.CharField(max_length=64, null=True, blank=True)
     senate_class = models.CharField(max_length=3, null=True, blank=True)
     birthdate = models.DateField(null=True, blank=True)
-    oc_email = models.CharField(max_length=128, null=True, blank=True)
+    oc_email = models.EmailField(null=True, blank=True)
 
     class Meta:
         ordering = ('lastname',)
@@ -499,7 +515,7 @@ class Office(models.Model):
     name = models.CharField(max_length=36, null=True, blank=True)
     phone = models.CharField(max_length=16, null=True, blank=True)
     fax = models.CharField(max_length=16, null=True, blank=True)
-    email = models.CharField(max_length=128, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
 
     def __unicode__(self):
         return unicode("%s: %s" % (self.type, self.address))
@@ -510,7 +526,7 @@ class StateLegislator(models.Model):
     leg_id = models.CharField(max_length=16, unique=True, db_index=True)
     level = models.CharField(max_length=16)
     district = models.CharField(max_length=36, null=True, blank=True, db_index=True)
-    email = models.CharField(max_length=128, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
     first_name = models.CharField(max_length=36, null=True, blank=True)
     middle_name = models.CharField(max_length=36, null=True, blank=True)
     last_name = models.CharField(max_length=36, null=True, blank=True)

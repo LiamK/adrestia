@@ -15,5 +15,6 @@ def add_opponents(sender, instance, **kwargs):
 @receiver(post_save, sender=Candidate)
 def add_delegate(sender, instance, **kwargs):
     delegate = instance.get_delegate()
+    log.debug('Found delegate: %s', delegate)
     if delegate:
         instance.delegate_set.add(delegate)
