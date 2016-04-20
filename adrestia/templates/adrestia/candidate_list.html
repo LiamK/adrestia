@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block title %}Bernie Candidates{% endblock %}
+{% spaceless %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+{% block og_title %}Bernie Candidates{% endblock %}
+{% block og_description %}These "Bernie Candidates" are running for office.{% endblock %}
+{% if candidate.image %}
+{% block og_image %}{% endblock %}
+{% endif %}
+{% endspaceless %}
 {% block content %}
     {% if state %}
     <h2 class="text-center">{{state.name}} Candidates</h1>

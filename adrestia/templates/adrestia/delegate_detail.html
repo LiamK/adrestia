@@ -3,7 +3,15 @@
 {% load email_obfuscator %}
 {% load thumbnail %}
 {% load adrestia_tags %}
-{% block title %}Super Delegates{% endblock %}
+{% block title %}Superdelegate {{ delegate.name }}{% endblock %}
+{% spaceless %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+{% block og_title %}Superdelegate {{ delegate.name }}{% endblock %}
+{% block og_description %}{{ delegate.name }} is a Superdelegate from {{ delegate.state.name }}{% endblock %}
+{% if candidate.image %}
+{% block og_image %}{% endblock %}
+{% endif %}
+{% endspaceless %}
 {% block content %}
 <script>
 $(function () {

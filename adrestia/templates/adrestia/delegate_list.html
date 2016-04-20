@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-{% block title %}Super Delegates{% endblock %}
+{% block title %}Superdelegates{% endblock %}
+{% spaceless %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+{% block og_title %}Superdelegates{% if state %} for {{ state.name }}{% endif %}{% endblock %}
+{% block og_description %}These are your Superdelegates!{% endblock %}
+{% endspaceless %}
 {% block content %}
-
     {% if state %}
     <h2 class="text-center">{{state.name}} Super Delegates<sup><a href="{% url 'state_chart' state.state %}">chart</a></sup></h2>
     {% else %}

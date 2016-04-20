@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Dear Super Delegates,{% endblock %}
+{% block og_url %}{{ request.build_absolute_uri  }}{% endblock %}
+{% block og_title %}Dear Superdelegate,{% endblock %}
+{% block og_description %}Contact your Superdelegates, and find out who's running against them!{% endblock %}
+{% block og_image %}{% endblock %}
 {% block content %}
 <div class="row">
     <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 intro">

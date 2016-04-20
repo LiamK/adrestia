@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load email_obfuscator %}
 {% block title %}Privacy Policy{% endblock %}
+{% spaceless %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+{% block og_title %}Dear Superdelegate Privacy Policy{% endblock %}
+{% block og_description %}{% endblock %}
+{% endspaceless %}
 {% block content %}
 <h2 class="text-center">Privacy Policy</h2>
 <div class="row">
@@ -85,10 +90,10 @@
         </p>
 
         <p>
-        If you really don't like cookies, we recommend using this <a target="_blank" href=
-        "https://tools.google.com/dlpage/gaoptout">Opt-out browser add-on</a>, or for a more
-        comprehensive approach,
-        <a href="https://www.ghostery.com/our-solutions/ghostery-browser-extension/">Ghostery</a>.</p>
+        If you really don't like cookies, we recommend using this <a target="_blank"
+        href="https://tools.google.com/dlpage/gaoptout">Opt-out browser add-on</a>, or
+        for a more comprehensive approach,
+        <a href="https://www.ghostery.com/our-solutions/ghostery-browser-extension/">Ghostery</a>.
         </p>
 
         <p>
@@ -96,8 +101,8 @@
             at {{ 'info@dearsuperdelegate.com'|obfuscate_mailto }}</a>.
         </p>
 
-        <p>
-            Last Edited on 2016-04-09
+        <p class="small">
+            Last Edited on 2016-04-20
         </p>
     </div>
 </div>

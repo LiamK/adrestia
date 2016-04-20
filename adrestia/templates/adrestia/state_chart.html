@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% load humanize %}
-{% block title %}State Superdelegate Chart{% endblock %}
-
+{% block title %}{{ state.name }} Superdelegate Chart{% endblock %}
+{% spaceless %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+{% block og_title %}{{ state.name }} Superdelegate Chart{% endblock %}
+{% block og_description %}A comparison of delegates and Superdelegates.{% endblock %}
+{% endspaceless %}
 {% block content %}
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
