@@ -105,15 +105,14 @@ def run():
             log.error("Candidate '%s' not recognized...skipping", candidate)
             continue
 
-        #group = group.replace('.', '')
-        #group = group.replace('[note 2]', '')
-        #group = group.replace('[note 3]', '')
-
-        dnc_group, created = DNCGroup.objects.get_or_create(abbr=group,
-            defaults = {'name':'default'} )
-        candidate, created = PresidentialCandidate.objects.get_or_create(name=candidate)
-        dstate, created = State.objects.get_or_create(state=state,
-                defaults = {'name':'default'})
+        # dnc_group, created = DNCGroup.objects.get_or_create(abbr=group,
+            # defaults = {'name':'default'} )
+        #candidate, created = PresidentialCandidate.objects.get_or_create(name=candidate)
+        #dstate, created = State.objects.get_or_create(state=state,
+                #defaults = {'name':'default'})
+        dnc_group = DNCGroup.objects.get(abbr=group)
+        candidate = PresidentialCandidate.objects.get(name=candidate)
+        dstate = State.objects.get(state=state)
         try:
             log.debug('%s (%s)', delegate, state)
             delegate, created = Delegate.objects.update_or_create(

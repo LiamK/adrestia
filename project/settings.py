@@ -142,6 +142,10 @@ GRAPPELLI_SWITCH_USER = True
 GRAPPELLI_SWITCH_USER_ORIGINAL = lambda x: True
 
 
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_SECONDS = 60*60*60 # 1 hour
+CACHE_MIDDLEWARE_PREFIX = 'M'
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
@@ -150,7 +154,7 @@ CACHES = {
         ],
         'OPTIONS': {
             'KEY_PREFIX':'A',
-            'TIMEOUT':300,
+            'TIMEOUT':60*60*60,
         }
     }
 }

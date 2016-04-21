@@ -310,10 +310,9 @@ class Candidate(models.Model):
         return unicode(self.name)
 
     def title_and_name(self, additional=False):
-        print self.name, self.serving, self.legislator, self.state_legislator
         if self.serving:
             if self.legislator:
-                ret = unicode("%s. %s" % (self.title, self.name))
+                ret = unicode("%s. %s" % (self.legislator.title, self.name))
                 if additional:
                     ret += unicode(" (%s %s)" % (self.state, self.legislator.district))
             elif self.state_legislator:
