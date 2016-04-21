@@ -8,9 +8,11 @@
 {% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_title %}{{ candidate.name }}{% endblock %}
 {% block og_description %}{{ candidate.name }} is running for office in {{ candidate.state.name }}{% endblock %}
+{% comment %} 
 {% if candidate.image %}
 {% block og_image %}{{ candidate.image.url }}{% endblock %}
 {% endif %}
+{% endcomment %} 
 {% endspaceless %}
 {% block content %}
 <script>
