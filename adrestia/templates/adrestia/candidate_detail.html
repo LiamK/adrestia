@@ -8,11 +8,8 @@
 {% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_title %}{{ candidate.name }}{% endblock %}
 {% block og_description %}{{ candidate.name }} is running for office in {{ candidate.state.name }}{% endblock %}
-{% comment %} 
-{% if candidate.image %}
-{% block og_image %}{{ candidate.image.url }}{% endblock %}
-{% endif %}
-{% endcomment %} 
+{# Make this all one line to avoid spaces... checking url length to make sure it's valid #} 
+{% block og_image %}{% if candidate.image.url|length > 7 %}{{ candidate.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 {% endspaceless %}
 {% block content %}
 <script>

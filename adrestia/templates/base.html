@@ -14,7 +14,7 @@
         <meta property="og:url" content="{% block og_url %}{% endblock %}">
         <meta property="og:title" content="{% block og_title %}{% endblock %}">
         <meta property="og:description" content="{% block og_description %}{% endblock %}">
-        <meta property="og:image" content="{% block og_image %}{% endblock %}">
+        <meta property="og:image" content="{% block og_image %}http://path.to.site.image.jpg{% endblock %}">
         <meta property="og:type" content="website">
 
         {% comment %}
@@ -37,6 +37,7 @@
         <link rel="icon" type="image/png" sizes="32x32" href="{% static 'adrestia/images/favicon-32x32.png' %}">
         <link rel="icon" type="image/png" sizes="96x96" href="{% static 'adrestia/images/favicon-96x96.png' %}">
         <link rel="icon" type="image/png" sizes="16x16" href="{% static 'adrestia/images/favicon-16x16.png' %}">
+        <link rel="icon" type="image/x-icon" href="{% static 'adrestia/images/favicon.ico' %}">
 
         {% comment %}
         <link rel="manifest" href="{% static 'adrestia/images/manifest.json' %}">
