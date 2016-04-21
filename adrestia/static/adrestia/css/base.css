@@ -22,7 +22,7 @@ html {
   background-color: rgba(0, 33, 0, .10);
 }
 body { 
-    background: url("../images/old-and-worn-parchment-paper-494x494.jpg") no-repeat center center fixed; 
+    xbackground: url("../images/old-and-worn-parchment-paper-494x494.jpg") no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

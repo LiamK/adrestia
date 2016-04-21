@@ -90,15 +90,24 @@ def run():
 
         delegate, state, group, candidate = [x.text for x in (delegate, state, group, candidate)]
         candidate = candidate.strip()
+        # the Wikipedia editors keep changing this!
+        if candidate.startswith('None'):
+            candidate = 'Uncommitted'
         state = state[:2] # cut off extraneous footnote, e.g. "DA[note 1]"
         if state == u'—':
             state = '--'
         delegate = delegate.replace('[3]', '') # cut off extraneous footnote, e.g. "DA[note 1]"
-        group = re.sub(r'\[\d+\]', '', group)
-        candidate = re.sub(r'\s*\[\d+\]\s*', '', candidate)
-        group = group.replace('.', '')
-        group = group.replace('[note 2]', '')
-        group = group.replace('[note 3]', '')
+        # replace '.' in 'Rep.', and [note...] stuff
+        group = re.sub(r'\[A-Za-z\s\d]+\]', '', group)
+        # remove [notes]
+        candidate = re.sub(r'\s*\.*\s*\[[a-z\d]+\]\s*', '', candidate)
+        if candidate not in ('Sanders', 'Clinton', 'Uncommitted', "O'Malley"):
+            log.error("Candidate '%s' not recognized...skipping", candidate)
+            continue
+
+        #group = group.replace('.', '')
+        #group = group.replace('[note 2]', '')
+        #group = group.replace('[note 3]', '')
 
         dnc_group, created = DNCGroup.objects.get_or_create(abbr=group,
             defaults = {'name':'default'} )
@@ -151,7 +160,8 @@ def run():
                     )
             delegate.footnotes.add(footnote)
 
-    print 'CREATED'
+    print 'CREATED %d NEW SUPERDELATES' % len(created_delegate_set)
+    log.warn('db_delegate_set: %s', len(db_delegate_set))
     pprint.pprint(created_delegate_set)
 
     # This should be the same as created
@@ -161,3 +171,5 @@ def run():
     print 'DB but not NEW -- REMOVE'
     pprint.pprint(db_delegate_set - new_delegate_set)
 
+    log.warn('symmetric difference')
+    pprint.pprint(db_delegate_set ^ new_delegate_set)

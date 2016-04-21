@@ -424,6 +424,7 @@ class Delegate(models.Model):
     phone = models.CharField(max_length=16, null=True, blank=True)
     fax = models.CharField(max_length=16, null=True, blank=True)
     address = models.CharField(max_length=256, null=True, blank=True)
+    vote_value = models.DecimalField(decimal_places=1, max_digits=2, default=1.0)
 
     class Meta:
         ordering = ('name',)

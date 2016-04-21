@@ -118,6 +118,8 @@ class DelegateList(ListView):
                 'state')
         qs = qs.prefetch_related('opponents')
 
+        qs.votes = qs.aggregate(count=Sum('vote_value'))
+
         return qs
 
 class DelegateDetail(DetailView):

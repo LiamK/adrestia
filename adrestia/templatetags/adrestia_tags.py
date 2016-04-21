@@ -2,6 +2,7 @@ import re
 import datetime
 import logging
 from django import template
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 from adrestia.models import Candidate
@@ -103,14 +104,25 @@ def election_info(c):
   today = datetime.date.today()
   leadup = datetime.timedelta(days=14)
   fmt = '%a, %b %d %Y'
+
+  def leadup_snippet(date, election):
+      ret = u'<br/><span class="text-danger election">%s: %s<br/>%s</span>' % (
+              election,
+              date.strftime(fmt),
+              naturaltime(
+                  datetime.datetime.combine(date, datetime.time.min)
+              )
+          )
+      return ret.encode('utf-8')
+
   try:
       # leadup
       if today <= c.state.primary_date:
           if c.state.primary_date - leadup < today:
-              ret = '<br/><span class="text-success election">Primary: %s</span>' % c.state.primary_date.strftime(fmt);
+              ret = leadup_snippet(c.state.primary_date, 'Primary')
       elif today <= c.state.general_date:
           if c.state.general_date - leadup < today:
-              ret = '<br/><span class="text-success election">General: %s</span>' % c.state.general_date.strftime(fmt);
+              ret = leadup_snippet(c.state.general_date, 'General')
       # passed
       if today > c.state.primary_date:
           if today < c.state.general_date:
@@ -127,6 +139,7 @@ def election_info(c):
       log.error('Tag error: %s', e)
 
   #ret_str = ', '.join(ret)
+  print ret
   return format_html('{}', mark_safe(ret))
 
 @register.filter(needs_autoescape=True)

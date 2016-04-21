@@ -74,6 +74,7 @@
         <link rel="stylesheet" href="{% static 'adrestia/css/awesome-bootstrap-checkbox.css' %}">
         <link rel="stylesheet" href="{% static 'adrestia/css/base.css' %}">
 
+        {% block extra_header %}{% endblock %}
         {% comment %}
         Include analytics here instead of via static 
         {% endcomment %}

@@ -38,7 +38,6 @@ def run():
         try:
             assert int(cols[0].text)
         except:
-            log.warn('Skipping row: %s', row)
             continue
 
         text_cols = [c.text for c in cols]
@@ -60,12 +59,12 @@ def run():
         summary, created = DelegateSummary.objects.update_or_create(
             state=state,
             defaults = {
-                'clinton_pledged':numeric_values[0],
-                'clinton_unpledged':numeric_values[1],
+                'sanders_pledged':numeric_values[0],
+                'sanders_unpledged':numeric_values[1],
                 'available_pledged':numeric_values[2],
                 'available_unpledged':numeric_values[3],
-                'sanders_pledged':numeric_values[4],
-                'sanders_unpledged':numeric_values[5],
+                'clinton_pledged':numeric_values[4],
+                'clinton_unpledged':numeric_values[5],
                 'allocation_pledged':numeric_values[8],
                 'allocation_unpledged':numeric_values[9],
             }
