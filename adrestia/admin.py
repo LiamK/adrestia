@@ -25,8 +25,16 @@ class CandidateAdmin(admin.ModelAdmin):
         'image_url',
         'image',
         )
-    list_filter = ('level', 'office', 'status', 'serving', 'running',
-            'winner', 'state')
+    list_filter = (
+        'level',
+        'office',
+        'status',
+        'serving',
+        'running',
+        'winner',
+        'state__census_region_name',
+        'state'
+        )
     list_editable = (
         'office',
         'level',

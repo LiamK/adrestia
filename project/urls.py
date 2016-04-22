@@ -38,6 +38,9 @@ urlpatterns = [
     url(r'^candidates/(?P<state>[A-Za-z]{2,2})/?$', CandidateList.as_view(),name='candidate_list'),
     url(r'^candidates/(?P<pk>[0-9]+)/?$', CandidateDetail.as_view(),
         name='candidate_detail'),
+    url(r'^thankyou/?$',
+        TemplateView.as_view(template_name='adrestia/thankyou.html'),
+        name='thankyou'),
     url(r'^api/', include('adrestia.api.urls')),
 ]
 
