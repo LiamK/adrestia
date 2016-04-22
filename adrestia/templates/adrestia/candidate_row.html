@@ -30,23 +30,23 @@
         <div class="col-xs-12 col-sm-2">
             <ul class='list-inline'>
             {% if c.twitter_id %}
-            <li><a target="_blank" href="https://twitter.com/{{ c.twitter_id }}"><i class="fa fa-twitter"></i></a>
+            <li><a target="_blank" title="Tweet, Tweet!" href="https://twitter.com/{{ c.twitter_id }}"><i class="fa fa-twitter"></i></a>
             {% elif c.legislator.twitter_id %}
-            <li><a target="_blank" href="https://twitter.com/{{ c.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
+            <li><a target="_blank" title="Tweet, Tweet!" href="https://twitter.com/{{ c.legislator.twitter_id }}"><i class="fa fa-twitter"></i></a>
             {% endif %}
             {% if c.facebook_id %}
-            <li><a target="_blank" href="https://facebook.com/{{ c.facebook_id }}"><i class="fa fa-facebook"></i></a>
+            <li><a target="_blank" title="Follow on Facebook"href="https://facebook.com/{{ c.facebook_id }}"><i class="fa fa-facebook"></i></a>
             {% elif c.legislator.facebook_id %}
-            <li><a target="_blank" href="https://facebook.com/{{ c.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
+            <li><a target="_blank" title="Follow on Facebook" href="https://facebook.com/{{ c.legislator.facebook_id }}"><i class="fa fa-facebook"></i></a>
             {% endif %}
             {% if c.legislator.oc_email %}
-            <li><a href="mailto:{{ c.legislator.oc_email|obfuscate }}"><i class="fa fa-envelope"></i></a>
+            <li><a title="Send an email" href="mailto:{{ c.legislator.oc_email|obfuscate }}"><i class="fa fa-envelope"></i></a>
             {% endif %}
             {% if c.website_url %}
-            <li><a target="_blank" href="{{ c.website_url }}"><i class="fa fa-globe"></i></a>
+            <li><a target="_blank" title="Go to web site" href="{{ c.website_url }}"><i class="fa fa-globe"></i></a>
             {% endif %}
             {% if c.donate_url %}
-            <li><a target="_blank" href="{{ c.donate_url }}"><i class="fa fa-usd"></i></a>
+            <li><a target="_blank" title="Make a donation!" href="{{ c.donate_url }}"><i class="fa fa-usd"></i></a>
             {% endif %}
             </ul>
         </div>
