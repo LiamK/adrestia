@@ -22,7 +22,6 @@ html {
   background-color: rgba(0, 33, 0, .10);
 }
 body { 
-    xbackground: url("../images/old-and-worn-parchment-paper-494x494.jpg") no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -254,6 +253,17 @@ span.chart-picker, p.chart-picker {
     border-color: #595;
 }
 
+#main {
+    margin-top:80px;
+}
+
+@media (min-width: 1200px) {
+    .container, .container-fluid {
+        max-width: 960px;
+    }
+}
+
+
 .navbar-default .navbar-brand {
     font-family: "Birds of a Feather";
     font-size: 1.5rem;
@@ -261,8 +271,8 @@ span.chart-picker, p.chart-picker {
 }
 .navbar-default {
     border-color: rgb(220, 235, 220);
-    background-color: rgba(0, 33, 0, .10);
-    background-image: linear-gradient(to bottom,rgba(0, 0, 0, .5) 0, rgba(220, 235, 220, .5) 100%);
+    background-color: rgb(220, 235, 220);
+    background-image: linear-gradient(to bottom,rgba(233, 228, 197, .5) 0, rgba(213, 208, 177, .5) 100%);
 }
 .navbar-default .navbar-nav>li>a {
     color: #242;

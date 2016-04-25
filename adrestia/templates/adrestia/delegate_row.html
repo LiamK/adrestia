@@ -1,7 +1,7 @@
 {% load email_obfuscator %}
 <div class="list-group-item">
     <div class="row">
-        <div class="col-xs-12 col-sm-3">
+        <div class="col-xs-12 col-sm-4">
             <a href="{% url 'delegate_detail' pk=d.id %}">
                 {{ d.name }},
                 {% if d.legislator %}
@@ -13,7 +13,7 @@
                 {% endif %}
             </a>
         </div>
-        <div class="col-xs-12 col-sm-3">
+        <div class="col-xs-12 col-sm-2">
                 {% if d.candidate.name == 'Sanders' %}
                     <span class="sanders">
                     {{ d.candidate }}
@@ -58,7 +58,7 @@
             Challenger{{ d.opponents.all.count|pluralize }}:
             {% for o in d.opponents.all %}
             <span class="sanders">
-                <a href="{% url 'candidate_detail' pk=o.id %}">{{ o.name }}</a></span>{% spaceless %}{% if not forloop.last %},{% endif %}{% endspaceless %}
+                <a href="{% url 'candidate_detail' pk=o.id %}">{{ o.name }}</a></span>{% spaceless %}{% if not forloop.last %},<br/>{% endif %}{% endspaceless %}
             {% endfor %}
         </div>
         {% endif %}
