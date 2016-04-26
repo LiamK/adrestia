@@ -1,12 +1,12 @@
 {% load staticfiles %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="threeWayCalculator">
     <head>
         <title>{% block title %}{% endblock %}</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1, user-scalable=no">
-        <link rel="canonical" href="https://dearsuperdelegate.com/">
+        <link rel="canonical" href="http://dearsuperdelegate.com/">
         <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
         <!-- facebook-related properties -->
@@ -14,7 +14,7 @@
         <meta property="og:url" content="{% block og_url %}{% endblock %}">
         <meta property="og:title" content="{% block og_title %}{% endblock %}">
         <meta property="og:description" content="{% block og_description %}{% endblock %}">
-        <meta property="og:image" content="{% block og_image %}{% static 'adrestia/images/dearsuperdelegate_logo.png' %}{% endblock %}">
+        <meta property="og:image" content="{% block og_image %}http://path.to.site.image.jpg{% endblock %}">
         <meta property="og:type" content="website">
 
         {% comment %}
@@ -76,12 +76,10 @@
         <link rel="stylesheet" href="{% static 'adrestia/css/base.css' %}">
 
         {% block extra_header %}{% endblock %}
-        {% comment %}
-        Include analytics here instead of via static 
-        {% endcomment %}
+        {# Include analytics here instead of via static #}
         {% include "adrestia/google_analytics.js" %}
     </head>
-    <body>
+    <body ng-controller="CalculatorCtrl">
         {% include "adrestia/navbar.html" %}
         <div id="main" class="container">
             {% block content %}{% endblock %}
