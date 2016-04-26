@@ -75,10 +75,13 @@
                         </tr>
                     {% endfor %}
                 </table>
+                <p>For Superdelegates, Uncommitted means they are
+                either officially on the record as Uncommitted, or they
+                haven't made a statement.  In the case of Pledged delegates,
+                Uncommitted means that voters haven't voted for them yet.
+                </p>
                 {% include "adrestia/chart_picker.html" %}
             </div>
         </div>
     </div>
-</div>
-{% include "adrestia/chart.js" %}
-{% endblock %}
+</div> {% include "adrestia/chart.js" %} {% endblock %}

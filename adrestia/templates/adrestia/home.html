@@ -32,16 +32,17 @@
         challenges.
         </p>
 
-        <p>It turns out there are quite a few <strong>"Bernie
-        Candidates"</strong> out there.  Some are incumbents and a good
+        <p>It turns out there are <a href="{% url 'candidate_list' %}">
+            quite a few <strong>"Bernie Candidates"</strong></a> out there.
+        Some are incumbents and a good
         number are running for the first time.  If you want to
-        <a href="{% url 'candidate_list' %}">make a donation</a>,
-        they will surely appreciate it!<p>
+        encourage them by making a donation they will surely appreciate it!<p>
 
         <p>In some cases, the Superdelegates seem to be remarkably out of
         step with the voters in their state.  There is a
-        <a href="{% url 'chart' %}">Superdelegate chart</a> for each state which gives a
-        graphic representation of the delegate and Superdelegate relationship.</p>
+        <a href="{% url 'chart' %}">Superdelegate chart</a> for each state
+        which gives a graphic representation of the delegate and Superdelegate
+        relationship.</p>
 
         {% comment %}
         <ul class="list-unstyled">

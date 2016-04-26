@@ -1,0 +1,90 @@
+{% extends "ng_base.html" %}
+{% load staticfiles %}
+{% block title %}Dear Superdelegate,{% endblock %}
+{% block og_url %}{{ request.build_absolute_uri  }}{% endblock %}
+{% block og_title %}Dear Superdelegate,{% endblock %}
+{% block og_description %}2016 General Election 3-Way Calculator{% endblock %}
+{% block extra_header %}
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.1.1/Chart.js"></script>
+<script src="https://cdn.jsdelivr.net/angular.chartjs/0.8.8/angular-chart.js"></script>
+<script src="{% static 'adrestia/js/controllers.js' %}"></script>
+{% comment %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.0/Chart.js"></script>
+<script src="https://cdn.jsdelivr.net/angular.chartjs/0.8.8/angular-chart.min.css"></script>
+<script src="https://cdn.jsdelivr.net/angular.chartjs/0.8.8/angular-chart.css" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/angular.chartjs/0.8.8/angular-chart.min.css.map"></script>
+<script src="https://cdn.jsdelivr.net/angular.chartjs/0.8.8/angular-chart.min.js.map"></script>
+<script src="https://cdn.jsdelivr.net/angular.chartjs/0.8.8/angular-chart.min.js"></script>
+{% endcomment %}
+{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
+        <h3>
+            2016 General Election 3-Way Calculator
+        </h3>
+        <div class="row">
+            <div class="col-xs-12 text-center"><a target="_blank" href="http://www.gallup.com/poll/180440/new-record-political-independents.aspx">Percentage of Electorate</a>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">Democrat</div>
+            <div class="col-xs-4">Republican</div>
+            <div class="col-xs-4">Independent</div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4">30%</div>
+            <div class="col-xs-4">26%</div>
+            <div class="col-xs-4">43%</div>
+        </div>
+        {% verbatim %}
+        <div class="row">
+            <div class="col-xs-8">
+            <canvas id="pie"
+                class="chart chart-pie"
+                chart-data="data"
+                chart-labels="labels"
+                chart-legend="false"></canvas> 
+            </div>
+            <div class="col-xs-4">
+                <div class="row" ng-repeat="c in candidates">
+                    <div class="col-xs-6">{{c.name}}</div>
+                    <div class="col-xs-6">{{c.total | percentage:2 }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">Estimated percentage of vote by party (enter your best guess!)</div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3"></div>
+            <div class="col-xs-3">Democrat</div>
+            <div class="col-xs-3">Republican</div>
+            <div class="col-xs-3">Independent</div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3">{{bernie.name}}</div>
+            <div class="col-xs-3"><input type=text" ng-model="bernie.dem"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="bernie.repub|percentage:2"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="bernie.indie|percentage:2"/></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3">{{hillary.name}}</div>
+            <div class="col-xs-3"><input type=text" ng-model="hillary.dem"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="hillary.repub|percentage:2"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="hillary.indie|percentage:2"/></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3">{{trump.name}}</div>
+            <div class="col-xs-3"><input type=text" ng-model="trump.dem"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="trump.repub|percentage:2"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="trump.indie|percentage:2"/></div>
+        </div>
+        <div class="row">
+            <div class="col-xs-3">{{bernie.dem}}</div>
+        </div>
+        {% endverbatim %}
+    </div>
+</div>
+{% endblock %}

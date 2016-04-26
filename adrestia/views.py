@@ -36,6 +36,9 @@ def error_500(request, template_name='adrestia/500.html'):
 class Home(TemplateView):
     template_name = 'adrestia/home.html'
 
+class CalculatorView(TemplateView):
+    template_name = 'adrestia/calculator.html'
+
 class DelegateList(ListView):
     model = Delegate
 

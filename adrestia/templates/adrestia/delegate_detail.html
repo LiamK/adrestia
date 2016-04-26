@@ -125,7 +125,7 @@ $(function () {
         <div class="img-rounded opponent">
         <a href="{% url 'candidate_detail' pk=o.id %}">
             {% if o.image %}
-                {% thumbnail o.image "x200" as im %}
+                {% thumbnail o.image "x75" as im %}
                 <img src="{{im.url}}"
                     width="{{im.width}}"
                     height="{{im.height}}"/>
@@ -139,6 +139,7 @@ $(function () {
                 <a type="button" href="#"
                     class="btn btn-warning",
                     data-toggle="popover",
+                    data-placement="top",
                     title="Hey!",
                     data-trigger="focus",
                     data-content="We don't have a link to this candidate's donation page!  To update candidate information, please contact {{ 'info@dearsuperdelegate.com'|obfuscate }}",

@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^$', Home.as_view(), name='home'),
+    url(r'^calculator/?$', CalculatorView.as_view(), name='calculator'),
     url(r'^chart/?$', ChartView.as_view(), name='chart'),
     url(r'^chart/(?P<state>[A-Za-z-]{2,2})/?$', ChartView.as_view(), name='state_chart'),
     url(r'^about/?$', TemplateView.as_view(template_name='adrestia/about.html'), name='about'),
