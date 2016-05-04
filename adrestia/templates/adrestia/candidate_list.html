@@ -4,10 +4,7 @@
 {% spaceless %}
 {% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_title %}Bernie Candidates{% endblock %}
-{% block og_description %}These "Bernie Candidates" are running for office.{% endblock %}
-{% if candidate.image %}
-{% block og_image %}{% endblock %}
-{% endif %}
+{% block og_description %}These 'Bernie Candidates' are running for office.{% endblock %}
 {% endspaceless %}
 {% block content %}
     {% if state %}

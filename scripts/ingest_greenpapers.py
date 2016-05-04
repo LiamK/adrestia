@@ -61,10 +61,10 @@ def run():
             defaults = {
                 'sanders_pledged':numeric_values[0],
                 'sanders_unpledged':numeric_values[1],
-                'available_pledged':numeric_values[2],
-                'available_unpledged':numeric_values[3],
-                'clinton_pledged':numeric_values[4],
-                'clinton_unpledged':numeric_values[5],
+                'clinton_pledged':numeric_values[2],
+                'clinton_unpledged':numeric_values[3],
+                'available_pledged':numeric_values[4],
+                'available_unpledged':numeric_values[5],
                 'allocation_pledged':numeric_values[8],
                 'allocation_unpledged':numeric_values[9],
             }
