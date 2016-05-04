@@ -1,6 +1,6 @@
 import logging
 from django.conf import settings
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpResponseRedirect, HttpResponse, Http404, FileResponse
 from django.db.models import Q, Count, Sum, Case, When
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
@@ -38,6 +38,12 @@ class Home(TemplateView):
 
 class CalculatorView(TemplateView):
     template_name = 'adrestia/calculator.html'
+
+class FileView(View):
+    def get(self, request):
+        response = FileResponse(open('titanic.csv', 'rb'))
+        return response
+
 
 class DelegateList(ListView):
     model = Delegate

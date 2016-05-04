@@ -78,7 +78,10 @@ def incumbent_or_opponent(c):
           ret.append('Unknown')
       # passed
       if today > c.state.primary_date:
-          if not c.winner: ret = ['Defeated']
+          #if not c.winner: ret = ['Defeated']
+          if c.winner == False: ret = ['Defeated']
+          if c.winner == True: ret = ['Primary Winner']
+          else: pass
   except:
       pass
 #  if ((c.legislator and c.legislator.lastname in c.name) or
@@ -93,7 +96,10 @@ def party(c):
   """
   Usage:
   """
-  return mark_safe(Candidate.PARTY_DICT[c.party])
+  if c.party:
+      return mark_safe(Candidate.PARTY_DICT[c.party])
+  else:
+      return mark_safe('Unknown')
 
 @register.simple_tag
 def election_info(c):
@@ -126,14 +132,14 @@ def election_info(c):
       # passed
       if today > c.state.primary_date:
           if today < c.state.general_date:
-              if c.winner:
-                  ret = '<i class="fa fa-meh-o text-warning smiley"></i>'
-              else:
+              if c.winner == True:
+                  ret = '<i class="fa fa-smile-o text-success smiley"></i>'
+              elif c.winner == False:
                   ret = '<i class="fa fa-frown-o text-danger smiley"></i>'
           else:
-              if c.winner:
+              if c.winner == True:
                   ret = '<i class="fa fa-smile-o text-success smiley"></i>'
-              else:
+              elif c.winner == False:
                   ret = '<i class="fa fa-frown-o text-danger smiley"></i>'
   except Exception, e:
       log.error('Tag error: %s', e)

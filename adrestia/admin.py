@@ -33,6 +33,7 @@ class CandidateAdmin(admin.ModelAdmin):
         'running',
         'winner',
         'state__census_region_name',
+        'state__primary_date',
         'state'
         )
     list_editable = (

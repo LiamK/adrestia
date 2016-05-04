@@ -42,6 +42,7 @@ def run():
 
     multiple_legislators = []
     missing_legislators = []
+#State,Name,Level,Office,District,Status,Sanders Dem Profile,Notes,Congressional Primary Date,Endorsement,Website,Facebook,Twitter,Email,Donate,Primary Win,General Election Win,Party,img
 
     for r in reader:
         # new fields not in data
@@ -77,6 +78,9 @@ def run():
         donate_url = r.get('Donate')
         facebook_id = r.get('Facebook')
         twitter_id = r.get('Twitter')
+        primary_win = r.get('Primary Win')
+        general_election_win = r.get('General Election Win')
+        party = r.get('Party')
         if facebook_id:
             m = re.search(
                 r'https?://(www.)?facebook.com/(\w#!/)?(pages/)?(([\w-]/)*)?(?P<id>[\w.-]+)',
@@ -94,7 +98,6 @@ def run():
                 assert len(twitter_id) <= 15
             except AssertionError:
                 log.error('Twitter id too long: %s', twitter_id)
-        continue
 
         tmpname = name
         tmpname = tmpname.replace(', Jr.', '')
@@ -158,7 +161,8 @@ def run():
             'status':status,
             'serving':serving,
             'running':running,
-            'winner':winner,
+            'winner':primary_win,
+            'party':party,
         }
         # treat the combination of state and name as unique for now, but
         # don't enforce
@@ -171,7 +175,7 @@ def run():
 
         # First go through the incumbents and cross-reference with sunlight
         # openstates dataset to get information
-        if 'Serving' in status:
+        if 'Serving' in status and level in ('Federal', 'State') and office in ('House', 'Senate'):
             legislators = None
             if level == 'Federal':
                 if office == 'House':
@@ -266,7 +270,10 @@ def run():
                         candidate.legislator = leg_obj
                     candidate.save()
                 else:
-                    multiple_legislators.append( [(l, type(l)) for l in legislators] )
+                    multiple_legislators.append( {
+                        'candidate':candidate,
+                        'matches':[(l, type(l)) for l in legislators]
+                        } )
                     print [(l, type(l)) for l in legislators]
                     #log.info(name)
                     #print name, state, district, ' -- ', legislators

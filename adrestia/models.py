@@ -238,10 +238,11 @@ class Candidate(models.Model):
             ('House', 'House'),
             ('Governor', 'Governor'),
             ('Lt. Governor', 'Lt. Governor'),
-            ('Mayor', 'Mayor'),
             ('Secretary of State', 'Secretary of State'),
-            ('City Council', 'City Council'),
             ('County Council', 'County Council'),
+            ('Mayor', 'Mayor'),
+            ('City Council', 'City Council'),
+            ('Town Representative', 'Town Representative'),
             ]
     PARTIES = [
             ('D',   'Democrat'),
@@ -250,7 +251,6 @@ class Candidate(models.Model):
             ('DFL', 'Minnesota Democratic-Farmer-Labor Party'),
             ('IR',  'Independent-Progressive'),
             ('IP',  'Independent Party'),
-            ('AI',  'American Independent'),
             ('PF',  'Peace and Freedom'),
             ('R',   'Republican'),
             ('UN',  'Unaffiliated'),

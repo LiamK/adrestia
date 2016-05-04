@@ -96,9 +96,9 @@ def run():
         state = state[:2] # cut off extraneous footnote, e.g. "DA[note 1]"
         if state == u'—':
             state = '--'
-        delegate = delegate.replace('[3]', '') # cut off extraneous footnote, e.g. "DA[note 1]"
+        delegate = re.sub(r'\[[\d]+\]', '', delegate) # cut off extraneous footnote, e.g. "DA[note 1]"
         # replace '.' in 'Rep.', and [note...] stuff
-        group = re.sub(r'\[A-Za-z\s\d]+\]', '', group)
+        group = re.sub(r'(\[[A-Za-z\s\d]+\]|\.*)', '', group)
         # remove [notes]
         candidate = re.sub(r'\s*\.*\s*\[[a-z\d]+\]\s*', '', candidate)
         if candidate not in ('Sanders', 'Clinton', 'Uncommitted', "O'Malley"):

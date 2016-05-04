@@ -49,7 +49,7 @@
             <div class="col-xs-4">
                 <div class="row" ng-repeat="c in candidates">
                     <div class="col-xs-6">{{c.name}}</div>
-                    <div class="col-xs-6">{{c.total | percentage:2 }}</div>
+                    <div class="col-xs-6">{{c.get_total() }}</div>
                     </div>
                 </div>
             </div>
@@ -63,26 +63,29 @@
             <div class="col-xs-3">Republican</div>
             <div class="col-xs-3">Independent</div>
         </div>
+        {{ bernie_total }}
+        {{ hillary_total }}
+        {{ trump_total }}
         <div class="row">
             <div class="col-xs-3">{{bernie.name}}</div>
-            <div class="col-xs-3"><input type=text" ng-model="bernie.dem"/></div>
-            <div class="col-xs-3"><input type=text" ng-model="bernie.repub|percentage:2"/></div>
-            <div class="col-xs-3"><input type=text" ng-model="bernie.indie|percentage:2"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="bernie.est_dem"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="bernie.est_rep"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="bernie.est_ind"/></div>
         </div>
         <div class="row">
             <div class="col-xs-3">{{hillary.name}}</div>
-            <div class="col-xs-3"><input type=text" ng-model="hillary.dem"/></div>
-            <div class="col-xs-3"><input type=text" ng-model="hillary.repub|percentage:2"/></div>
-            <div class="col-xs-3"><input type=text" ng-model="hillary.indie|percentage:2"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="hillary.est_dem"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="hillary.est_rep"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="hillary.est_ind"/></div>
         </div>
         <div class="row">
             <div class="col-xs-3">{{trump.name}}</div>
-            <div class="col-xs-3"><input type=text" ng-model="trump.dem"/></div>
-            <div class="col-xs-3"><input type=text" ng-model="trump.repub|percentage:2"/></div>
-            <div class="col-xs-3"><input type=text" ng-model="trump.indie|percentage:2"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="trump.est_dem"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="trump.est_rep"/></div>
+            <div class="col-xs-3"><input type=text" ng-model="trump.est_ind"/></div>
         </div>
         <div class="row">
-            <div class="col-xs-3">{{bernie.dem}}</div>
+            <div class="col-xs-3">{{bernie.est_dem}}</div>
         </div>
         {% endverbatim %}
     </div>
