@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.humanize',
+    'django.contrib.sitemaps',
     'django.contrib.staticfiles',
     'gunicorn',
     'lockdown',
@@ -74,7 +75,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         #'BACKEND': 'django.template.backends.jinja2.Jinja2',
         'DIRS': [],
-        'APP_DIRS': True,
+        'APP_DIRS':True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',

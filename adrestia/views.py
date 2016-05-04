@@ -1,5 +1,6 @@
 import logging
 from django.conf import settings
+from django.contrib.sitemaps import Sitemap
 from django.http import HttpResponseRedirect, HttpResponse, Http404, FileResponse
 from django.db.models import Q, Count, Sum, Case, When
 from django.shortcuts import render
@@ -14,6 +15,18 @@ import json
 from .forms import DelegateForm, CandidateForm
 
 log = logging.getLogger(__name__)
+
+class StaticViewSitemap(Sitemap):
+    priority = 0.5
+    changefreq = 'daily'
+    protocol = 'https'
+
+    def items(self):
+        return ['home', 'about', 'chart', 'delegate_list', 'candidate_list']
+
+    def location(self, item):
+        return reverse(item)
+
 
 def print_dict(d):
     new = {}

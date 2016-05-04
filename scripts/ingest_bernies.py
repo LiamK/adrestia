@@ -46,7 +46,7 @@ def run():
 
     for r in reader:
         # new fields not in data
-        serving = running = winner = False
+        serving = running = False
 
         name = r.get('Name')
         if not name:
@@ -78,9 +78,17 @@ def run():
         donate_url = r.get('Donate')
         facebook_id = r.get('Facebook')
         twitter_id = r.get('Twitter')
+
         primary_win = r.get('Primary Win')
+        try: primary_win = bool(int(primary_win))
+        except: primary_win = False
+
         general_election_win = r.get('General Election Win')
+        try: general_election_win = bool(int(general_election_win))
+        except: general_election_win = False
+
         party = r.get('Party')
+
         if facebook_id:
             m = re.search(
                 r'https?://(www.)?facebook.com/(\w#!/)?(pages/)?(([\w-]/)*)?(?P<id>[\w.-]+)',
