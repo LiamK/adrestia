@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% block title %}Superdelegates{% endblock %}
 {% spaceless %}
+{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_title %}Superdelegates{% if state %} for {{ state.name }}{% endif %}{% endblock %}
 {% block og_description %}These are your Superdelegates!{% endblock %}

@@ -5,6 +5,7 @@
 {% load adrestia_tags %}
 {% block title %}Superdelegate {{ delegate.name }}{% endblock %}
 {% spaceless %}
+{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_title %}Superdelegate {{ delegate.name }}{% endblock %}
 {% block og_description %}{{ delegate.name }} is a Superdelegate from {{ delegate.state.name }}{% endblock %}

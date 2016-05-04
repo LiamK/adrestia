@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Dear Superdelegate,{% endblock %}
+{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_url %}{{ request.build_absolute_uri  }}{% endblock %}
 {% block og_title %}Dear Superdelegate,{% endblock %}
 {% block og_description %}Contact your Superdelegates, and find out who's running against them!{% endblock %}

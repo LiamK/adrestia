@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% block title %}Bernie Candidates{% endblock %}
 {% spaceless %}
+{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_title %}Bernie Candidates{% endblock %}
 {% block og_description %}These 'Bernie Candidates' are running for office.{% endblock %}

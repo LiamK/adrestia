@@ -2,6 +2,7 @@
 {% load email_obfuscator %}
 {% block title %}Privacy Policy{% endblock %}
 {% spaceless %}
+{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_title %}Dear Superdelegate Privacy Policy{% endblock %}
 {% block og_description %}{% endblock %}

@@ -2,6 +2,7 @@
 {% load humanize %}
 {% block title %}{{ state.name }} Superdelegate Chart{% endblock %}
 {% spaceless %}
+{% block canonical_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_title %}{{ state.name }} Superdelegate Chart{% endblock %}
 {% block og_description %}A comparison of delegates and Superdelegates.{% endblock %}
