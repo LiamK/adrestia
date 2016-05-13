@@ -78,10 +78,14 @@ def incumbent_or_opponent(c):
           ret.append('Unknown')
       # passed
       if today > c.state.primary_date:
-          #if not c.winner: ret = ['Defeated']
-          if c.winner == False: ret = ['Defeated']
-          if c.winner == True: ret = ['Primary Winner']
-          else: pass
+          if today < c.state.general_date:
+              if c.primary_win == False: ret = ['Defeated']
+              elif c.primary_win == True: ret = ['Primary Winner']
+              elif c.primary_win == None: ret = ['Missing Data']
+          else:
+              if c.general_win == False: ret = ['Defeated']
+              elif c.general_win == True: ret = ['Winner']
+              elif c.general_win == None: ret = ['Missing Data']
   except:
       pass
 #  if ((c.legislator and c.legislator.lastname in c.name) or
@@ -132,14 +136,16 @@ def election_info(c):
       # passed
       if today > c.state.primary_date:
           if today < c.state.general_date:
-              if c.winner == True:
+              if c.primary_win == True:
                   ret = '<i class="fa fa-smile-o text-success smiley"></i>'
-              elif c.winner == False:
+              elif c.primary_win == False:
                   ret = '<i class="fa fa-frown-o text-danger smiley"></i>'
+              else:
+                  ret = '<i class="">?</i>'
           else:
-              if c.winner == True:
+              if c.general_win == True:
                   ret = '<i class="fa fa-smile-o text-success smiley"></i>'
-              elif c.winner == False:
+              elif c.general_win == False:
                   ret = '<i class="fa fa-frown-o text-danger smiley"></i>'
   except Exception, e:
       log.error('Tag error: %s', e)

@@ -63,17 +63,17 @@ threeWayCalculator.controller('CalculatorCtrl', function ($scope) {
 	    }
 	}
 
-	var est_bernie_dem = .3975;
-	var est_bernie_rep = .19;
-	var est_bernie_ind = .4570;
+	var est_bernie_dem = .39;
+	var est_hillary_dem = .49;
+	var est_trump_dem = .12;
 
-	var est_hillary_dem = .4924;
-	var est_hillary_rep = .19;
-	var est_hillary_ind = .09;
+	var est_bernie_rep = .17;
+	var est_hillary_rep = .13;
+	var est_trump_rep = .70;
 
-	var est_trump_dem = .11;
-	var est_trump_rep = .60;
-	var est_trump_ind = .2590;
+	var est_bernie_ind = .63;
+	var est_hillary_ind = .17;
+	var est_trump_ind = .20;
 
         $scope.democrat = new Party('Democrat', electorate_dem,
             est_bernie_dem,

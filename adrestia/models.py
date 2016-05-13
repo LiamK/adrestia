@@ -230,7 +230,9 @@ class Candidate(models.Model):
             (None, 'Any Level'),
             ('Federal', 'Federal'),
             ('State', 'State'),
-            ('Local', 'Local'),
+            ('County', 'County'),
+            ('City', 'City'),
+            ('Neighborhood', 'Neighborhood'),
             ]
     OFFICES = [
             (None, 'Any Office'),
@@ -243,6 +245,19 @@ class Candidate(models.Model):
             ('Mayor', 'Mayor'),
             ('City Council', 'City Council'),
             ('Town Representative', 'Town Representative'),
+                ('County Recorder', 'County Recorder'),
+                ('County Commissioner', 'County Commissioner'),
+                ('County Auditor', 'County Auditor'),
+                ('County Legislature', 'County Legislature'),
+                ('County Supervisor', 'County Supervisor'),
+                ('City-County Council', 'City-County Council'),
+                ('Alderman', 'Alderman'),
+                ('Alderwoman', 'Alderwoman'),
+                ('Justice of the Peace', 'Justice of the Peace'),
+                ('Central Committee', 'Central Committee'),
+                ('Neighborhood Council', 'Neighborhood Council'),
+                ('Surrogate', 'Surrogate'),
+                ('Freeholder', 'Freeholder'),
             ]
     PARTIES = [
             ('D',   'Democrat'),
@@ -253,11 +268,14 @@ class Candidate(models.Model):
             ('IP',  'Independent Party'),
             ('PF',  'Peace and Freedom'),
             ('R',   'Republican'),
+            ('VPP', 'Vermont Progressive Party'),
             ('UN',  'Unaffiliated'),
         ]
     PARTY_DICT = dict(PARTIES)
 
     name = models.CharField(max_length=36)
+    first_name = models.CharField(null=True, blank=True, max_length=36)
+    last_name = models.CharField(null=True, blank=True, max_length=36)
     state = models.ForeignKey(State, null=True)
     level = models.CharField(max_length=24, choices=LEVELS, null=True)
     office = models.CharField(max_length=24, choices=OFFICES, null=True)
@@ -269,6 +287,10 @@ class Candidate(models.Model):
         help_text='Check this candidate is the incumbent')
     running = models.BooleanField(
         help_text='Running for office or re-election')
+    primary_win = models.NullBooleanField(
+        help_text='Check this if candidate has won their primary')
+    general_win = models.NullBooleanField(
+        help_text='Check this if candidate has won their general election')
     winner = models.BooleanField(default=False,
         help_text='Check this if candidate has won their election')
     notes = models.TextField(null=True, blank=True, 
@@ -281,7 +303,7 @@ class Candidate(models.Model):
     state_legislator = models.ForeignKey('StateLegislator',
         to_field='leg_id', null=True, blank=True,
         help_text='Enter State Legislator if this candidate is the incumbent')
-    party = models.CharField(max_length=2, choices=PARTIES,
+    party = models.CharField(max_length=3, choices=PARTIES,
         null=True, blank=True,
         help_text='See for abbreviations: http://abcnews.go.com/Politics/party-abbreviations/story?id=10865978')
 
@@ -294,6 +316,7 @@ class Candidate(models.Model):
     website_url = models.URLField(max_length=500, null=True, blank=True)
     donate_url = models.URLField(max_length=500, null=True, blank=True)
     endorsement_url = models.URLField(max_length=500, null=True, blank=True)
+    endorsement_text = models.CharField(max_length=500, null=True, blank=True)
     webform_url = models.URLField(max_length=500, null=True, blank=True,
         help_text='Enter URL of web form if available')
     email = models.EmailField(null=True, blank=True)
@@ -301,6 +324,8 @@ class Candidate(models.Model):
         help_text='Enter image URL here and the image will be uploaded')
     image = models.ImageField(null=True, blank=True, upload_to=make_digest,
         help_text='Enter a local image file here to upload')
+    created = models.DateTimeField(auto_now_add=True, help_text='Created')
+    updated = models.DateTimeField(auto_now=True, help_text='Updated')
 
 
     class Meta:
@@ -341,8 +366,8 @@ class Candidate(models.Model):
 
             if url:
                 filename = url.split('/')[-1]
-                print 'filename', filename
-                log.debug('Copying %s from %s', filename, url)
+                #print 'filename', filename
+                #log.debug('Copying %s from %s', filename, url)
                 image_file = NamedTemporaryFile(delete=True)
                 try:
                     req = requests.get(url)
