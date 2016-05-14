@@ -396,10 +396,11 @@ class Candidate(models.Model):
                     state=self.state,
                     legislator__district=self.district,
                     )
+                log.info('Found delegate for %s', self)
                 return delegate
         except Delegate.DoesNotExist:
             pass
-            log.debug('No delegate found for %s', self)
+            #log.debug('No delegate found for %s', self)
         except Delegate.MultipleObjectsReturned:
             log.warn('Multiple matches for %s', self)
 

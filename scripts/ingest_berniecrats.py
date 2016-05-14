@@ -363,7 +363,6 @@ def run():
         print '{:<10}'.format('DB ONLY'), ', '.join(col1)
         print '{:<10}'.format('NOT FOUND'), ', '.join(col2)
         print matrix_to_string([[col1], [col2]])
-        print matrix_to_string([db_only_dict[s.state], not_found_dict[s.state]])
 
 
 def matrix_to_string(matrix, header=None):

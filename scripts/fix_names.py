@@ -37,47 +37,57 @@ def run():
         c.name = c.name.strip()
         c.save()
 
-    c = Candidate.objects.get(name='Martin Quezada')
-    c.name = 'Martín Quezada'
+    c = Candidate.objects.get(name='Bob Sweere')
+    c.facebook_id = '100010700328351'
     c.save()
 
-    c = Candidate.objects.get(name='Ed Vargas')
-    c.name = 'Edwin Vargas'
+    c = Candidate.objects.get(name='Pramila Jayapal')
+    c.twitter_id = 'PramilaJayapal'
+    c.image = None
     c.save()
 
-    c = Candidate.objects.get(name='Michael Trout')
-    c.name = 'W. Michael Trout'
-    c.save()
-
-    c = Candidate.objects.get(name='Julian Bell')
-    c.name = 'Dr. Julian Bell'
-    c.save()
-
-    c = Candidate.objects.get(name='Joe Neal')
-    c.name = 'Joseph Neal'
-    c.save()
-
-    c = Candidate.objects.get(name='Rosanna Gabaldon')
-    c.name = 'Rosanna Gabaldón'
-    c.save()
-
-    c = Candidate.objects.get(name='Bao Ngyuen')
-    c.name = 'Bao Nguyen'
-    c.save()
-
-    c = Candidate.objects.get(name='Luis Sepulveda')
-    c.name = 'Luis Sepúlveda'
-    c.save()
-
-    c = Candidate.objects.get(name='Jesse Sabaih')
-    c.name = 'Jesse Sbaih'
-    c.save()
-
+#    c = Candidate.objects.get(name='Martin Quezada')
+#    c.name = 'Martín Quezada'
+#    c.save()
+#
+#    c = Candidate.objects.get(name='Ed Vargas')
+#    c.name = 'Edwin Vargas'
+#    c.save()
+#
+#    c = Candidate.objects.get(name='Michael Trout')
+#    c.name = 'W. Michael Trout'
+#    c.save()
+#
+#    c = Candidate.objects.get(name='Julian Bell')
+#    c.name = 'Dr. Julian Bell'
+#    c.save()
+#
+#    c = Candidate.objects.get(name='Joe Neal')
+#    c.name = 'Joseph Neal'
+#    c.save()
+#
+#    c = Candidate.objects.get(name='Rosanna Gabaldon')
+#    c.name = 'Rosanna Gabaldón'
+#    c.save()
+#
+#    c = Candidate.objects.get(name='Bao Ngyuen')
+#    c.name = 'Bao Nguyen'
+#    c.save()
+#
+#    c = Candidate.objects.get(name='Luis Sepulveda')
+#    c.name = 'Luis Sepúlveda'
+#    c.save()
+#
+#    c = Candidate.objects.get(name='Jesse Sabaih')
+#    c.name = 'Jesse Sbaih'
+#    c.save()
+#
     c = Candidate.objects.get(name='Pierre Frantz').delete()
 
-    for c in Candidate.objects.all():
-        if c.winner:
-            c.primary_win = True
-            c.save()
+
+#    for c in Candidate.objects.all():
+#        if c.winner:
+#            c.primary_win = True
+#            c.save()
 
 
