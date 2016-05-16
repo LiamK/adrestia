@@ -32,7 +32,7 @@
             {% endcomment %}
         </div>
         <div class="col-xs-8 col-sm-3">
-            {% incumbent_or_opponent c %}&nbsp;{% election_info c %}
+            {% election_info c %}
             {% comment %}
             {% contains c.name c.legislator.lastname as legislator_match %}
             {% if legislator_match %}

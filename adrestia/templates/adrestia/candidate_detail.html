@@ -48,8 +48,7 @@ $(function () {
         {% endif %}
         </h2>
         <h3>
-            Status: {% incumbent_or_opponent candidate %},
-            {{ candidate.state }} {% if candidate.district %} {{ candidate.district }} {% endif %}<br/>
+            Office: {{ candidate.state }} {% if candidate.district %} {{ candidate.district }} {% endif %}<br/>
             Party: {% party candidate %}<br/>
             {% election_info candidate %}
     </h3>

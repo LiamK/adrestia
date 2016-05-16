@@ -196,8 +196,8 @@ class State(models.Model):
     name = models.CharField(max_length=36)
     fips_state = models.CharField(max_length=2, default='ZZ')
     census_region_name = models.CharField(max_length=12, default='ZZ')
-    primary_date = models.DateField(null=True, blank=True)
-    general_date = models.DateField(null=True, blank=True)
+    primary_date = models.DateTimeField(null=True, blank=True)
+    general_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ('state',)
@@ -234,6 +234,7 @@ class Candidate(models.Model):
             ('City', 'City'),
             ('Neighborhood', 'Neighborhood'),
             ]
+    LEVEL_LIST = [x[0] for x in LEVELS if x[0] is not None]
     OFFICES = [
             (None, 'Any Office'),
             ('Senate', 'Senate'),
@@ -259,6 +260,7 @@ class Candidate(models.Model):
                 ('Surrogate', 'Surrogate'),
                 ('Freeholder', 'Freeholder'),
             ]
+    OFFICE_LIST = [x[0] for x in OFFICES if x[0] is not None]
     PARTIES = [
             ('D',   'Democrat'),
             ('G',   'Green'),

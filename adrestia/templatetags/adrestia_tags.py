@@ -1,4 +1,5 @@
 import re
+import pytz
 import datetime
 import logging
 from django import template
@@ -45,8 +46,6 @@ def candidate_office(c):
 
   try:
       if level == 'Federal':
-          ret.append(district)
-      elif level == 'Local':
           ret.append(office)
           ret.append(district)
       elif level == 'State':
@@ -56,9 +55,15 @@ def candidate_office(c):
               ret.append(level)
               ret.append(office)
               ret.append(district)
+      elif level in Candidate.LEVEL_LIST:
+          ret.append(office)
+          ret.append(district)
       if not ret:
+          log.error('Candidate %s: %s, %s, %s, %s', c, state, level, office,
+                  district)
           ret.append('Unknown')
   except:
+      raise
       log.error('Unknown error')
       pass
 
@@ -71,21 +76,24 @@ def incumbent_or_opponent(c):
   """
   ret = []
   today = datetime.date.today()
+  today = pytz.timezone('UTC').localize(datetime.datetime.utcnow())
   try:
+      raise
       if c.serving: ret.append('Incumbent')
       if c.running: ret.append('Running')
       if not ret:
-          ret.append('Unknown')
+          ret.append('Status Unknown')
+
       # passed
-      if today > c.state.primary_date:
-          if today < c.state.general_date:
-              if c.primary_win == False: ret = ['Defeated']
-              elif c.primary_win == True: ret = ['Primary Winner']
-              elif c.primary_win == None: ret = ['Missing Data']
-          else:
-              if c.general_win == False: ret = ['Defeated']
-              elif c.general_win == True: ret = ['Winner']
-              elif c.general_win == None: ret = ['Missing Data']
+#      if today > c.state.primary_date and c.level in ('Federal', 'State'):
+#          if today < c.state.general_date:
+#              if c.primary_win == False: ret = ['Defeated']
+#              elif c.primary_win == True: ret = ['Primary Winner']
+#              elif c.primary_win == None: ret = ['Won or Lost?']
+#          else:
+#              if c.general_win == False: ret = ['Defeated']
+#              elif c.general_win == True: ret = ['Winner']
+#              elif c.general_win == None: ret = ['Won or Lost?']
   except:
       pass
 #  if ((c.legislator and c.legislator.lastname in c.name) or
@@ -110,49 +118,48 @@ def election_info(c):
   """
   Usage:
   """
-  ret = ''
-  today = datetime.date.today()
+  ret = []
+  today = pytz.timezone('UTC').localize(datetime.datetime.utcnow())
   leadup = datetime.timedelta(days=14)
   fmt = '%a, %b %d %Y'
 
   def leadup_snippet(date, election):
-      ret = u'<br/><span class="text-danger election">%s: %s<br/>%s</span>' % (
+      snippet = u'<br/><span class="text-danger election">%s: %s<br/>%s</span>' % (
               election,
               date.strftime(fmt),
-              naturaltime(
-                  datetime.datetime.combine(date, datetime.time.min)
-              )
+              naturaltime(date)
           )
-      return ret.encode('utf-8')
+      return snippet.encode('utf-8')
 
   try:
-      # leadup
+      if c.serving: ret.append('Incumbent')
+      if c.running: ret.append('Candidate')
+
+      # before primary or general election
       if today <= c.state.primary_date:
           if c.state.primary_date - leadup < today:
-              ret = leadup_snippet(c.state.primary_date, 'Primary')
+              ret.append(leadup_snippet(c.state.primary_date, 'Primary'))
       elif today <= c.state.general_date:
           if c.state.general_date - leadup < today:
-              ret = leadup_snippet(c.state.general_date, 'General')
-      # passed
-      if today > c.state.primary_date:
-          if today < c.state.general_date:
-              if c.primary_win == True:
-                  ret = '<i class="fa fa-smile-o text-success smiley"></i>'
-              elif c.primary_win == False:
-                  ret = '<i class="fa fa-frown-o text-danger smiley"></i>'
-              else:
-                  ret = '<i class="">?</i>'
-          else:
-              if c.general_win == True:
-                  ret = '<i class="fa fa-smile-o text-success smiley"></i>'
-              elif c.general_win == False:
-                  ret = '<i class="fa fa-frown-o text-danger smiley"></i>'
+              ret.append(leadup_snippet(c.state.general_date, 'General'))
+          if c.primary_win == True:
+              ret.append('<br/>Primary winner <i class="fa fa-smile-o text-success smiley"></i>')
+          elif c.primary_win == False:
+              ret.append('<br/>Defeated <i class="fa fa-frown-o text-danger smiley"></i>')
+          elif c.primary_win == None and c.level in ('Federal', 'State'):
+              ret.append('<br/>Won or Lost <i class="fa fa-question"></i>')
+      else:
+          if c.general_win == True:
+              ret.append('<i class="fa fa-smile-o text-success smiley"></i>')
+          elif c.general_win == False:
+              ret.append('<i class="fa fa-frown-o text-danger smiley"></i>')
+          elif c.general_win == None and c.level in ('Federal', 'State'):
+              ret.append('<br/>Won or Lost <i class="fa fa-question"></i>')
+
   except Exception, e:
       log.error('Tag error: %s', e)
 
-  #ret_str = ', '.join(ret)
-  print ret
-  return format_html('{}', mark_safe(ret))
+  return format_html('{}', mark_safe(' '.join(ret)))
 
 @register.filter(needs_autoescape=True)
 def unused(value, autoescape=True):
