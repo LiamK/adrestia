@@ -41,13 +41,19 @@ def run():
             continue
 
         text_cols = [c.text for c in cols]
-        state_name = text_cols[1]
+        state_name = text_cols[2]
         if state_name == 'District of Columbia':
             state_name = 'Washington DC'
         if state_name == 'Northern Marianas':
             state_name = 'Northern Mariana Islands'
-        state = State.objects.get(name=state_name)
-        text_cols = text_cols[2:]
+        try:
+            state = State.objects.get(name=state_name)
+        except:
+            print state_name
+            continue
+
+
+        text_cols = text_cols[3:]
 
         def numerify(n):
             try: return int(n)
@@ -59,10 +65,10 @@ def run():
         summary, created = DelegateSummary.objects.update_or_create(
             state=state,
             defaults = {
-                'sanders_pledged':numeric_values[0],
-                'sanders_unpledged':numeric_values[1],
-                'clinton_pledged':numeric_values[2],
-                'clinton_unpledged':numeric_values[3],
+                'clinton_pledged':numeric_values[0],
+                'clinton_unpledged':numeric_values[1],
+                'sanders_pledged':numeric_values[2],
+                'sanders_unpledged':numeric_values[3],
                 'available_pledged':numeric_values[4],
                 'available_unpledged':numeric_values[5],
                 'allocation_pledged':numeric_values[8],

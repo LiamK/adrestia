@@ -59,8 +59,8 @@ def candidate_office(c):
           ret.append(office)
           ret.append(district)
       if not ret:
-          log.error('Candidate %s: %s, %s, %s, %s', c, state, level, office,
-                  district)
+          log.error('Candidate %s: %s, %s, %s, %s', 
+                  c, state, level, office, district)
           ret.append('Unknown')
   except:
       raise
