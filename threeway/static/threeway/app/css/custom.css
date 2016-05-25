@@ -1,0 +1,86 @@
+body {
+    font-family: "Roboto", sans-serif;
+    color: #666;
+}
+.parsets.tooltip {
+  opacity: 1;
+}
+
+svg {
+  font: 13px sans-serif;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.brush rect.background {
+  fill-opacity: 0.75;
+}
+
+.brush .party {
+  fill-opacity: 0.75;
+}
+
+.brush .extent {
+  fill-opacity: 0.75;
+}
+
+.democrat .brush .party {
+  fill: #013838;
+}
+
+.democrat .brush .extent {
+  fill: #2b7171;
+}
+
+.democrat .brush rect.background {
+  fill: #3f8282;
+}
+
+.republican .brush .party {
+  fill: #5d0101;
+}
+
+.republican .brush .extent {
+   fill: #af3a3a;
+ }
+
+.republican .brush rect.background {
+  fill: #d86a6a;
+}
+
+.independent .brush .party {
+  fill: #3a5701;
+}
+
+.independent .brush .extent {
+  fill: #7fa336;
+}
+
+.independent .brush rect.background {
+  fill: #a7ca63;
+}
+
+.text-svg{
+  font-size: 14px;
+  padding-top:0.5 rem;
+}
+.slider-label {
+  font-size: 16px;
+  margin-top:1rem;
+  display: inline-block;
+}
+.top-border {
+    border-top: 1px solid #ddd;
+}
+.bottom-border {
+    border-bottom: 1px solid #ddd;
+}
+
+.nv-bar {
+    border:none;
+    color:red !important;
+}

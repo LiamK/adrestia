@@ -59,8 +59,8 @@ def candidate_office(c):
           ret.append(office)
           ret.append(district)
       if not ret:
-          log.error('Candidate %s: %s, %s, %s, %s', 
-                  c, state, level, office, district)
+          log.error('Candidate %s: %s, %s, %s, %s', c, state, level, office,
+                  district)
           ret.append('Unknown')
   except:
       raise
@@ -115,51 +115,63 @@ def party(c):
 
 @register.simple_tag
 def election_info(c):
-  """
-  Usage:
-  """
-  ret = []
-  today = pytz.timezone('UTC').localize(datetime.datetime.utcnow())
-  leadup = datetime.timedelta(days=14)
-  fmt = '%a, %b %d %Y'
+    """
+    Usage:
+    """
+    ret = []
+    today = pytz.timezone('UTC').localize(datetime.datetime.utcnow())
+    leadup = datetime.timedelta(days=14)
+    fmt = '%a, %b %d %Y'
 
-  def leadup_snippet(date, election):
-      snippet = u'<br/><span class="text-danger election">%s: %s<br/>%s</span>' % (
+    def leadup_snippet(state, election):
+        if election == 'Primary':
+            date = state.primary_date
+        elif election == 'General':
+            date = state.general_date
+        election_end = state.election_end
+
+        snippet = u'<br/><span class="text-danger election">%s: %s' % (
               election,
               date.strftime(fmt),
-              naturaltime(date)
-          )
-      return snippet.encode('utf-8')
+        )
+        if date <= today < election_end:
+            snippet += '<br/>Polls open, go vote!</span>'
+        else:
+            snippet += '<br/>%s</span>' % naturaltime(date)
 
-  try:
-      if c.serving: ret.append('Incumbent')
-      if c.running: ret.append('Candidate')
+        return snippet.encode('utf-8')
 
-      # before primary or general election
-      if today <= c.state.primary_date:
-          if c.state.primary_date - leadup < today:
-              ret.append(leadup_snippet(c.state.primary_date, 'Primary'))
-      elif today <= c.state.general_date:
-          if c.state.general_date - leadup < today:
-              ret.append(leadup_snippet(c.state.general_date, 'General'))
-          if c.primary_win == True:
-              ret.append('<br/>Primary winner <i class="fa fa-smile-o text-success smiley"></i>')
-          elif c.primary_win == False:
-              ret.append('<br/>Defeated <i class="fa fa-frown-o text-danger smiley"></i>')
-          elif c.primary_win == None and c.level in ('Federal', 'State'):
-              ret.append('<br/>Won or Lost <i class="fa fa-question"></i>')
-      else:
-          if c.general_win == True:
-              ret.append('<i class="fa fa-smile-o text-success smiley"></i>')
-          elif c.general_win == False:
-              ret.append('<i class="fa fa-frown-o text-danger smiley"></i>')
-          elif c.general_win == None and c.level in ('Federal', 'State'):
-              ret.append('<br/>Won or Lost <i class="fa fa-question"></i>')
+    try:
+        if c.serving: ret.append('Incumbent')
+        if c.running: ret.append('Candidate')
 
-  except Exception, e:
-      log.error('Tag error: %s', e)
-
-  return format_html('{}', mark_safe(' '.join(ret)))
+        # estimate polls closing time as opening + 12 hours
+        c.state.election_end = c.state.primary_date+datetime.timedelta(hours=12)
+        # before primary or general election
+        if today <= c.state.election_end:
+            if c.state.primary_date - leadup < today:
+                ret.append(leadup_snippet(c.state, 'Primary'))
+        elif today <= c.state.general_date:
+            if c.state.general_date - leadup < today:
+                ret.append(leadup_snippet(c.state, 'General'))
+            if c.primary_win == True:
+                ret.append('<br/>Primary winner <i class="fa fa-smile-o text-success smiley"></i>')
+            elif c.primary_win == False:
+                ret.append('<br/>Defeated <i class="fa fa-frown-o text-danger smiley"></i>')
+            elif c.primary_win == None and c.level in ('Federal', 'State'):
+                ret.append('<br/>Won or Lost <i class="fa fa-question"></i>')
+        else:
+            if c.general_win == True:
+                ret.append('<i class="fa fa-smile-o text-success smiley"></i>')
+            elif c.general_win == False:
+                ret.append('<i class="fa fa-frown-o text-danger smiley"></i>')
+            elif c.general_win == None and c.level in ('Federal', 'State'):
+                ret.append('<br/>Won or Lost <i class="fa fa-question"></i>')
+  
+    except Exception, e:
+        log.error('Tag error: %s', e)
+  
+    return format_html('{}', mark_safe(' '.join(ret)))
 
 @register.filter(needs_autoescape=True)
 def unused(value, autoescape=True):

@@ -12,10 +12,10 @@ handler500 = 'adrestia.views.error_500'
 sitemaps = { 'static': StaticViewSitemap }
 
 urlpatterns = [
+    url(r'^$', Home.as_view(), name='home'),
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
-    url(r'^$', Home.as_view(), name='home'),
     url(r'^calculator/?$', CalculatorView.as_view(), name='calculator'),
     url(r'^d3/?$', TemplateView.as_view(template_name='adrestia/d3.html'), name='d3'),
     url(r'^nvd3/?$', TemplateView.as_view(template_name='adrestia/nvd3.html'), name='nvd3'),

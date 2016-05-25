@@ -46,8 +46,19 @@ def error_500(request, template_name='adrestia/500.html'):
     return render(request, template_name)
 
 
-class Home(TemplateView):
-    template_name = 'adrestia/home.html'
+class Home(View):
+    superdelegate_template_name = 'adrestia/home.html'
+    threeway_template_name = 'threeway/index.html'
+    def get(self, request, *args, **kwargs):
+        try:
+            if 'superdelegate' in request.META.get('HTTP_HOST').lower():
+                return render(request, self.superdelegate_template_name)
+            elif 'freespeech' in request.META.get('HTTP_HOST').lower():
+                return render(request, self.threeway_template_name)
+        except:
+            pass
+
+        return render(request, self.superdelegate_template_name)
 
 class CalculatorView(TemplateView):
     template_name = 'adrestia/calculator.html'
