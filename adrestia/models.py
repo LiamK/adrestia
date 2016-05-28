@@ -285,6 +285,8 @@ class Candidate(models.Model):
         help_text='Fed or State house district name or number, Junior '
                   'Seat or Senior Seat for Fed Senate, City for Mayor')
     status = models.CharField(max_length=24, null=True, blank=True)
+    endorsed_by_bernie = models.BooleanField(
+        help_text='Endorsed by Bernie')
     serving = models.BooleanField(
         help_text='Check this candidate is the incumbent')
     running = models.BooleanField(

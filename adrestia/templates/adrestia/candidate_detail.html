@@ -51,6 +51,9 @@ $(function () {
             Office: {{ candidate.state }} {% if candidate.district %} {{ candidate.district }} {% endif %}<br/>
             Party: {% party candidate %}<br/>
             {% election_info candidate %}
+            {% if candidate.endorsed_by_bernie %}
+               <p><i class="fa fa-star endorsed"></i>&nbsp;Endorsed by Bernie</p>
+            {% endif %}
     </h3>
 
         {% if candidate.profile_url or candidate.website_url or candidate.facebook_id or candidate.twitter_id or candidate.endorsement_url %}
