@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'lockdown',
     'maintenancemode',
     'adrestia',
-    'threeway',
     'django_extensions',
     'debug_toolbar',
     'email_obfuscator',
