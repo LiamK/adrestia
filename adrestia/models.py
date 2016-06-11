@@ -13,7 +13,6 @@ from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.core.files.base import ContentFile
 from django.db.models import Q
-from django.db.models.signals import post_save, post_delete
 from django.utils.html import format_html
 from django.utils.text import slugify
 
