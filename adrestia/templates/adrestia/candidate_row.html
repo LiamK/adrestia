@@ -4,6 +4,9 @@
 <div class="list-group-item">
     <div class="row">
         <div class="col-xs-8 col-sm-3">
+            {% if c.endorsed_by_bernie %}
+            <span title="Endorsed by Bernie"><i class="fa fa-star endorsed"></i></span>&nbsp;
+            {% endif %}
             <a href="{% url 'candidate_detail' pk=c.id %}">{{ c.name }}</a>
         <div class="xcol-xs-4 xcol-sm-2 image-shadow">
                 {% if c.image %}

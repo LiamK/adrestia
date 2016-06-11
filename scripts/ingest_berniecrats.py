@@ -59,6 +59,7 @@ def run():
         office = get_office(c, office_dict)
         district = get_district(c)
         website_url = c.get('website')
+        endorsed_by_bernie = c.get('endorsedByBernie')
         endorsement_url = c.get('infoUrl')
         endorsement_text = c.get('infoLink')
         primary_win = get_null_bool(c.get('electPrimary'))
@@ -136,6 +137,7 @@ def run():
             'website_url':website_url,
             'twitter_id':twitter_id,
             'facebook_id':facebook_id,
+            'endorsed_by_bernie':endorsed_by_bernie,
             'endorsement_url':endorsement_url,
             'endorsement_text':endorsement_url,
             'level':level,
