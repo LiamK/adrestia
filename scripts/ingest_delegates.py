@@ -95,7 +95,7 @@ def run():
             candidate = 'Uncommitted'
         state = state[:2] # cut off extraneous footnote, e.g. "DA[note 1]"
         if state == u'—':
-            state = '--'
+            state = 'UA'
         delegate = re.sub(r'\[[\d]+\]', '', delegate) # cut off extraneous footnote, e.g. "DA[note 1]"
         # replace '.' in 'Rep.', and [note...] stuff
         group = re.sub(r'(\[[A-Za-z\s\d]+\]|\.*)', '', group)
