@@ -280,7 +280,7 @@ class Candidate(models.Model):
     state = models.ForeignKey(State, null=True)
     level = models.CharField(max_length=24, choices=LEVELS, null=True)
     office = models.CharField(max_length=24, choices=OFFICES, null=True)
-    district = models.CharField(max_length=36, null=True, blank=True,
+    district = models.CharField(max_length=64, null=True, blank=True,
         help_text='Fed or State house district name or number, Junior '
                   'Seat or Senior Seat for Fed Senate, City for Mayor')
     status = models.CharField(max_length=24, null=True, blank=True)
